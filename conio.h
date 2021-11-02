@@ -1,13 +1,16 @@
 /*
  *	conio.h
- *	Author: Jakash3
+ *	Author: Jakash3 QAIU
  */
 
+// 添加windows下MinGW-GCC编译支持
 #ifndef CONIO_H
 #define CONIO_H
- 
+
+#ifdef __unix__
 #include <stdio.h>
 #include <unistd.h>
+#include <conio.h>
 #include <termios.h>
 #include <sys/select.h>
 
@@ -77,4 +80,14 @@ static int kbhit() {
 }
 
 static int _kbhit() {return kbhit();}
-#endif
+#elifdef __WIN32__
+#include <windows.h>
+#include <conio.h>
+
+void clrscr(){
+    system("cls");
+}
+
+
+#endif // __unix__
+#endif // CONIO_H
