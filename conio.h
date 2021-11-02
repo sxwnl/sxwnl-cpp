@@ -1,16 +1,17 @@
-/*
+/**
  *	conio.h
  *	Author: Jakash3 QAIU
  */
 
-// 添加windows下MinGW-GCC编译支持
+// Update.2021-11-01 兼容Cygwin 修改getch实现方式
+// Update.2021-11-03 添加windows下MinGW-GCC编译支持
+
 #ifndef CONIO_H
 #define CONIO_H
 
 #ifdef __unix__
 #include <stdio.h>
 #include <unistd.h>
-#include <conio.h>
 #include <termios.h>
 #include <sys/select.h>
 
@@ -80,14 +81,16 @@ static int kbhit() {
 }
 
 static int _kbhit() {return kbhit();}
-#elifdef __WIN32__
+
+#endif // __unix__
+#ifdef __WIN32__
 #include <windows.h>
 #include <conio.h>
 
-void clrscr(){
-    system("cls");
-}
+static void clrscr() {system("cls");}
 
+static void _clrscr() {clrscr();}
 
-#endif // __unix__
+#endif // __WIN32__
+
 #endif // CONIO_H

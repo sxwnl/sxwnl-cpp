@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Test bin files
+test
+test1
+test2
+test3
+test4
+test6
+test5
