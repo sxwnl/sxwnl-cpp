@@ -381,6 +381,10 @@ void drawmap()
 }
 int main()
 {
+#ifdef WIN32
+	system("chcp 65001");
+#endif
+
 	Date dat=get_time();
 	init_ob();
 	initmap(dat.Y,dat.M);
