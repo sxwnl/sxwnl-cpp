@@ -1,8 +1,8 @@
-#include <cmath>
 #include <cstring>
 #include "lunar_ssq.h"
 #include "lunar_ob.h"
 #include "../eph/eph0.h"
+#include "../tool.h"
 
 #define int2(v) ((int)floor(v))
 /************************
@@ -81,98 +81,85 @@ double ssq::qiKB[]={ //气直线拟合参数
 char* ssq::str_qi;
 char* ssq::str_so;
 
-char* ssq::jieya(int mood)
-{//注意需要手动释放内存
-	const char *suoS= //  619-01-21开始16598个朔日修正表 d0=1947168
-"EqoFscDcrFpmEsF2DfFideFelFpFfFfFiaipqti1ksttikptikqckstekqttgkqttgkqteksttikptikq2fjstgjqttjkqttgkqt"
-"ekstfkptikq2tijstgjiFkirFsAeACoFsiDaDiADc1AFbBfgdfikijFifegF1FhaikgFag1E2btaieeibggiffdeigFfqDfaiBkF"
-"1kEaikhkigeidhhdiegcFfakF1ggkidbiaedksaFffckekidhhdhdikcikiakicjF1deedFhFccgicdekgiFbiaikcfi1kbFibef"
-"gEgFdcFkFeFkdcfkF1kfkcickEiFkDacFiEfbiaejcFfffkhkdgkaiei1ehigikhdFikfckF1dhhdikcfgjikhfjicjicgiehdik"
-"cikggcifgiejF1jkieFhegikggcikFegiegkfjebhigikggcikdgkaFkijcfkcikfkcifikiggkaeeigefkcdfcfkhkdgkegieid"
-"hijcFfakhfgeidieidiegikhfkfckfcjbdehdikggikgkfkicjicjF1dbidikFiggcifgiejkiegkigcdiegfggcikdbgfgefjF1"
-"kfegikggcikdgFkeeijcfkcikfkekcikdgkabhkFikaffcfkhkdgkegbiaekfkiakicjhfgqdq2fkiakgkfkhfkfcjiekgFebicg"
-"gbedF1jikejbbbiakgbgkacgiejkijjgigfiakggfggcibFifjefjF1kfekdgjcibFeFkijcfkfhkfkeaieigekgbhkfikidfcje"
-"aibgekgdkiffiffkiakF1jhbakgdki1dj1ikfkicjicjieeFkgdkicggkighdF1jfgkgfgbdkicggfggkidFkiekgijkeigfiski"
-"ggfaidheigF1jekijcikickiggkidhhdbgcfkFikikhkigeidieFikggikhkffaffijhidhhakgdkhkijF1kiakF1kfheakgdkif"
-"iggkigicjiejkieedikgdfcggkigieeiejfgkgkigbgikicggkiaideeijkefjeijikhkiggkiaidheigcikaikffikijgkiahi1"
-"hhdikgjfifaakekighie1hiaikggikhkffakicjhiahaikggikhkijF1kfejfeFhidikggiffiggkigicjiekgieeigikggiffig"
-"gkidheigkgfjkeigiegikifiggkidhedeijcfkFikikhkiggkidhh1ehigcikaffkhkiggkidhh1hhigikekfiFkFikcidhh1hit"
-"cikggikhkfkicjicghiediaikggikhkijbjfejfeFhaikggifikiggkigiejkikgkgieeigikggiffiggkigieeigekijcijikgg"
-"ifikiggkideedeijkefkfckikhkiggkidhh1ehijcikaffkhkiggkidhh1hhigikhkikFikfckcidhh1hiaikgjikhfjicjicgie"
-"hdikcikggifikigiejfejkieFhegikggifikiggfghigkfjeijkhigikggifikiggkigieeijcijcikfksikifikiggkidehdeij"
-"cfdckikhkiggkhghh1ehijikifffffkhsFngErD1pAfBoDd1BlEtFqA2AqoEpDqElAEsEeB2BmADlDkqBtC1FnEpDqnEmFsFsAFn"
-"llBbFmDsDiCtDmAB2BmtCgpEplCpAEiBiEoFqFtEqsDcCnFtADnFlEgdkEgmEtEsCtDmADqFtAFrAtEcCqAE1BoFqC1F1DrFtBmF"
-"tAC2ACnFaoCgADcADcCcFfoFtDlAFgmFqBq2bpEoAEmkqnEeCtAE1bAEqgDfFfCrgEcBrACfAAABqAAB1AAClEnFeCtCgAADqDoB"
-"mtAAACbFiAAADsEtBqAB2FsDqpFqEmFsCeDtFlCeDtoEpClEqAAFrAFoCgFmFsFqEnAEcCqFeCtFtEnAEeFtAAEkFnErAABbFkAD"
-"nAAeCtFeAfBoAEpFtAABtFqAApDcCGJ",
+char *ssq::jieya(int type)
+{
 
-    *qiS =  //1645-09-23开始7567个节气修正表
-"FrcFs22AFsckF2tsDtFqEtF1posFdFgiFseFtmelpsEfhkF2anmelpFlF1ikrotcnEqEq2FfqmcDsrFor22FgFrcgDscFs22FgEe"
-"FtE2sfFs22sCoEsaF2tsD1FpeE2eFsssEciFsFnmelpFcFhkF2tcnEqEpFgkrotcnEqrEtFermcDsrE222FgBmcmr22DaEfnaF22"
-"2sD1FpeForeF2tssEfiFpEoeFssD1iFstEqFppDgFstcnEqEpFg11FscnEqrAoAF2ClAEsDmDtCtBaDlAFbAEpAAAAAD2FgBiBqo"
-"BbnBaBoAAAAAAAEgDqAdBqAFrBaBoACdAAf1AACgAAAeBbCamDgEifAE2AABa1C1BgFdiAAACoCeE1ADiEifDaAEqAAFe1AcFbcA"
-"AAAAF1iFaAAACpACmFmAAAAAAAACrDaAAADG0",
+	 std::string suoS = //  619-01-21开始16598个朔日修正表 d0=1947168
+		"EqoFscDcrFpmEsF2DfFideFelFpFfFfFiaipqti1ksttikptikqckstekqttgkqttgkqteksttikptikq2fjstgjqttjkqttgkqt"
+		"ekstfkptikq2tijstgjiFkirFsAeACoFsiDaDiADc1AFbBfgdfikijFifegF1FhaikgFag1E2btaieeibggiffdeigFfqDfaiBkF"
+		"1kEaikhkigeidhhdiegcFfakF1ggkidbiaedksaFffckekidhhdhdikcikiakicjF1deedFhFccgicdekgiFbiaikcfi1kbFibef"
+		"gEgFdcFkFeFkdcfkF1kfkcickEiFkDacFiEfbiaejcFfffkhkdgkaiei1ehigikhdFikfckF1dhhdikcfgjikhfjicjicgiehdik"
+		"cikggcifgiejF1jkieFhegikggcikFegiegkfjebhigikggcikdgkaFkijcfkcikfkcifikiggkaeeigefkcdfcfkhkdgkegieid"
+		"hijcFfakhfgeidieidiegikhfkfckfcjbdehdikggikgkfkicjicjF1dbidikFiggcifgiejkiegkigcdiegfggcikdbgfgefjF1"
+		"kfegikggcikdgFkeeijcfkcikfkekcikdgkabhkFikaffcfkhkdgkegbiaekfkiakicjhfgqdq2fkiakgkfkhfkfcjiekgFebicg"
+		"gbedF1jikejbbbiakgbgkacgiejkijjgigfiakggfggcibFifjefjF1kfekdgjcibFeFkijcfkfhkfkeaieigekgbhkfikidfcje"
+		"aibgekgdkiffiffkiakF1jhbakgdki1dj1ikfkicjicjieeFkgdkicggkighdF1jfgkgfgbdkicggfggkidFkiekgijkeigfiski"
+		"ggfaidheigF1jekijcikickiggkidhhdbgcfkFikikhkigeidieFikggikhkffaffijhidhhakgdkhkijF1kiakF1kfheakgdkif"
+		"iggkigicjiejkieedikgdfcggkigieeiejfgkgkigbgikicggkiaideeijkefjeijikhkiggkiaidheigcikaikffikijgkiahi1"
+		"hhdikgjfifaakekighie1hiaikggikhkffakicjhiahaikggikhkijF1kfejfeFhidikggiffiggkigicjiekgieeigikggiffig"
+		"gkidheigkgfjkeigiegikifiggkidhedeijcfkFikikhkiggkidhh1ehigcikaffkhkiggkidhh1hhigikekfiFkFikcidhh1hit"
+		"cikggikhkfkicjicghiediaikggikhkijbjfejfeFhaikggifikiggkigiejkikgkgieeigikggiffiggkigieeigekijcijikgg"
+		"ifikiggkideedeijkefkfckikhkiggkidhh1ehijcikaffkhkiggkidhh1hhigikhkikFikfckcidhh1hiaikgjikhfjicjicgie"
+		"hdikcikggifikigiejfejkieFhegikggifikiggfghigkfjeijkhigikggifikiggkigieeijcijcikfksikifikiggkidehdeij"
+		"cfdckikhkiggkhghh1ehijikifffffkhsFngErD1pAfBoDd1BlEtFqA2AqoEpDqElAEsEeB2BmADlDkqBtC1FnEpDqnEmFsFsAFn"
+		"llBbFmDsDiCtDmAB2BmtCgpEplCpAEiBiEoFqFtEqsDcCnFtADnFlEgdkEgmEtEsCtDmADqFtAFrAtEcCqAE1BoFqC1F1DrFtBmF"
+		"tAC2ACnFaoCgADcADcCcFfoFtDlAFgmFqBq2bpEoAEmkqnEeCtAE1bAEqgDfFfCrgEcBrACfAAABqAAB1AAClEnFeCtCgAADqDoB"
+		"mtAAACbFiAAADsEtBqAB2FsDqpFqEmFsCeDtFlCeDtoEpClEqAAFrAFoCgFmFsFqEnAEcCqFeCtFtEnAEeFtAAEkFnErAABbFkAD"
+		"nAAeCtFeAfBoAEpFtAABtFqAApDcCGJ",
 
-    *o ="0000000000",
-	*o2="00000000000000000000",
-	*o3="000000000000000000000000000000",
-	*o4="0000000000000000000000000000000000000000",
-	*o5="00000000000000000000000000000000000000000000000000",
-	*o6="000000000000000000000000000000000000000000000000000000000000",
-	*str;
-	char *s;
-	if (mood)
-	{
+	qiS = // 1645-09-23开始7567个节气修正表
+		"FrcFs22AFsckF2tsDtFqEtF1posFdFgiFseFtmelpsEfhkF2anmelpFlF1ikrotcnEqEq2FfqmcDsrFor22FgFrcgDscFs22FgEe"
+		"FtE2sfFs22sCoEsaF2tsD1FpeE2eFsssEciFsFnmelpFcFhkF2tcnEqEpFgkrotcnEqrEtFermcDsrE222FgBmcmr22DaEfnaF22"
+		"2sD1FpeForeF2tssEfiFpEoeFssD1iFstEqFppDgFstcnEqEpFg11FscnEqrAoAF2ClAEsDmDtCtBaDlAFbAEpAAAAAD2FgBiBqo"
+		"BbnBaBoAAAAAAAEgDqAdBqAFrBaBoACdAAf1AACgAAAeBbCamDgEifAE2AABa1C1BgFdiAAACoCeE1ADiEifDaAEqAAFe1AcFbcA"
+		"AAAAF1iFaAAACpACmFmAAAAAAAACrDaAAADG0",
+
+	o = "0000000000",
+	o2 = "00000000000000000000",
+	o3 = "000000000000000000000000000000",
+	o4 = "0000000000000000000000000000000000000000",
+	o5 = "00000000000000000000000000000000000000000000000000",
+	o6 = "000000000000000000000000000000000000000000000000000000000000";
+	
+	std::string str;
+	if (type) {
 		str=suoS;
-    	s=(char*)calloc(16600,1);
-	}else
-	{
+	} else {
 		str=qiS;
-		s=(char*)calloc(7570,1);
 	}
-	for (int i=0;i<strlen(str);i++)
-	{
-		switch (str[i])
-		{
-			case 'J':strcat(s,"00");break;		
-			case 'I':strcat(s,"000");break;
-			case 'H':strcat(s,"0000");break;
-			case 'G':strcat(s,"00000");break;
-			case 't':strcat(s,"02");break;
-			case 's':strcat(s,"002");break;
-			case 'r':strcat(s,"0002");break;
-			case 'q':strcat(s,"00002");break;	
-			case 'p':strcat(s,"000002");break;
-			case 'o':strcat(s,"0000002");break;
-			case 'n':strcat(s,"00000002");break;
-			case 'm':strcat(s,"000000002");break;
-			case 'l':strcat(s,"0000000002");break;			
-			case 'k':strcat(s,"01");break;			
-			case 'j':strcat(s,"0101");break;			
-			case 'i':strcat(s,"001");break;			
-			case 'h':strcat(s,"001001");break;			
-			case 'g':strcat(s,"0001");break;			
-			case 'f':strcat(s,"00001");break;
-			case 'e':strcat(s,"000001");break;
-			case 'd':strcat(s,"0000001");break;			
-			case 'c':strcat(s,"00000001");break;			
-			case 'b':strcat(s,"000000001");break;
-			case 'a':strcat(s,"0000000001");break;						
-			case 'F':strcat(s,o);break;
-			case 'E':strcat(s,o2);break;			
-			case 'D':strcat(s,o3);break;			
-			case 'C':strcat(s,o4);break;			
-			case 'B':strcat(s,o5);break;			
-			case 'A':strcat(s,o6);break;
-			default:
-			{
-				char strnum[2]={};
-				sprintf(strnum,"%c",str[i]);
-				strcat(s,strnum);
-			}
-		}		
-	}
-	return s;
+	string_replace(str, "J", "00");
+	string_replace(str, "I", "000");
+	string_replace(str, "H", "0000");
+	string_replace(str, "G", "00000");
+	string_replace(str, "t", "02");
+	string_replace(str, "s", "002");
+	string_replace(str, "r", "0002");
+	string_replace(str, "q", "00002");
+	string_replace(str, "p", "000002");
+	string_replace(str, "o", "0000002");
+	string_replace(str, "n", "00000002");
+	string_replace(str, "m", "000000002");
+	string_replace(str, "l", "0000000002");
+	string_replace(str, "k", "01");
+	string_replace(str, "j", "0101");
+	string_replace(str, "i", "001");
+	string_replace(str, "h", "001001");
+	string_replace(str, "g", "0001");
+	string_replace(str, "f", "00001");
+	string_replace(str, "e", "000001");
+	string_replace(str, "d", "0000001");
+	string_replace(str, "c", "00000001");
+	string_replace(str, "b", "000000001");
+	string_replace(str, "a", "0000000001");
+	string_replace(str, "F", o);
+	string_replace(str, "E", o2);
+	string_replace(str, "D", o3);
+	string_replace(str, "C", o4);
+	string_replace(str, "B", o5);
+	string_replace(str, "A", o6);
+	char *result = (char *)malloc(strlen(str.c_str())+1);
+	strcpy_s(result, str.size() + 1, str.c_str());
+	return result;
 }
 
 void ssq::init()

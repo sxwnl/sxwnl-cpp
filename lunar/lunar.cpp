@@ -1,6 +1,4 @@
 #include <cstring>
-#include <cmath>
-//#include <iostream>
 #include "lunar.h"
 #include "lunar_ssq.h"
 #include "../eph/eph0.h"

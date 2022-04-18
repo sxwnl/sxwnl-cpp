@@ -382,28 +382,28 @@ void drawmap()
 int main()
 {
 #ifdef WIN32
-	system("chcp 65001");
+	system("@chcp 65001");
 #endif
 
 	Date dat=get_time();
 	init_ob();
-	initmap(dat.Y,dat.M);
-	drawmap();
-	std::cout<<DD2str(get_time())<<std::endl;
+	// initmap(dat.Y,dat.M);
+	// drawmap();
+	// std::cout<<DD2str(get_time())<<std::endl;
 		
 	
-	OB_LUN lun=yueLiCalc(dat.Y,dat.M);
-	for (int i = 0;i < 30;i++)
-	{
-		std::cout<<std::endl<<lun.day[i].d<<"天:"<<lun.day[i].Lday2;
-		if (lun.day[i].A.length())
-		std::cout<<"A"<<lun.day[i].A;
-		if (lun.day[i].B.length())
-		std::cout<<"B"<<lun.day[i].B;
-		if (lun.day[i].C.length())
-		std::cout<<"C"<<lun.day[i].C;
+	// OB_LUN lun=yueLiCalc(dat.Y,dat.M);
+	// for (int i = 0;i < 30;i++)
+	// {
+	// 	std::cout<<std::endl<<lun.day[i].d<<"天:"<<lun.day[i].Lday2;
+	// 	if (lun.day[i].A.length())
+	// 	std::cout<<"A"<<lun.day[i].A;
+	// 	if (lun.day[i].B.length())
+	// 	std::cout<<"B"<<lun.day[i].B;
+	// 	if (lun.day[i].C.length())
+	// 	std::cout<<"C"<<lun.day[i].C;
 	
-	}
+	// }
 	/*
 	rysCalc();
 	std::cout<<rs_search(2008,8,200,1)<<std::endl;
@@ -416,12 +416,20 @@ int main()
 	qiCalc(2018);
 	houCalc(2018);
 	*/
-	dingQi_v();
-	dingSuo_v();
+	// dingQi_v();
+	// dingSuo_v();
 	
-	dingQi_cmp();
-	dingSuo_cmp(2000,10);
+	// dingQi_cmp();
+	// dingSuo_cmp(2000,10);
 	
-	ML_calc(dat);
+	// ML_calc(dat);
+	std::cout<<rs_search(2008,8,200,1)<<std::endl;
+	rs2_calc(5,0);
+	rs2_jxb();
+
+	Date d = {2008, 8, 1, 16, 15, 15.0};
+	rysCalc(d, true, false);
+	#ifdef WIN32
+	#endif
 	return 0;
 }

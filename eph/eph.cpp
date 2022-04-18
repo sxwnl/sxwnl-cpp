@@ -1,5 +1,4 @@
 #include <cstring>
-#include <cmath>
 #include "eph.h"
 #include "eph0.h"
 #include "../tool.h"

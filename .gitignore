@@ -39,3 +39,8 @@ test3
 test4
 test6
 test5
+.vscode/configurationCache.log
+.vscode/dryrun.log
+.vscode/targets.log
+.vscode/c_cpp_properties.json
+.vscode/settings.json

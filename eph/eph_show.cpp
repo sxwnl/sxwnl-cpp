@@ -4,7 +4,6 @@
 #include "eph_show.h"
 #include "eph0.h"
 #include "eph.h"
-#include "../tool.h"
 #include "eph_msc.h"
 #include "eph_szj.h"
 #include "eph_yspl.h"
@@ -12,12 +11,15 @@
 #include "eph_rspl.h"
 #include "../lat_lon_data.h"
 
-void rysCalc()
+void rysCalc(Date d, bool is_utc, bool nasa_r)
 {
 	double vJ=jw.J/radd;
 	double vW=jw.W/radd;
-	double jd = toJD({2008, 8, 1, 18, 17, 15.0})-J2000;
-	jd+=-8/24.0+dt_T(jd);
+	double jd = toJD(d)-J2000;
+	if (is_utc) {
+		jd+=-8/24.0+dt_T(jd);
+	}
+	
 	msc::calc(jd,vJ,vW,0);
 	std::string s = "",s2;
 	double J1, W1, J2, W2;
@@ -41,7 +43,7 @@ void rysCalc()
 			+ "日月中心视距 " + m2fm(d1, 2, 0) + " 日月半径和 " + m2fm(d0, 2, 0) + "\n半径差 " + m2fm(sr - mr, 2, 0) + "\t距外切 " + m2fm(d1 - d0, 2, 0);
 
 		// 显示南北界数据
-		rsPL::nasa_r = 0;		// 视径选择
+		rsPL::nasa_r = nasa_r;		// 视径选择
 		s = s + "\n--------------------------------------\n" + JD2str(jd + J2000) + " TD\n--------------------------------------\n" + "南北界点：经度　　　　纬度\n";
 		std::array < std::string, 5 > mc =
 		{
@@ -61,8 +63,6 @@ void rysCalc()
 		s += "本影南北界距约" + rsPL::Vb;
 
 		// 显示食甚等时间
-		rsPL::nasa_r = 0;
-		// rsPL::nasa_r=1; //视径选择
 		std::string td = " TD";
 		mc ={"初亏", "食甚", "复圆", "食既", "生光"};
 		rsPL::secMax(jd, vJ, vW, 0);
@@ -74,7 +74,7 @@ void rysCalc()
 			jd = rsPL::sT[i];
 			if (!jd)
 				continue;
-			if (1)
+			if (is_utc)
 				jd -= -8 / 24.0 + dt_T(jd), td = " UTC";	// 转为UTC(本地时间)
 			s += mc[i] + ":" + JD2str(jd + J2000) + td + "\n";
 		}
@@ -103,7 +103,7 @@ void rysCalc()
 			jd = ysPL::lT[i];
 			if (!jd)
 				continue;
-			if (1)
+			if (is_utc)
 				jd -= -8 / 24.0 + dt_T(jd), td = " UTC";	// 转为UTC(本地时间)
 			s = s+mc[i] + ":" + JD2str(jd + J2000) + td + "\n";
 		}
