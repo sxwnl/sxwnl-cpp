@@ -158,7 +158,7 @@ char *ssq::jieya(int type)
 	string_replace(str, "B", o5);
 	string_replace(str, "A", o6);
 	char *result = (char *)malloc(strlen(str.c_str())+1);
-	strcpy_s(result, str.size() + 1, str.c_str());
+	strncpy(result, str.c_str(), str.size() + 1);
 	return result;
 }
 

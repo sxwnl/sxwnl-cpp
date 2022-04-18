@@ -387,9 +387,9 @@ int main()
 
 	Date dat=get_time();
 	init_ob();
-	// initmap(dat.Y,dat.M);
-	// drawmap();
-	// std::cout<<DD2str(get_time())<<std::endl;
+	initmap(dat.Y,dat.M);
+	drawmap();
+	std::cout<<DD2str(get_time())<<std::endl;
 		
 	
 	// OB_LUN lun=yueLiCalc(dat.Y,dat.M);
