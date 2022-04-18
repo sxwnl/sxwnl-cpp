@@ -1,6 +1,8 @@
 #ifndef TOOL_H
 #define TOOL_H
 
+#define _USE_MATH_DEFINES
+
 #include <sstream>
 #include <iomanip>
 #include <string>
