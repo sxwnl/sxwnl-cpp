@@ -42,7 +42,7 @@ std::array<double,3> h2g(std::array<double,3> z, std::array<double,3> a);
 double shiChaJ(double gst,double L,double fa,double J,double W);
 double hcjj(double t);
 double dt_calc(double y);
-double dt_T(int t);
+double dt_T(double t);
 std::array<double,3> CDllr_J2D(double t, std::array<double,3> llr, const char *mx);
 std::array<double,3> CDllr_D2J(double t, std::array<double,3> llr, const char *mx);
 std::array<double,3> HDllr_J2D(double t, std::array<double,3> llr, const char *mx);

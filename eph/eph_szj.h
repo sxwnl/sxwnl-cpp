@@ -48,7 +48,7 @@ public:
 	static SJ Mt(double jd);
 	static SJ Qt(double jd);
 	static SJ St(double jd);
-	static void calcRTS(double jd, int n, double Jdl, double Wdl, int sq);
+	static void calcRTS(double jd, int n, double Jdl, double Wdl, double sq);
 		
 	static double L;	//站点地理经度,向东测量为正
 	static double fa;	//站点地理纬度

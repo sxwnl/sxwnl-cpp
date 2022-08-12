@@ -202,7 +202,7 @@ double dt_calc(double y)
 	return dt_at[i + 1] + dt_at[i + 2] * t1 + dt_at[i + 3] * t2 + dt_at[i + 4] * t3;
 }
 
-double dt_T(int t)
+double dt_T(double t)
 {//传入儒略日(J2000起算),计算TD-UT(单位:日)
 	return dt_calc(t / 365.2425 + 2000) / 86400.0;
 }

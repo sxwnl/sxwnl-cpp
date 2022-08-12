@@ -143,7 +143,7 @@ SJ SZJ::St(double jd)
 	return r;
 }
 
-void SZJ::calcRTS(double jd, int n, double Jdl, double Wdl, int sq)
+void SZJ::calcRTS(double jd, int n, double Jdl, double Wdl, double sq)
 {	//多天升中降计算,jd是当地起始略日(中午时刻),sq是时区
 	int i, c;
 	SJ_S rr;
