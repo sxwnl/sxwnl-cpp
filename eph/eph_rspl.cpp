@@ -163,7 +163,7 @@ void rsPL::zb0(double jd)
 {
   //基本参数计算
   double deltat = dt_T(jd); //TD-UT
-  double E=hcjj(jd/365251.0);
+  double E=hcjj(jd/36525.0);
   std::array<double,2> zd=nutation2(jd/36525.0);
   
   rsPL::P.g = pGST(jd-deltat, deltat) + zd[0]*cos(E+zd[1]); //真恒星时(不考虑非多项式部分)
