@@ -4,7 +4,12 @@ sxwnl for cpp version
 # build
 ## 1.use cmake  
 ```bash
-bash autobuild.sh
+# build or update bin
+./autobuild.sh
+
+# clean obj files and build
+./rebuild.sh
+
 ```
 ## 2.use make  
 ```bash
