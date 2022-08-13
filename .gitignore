@@ -33,6 +33,7 @@
 
 # Test bin files
 test
+test0
 test1
 test2
 test3
@@ -44,3 +45,6 @@ test5
 .vscode/targets.log
 .vscode/c_cpp_properties.json
 .vscode/settings.json
+
+# cmake build path
+build
