@@ -7,4 +7,4 @@ if [ ! -d "$build_dir" ]; then
 else
     rm -rf ./$build_dir/* 
 fi
-cd build && cmake .. && make 
+cd build && cmake .. && make -j4
