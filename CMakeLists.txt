@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.6.0)
-project(MultipleFiles)
+project(sxwnl-cpp)
 include_directories(
 	${PROJECT_SOURCE_DIR}/eph
 	${PROJECT_SOURCE_DIR}/lunar
@@ -10,7 +10,7 @@ file(GLOB SRCS
 	"${PROJECT_SOURCE_DIR}/lunar/*"
 	"${PROJECT_SOURCE_DIR}/*"
 )
-#add_executable(MultipleFiles ${SRCS})
+# 测试
 add_executable(test0 test/test.cpp ${SRCS})
 add_executable(test1 test/test1.cpp ${SRCS})
 
