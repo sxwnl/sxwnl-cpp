@@ -4,7 +4,7 @@ sxwnl for cpp version
 # build
 ## 1.use cmake  
 ```bash
-badh autobuild.sh
+bash autobuild.sh
 ```
 ## 2.use make  
 ```bash
