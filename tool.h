@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#define A2R(x) ((x) / 180 * M_PI)
 
 inline int int2(double v) {return (int)floor(v);};
 
