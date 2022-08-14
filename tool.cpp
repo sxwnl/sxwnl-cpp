@@ -226,3 +226,12 @@ std::string JD2str(double jd)
 	Date r=setFromJD(jd);
 	return DD2str(r);
 }
+
+
+std::string fill_str(std::string s, int n, std::string c) {
+	int len=s.length();
+	for(int i=0;i<len-n;i++){
+		s=c+s;
+	}
+	return s;
+}

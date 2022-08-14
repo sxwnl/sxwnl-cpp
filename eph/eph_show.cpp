@@ -10,7 +10,8 @@
 #include "eph_rsgs.h"
 #include "eph_rspl.h"
 #include "../lat_lon_data.h"
-
+#include "../tool.h"
+  
 void rysCalc(Date d, bool is_utc, bool nasa_r)
 {
 	double vJ=jw.J/radd;
@@ -82,7 +83,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		s += "食分: " + to_str(rsPL::sf, 5) + "\n";
 		s += "月日视径比: " + to_str(rsPL::b1, 5) + "(全或环食分)\n";
 		s += "是否NASA径比(1是,0否): " + to_str(rsPL::nasa_r) + "\n";
-		s += "食分指日面直径被遮比例";
+		s += "食分指日面直径被遮比例\n\n";
 	}
 
 	if (msHJ > 170 / radd && msHJ < 190 / radd)
@@ -108,8 +109,9 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 			s = s+mc[i] + ":" + JD2str(jd + J2000) + td + "\n";
 		}
 		s += "食分:" + to_str(ysPL::sf, 5) + "\n";
-		s += "食分指月面直径被遮比例";
+		s += "食分指月面直径被遮比例\n\n";
 	}
+	s += msc::toStr(true);
 	std::cout<<s<<std::endl;
 }
 
@@ -157,6 +159,8 @@ void rs2_calc(int fs,double jd0)
  jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //归朔
  //Cp10_jd.value = Cp10_jd2.value = (jd+J2000),6);    //保存在屏幕上
  std::cout<<JD2str(jd+J2000)<<std::endl; //显示时间串
+  
+ std::map<std::string,std::string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
 
  std::string s="";
  //计算单个日食
@@ -164,7 +168,6 @@ void rs2_calc(int fs,double jd0)
  {
   rsGS::init(jd,7);
   _FEATURE r = rsGS::feature(jd); //特征计算
-  std::map<std::string,std::string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
   if(r.lx=="N") s = "无日食";
   else s = s+"\n"
    + "\e[1m本次日食概述(力学时)\e[0m\n"
@@ -194,17 +197,20 @@ void rs2_calc(int fs,double jd0)
   int i;
   _FEATURE r;
   int bn = 100; //并设置为多步
-  s = "\e[41;37;1m       力学时                Y   型    中心地标      方位角    食分  食带  食延   \n\e[0m";
+  s = "\e[41;37;1m       力学时           γ      型      中心地标      方位角    食分    食带 食延 \n\e[0m";
   for(i=0;i<bn;i++,jd+=step)
   {
    rsGS::init(jd,3);  //中精度计算
    r = rsGS::feature(jd);
    if(r.lx=="N") continue;
    s = s
-     + "\e[31;1m"+JD2str(r.jd+J2000) + "    \e[33m" + to_str(r.D,4) + "  \e[32m" + r.lx + "  \e[35m"
-     + to_str((r.zxJ*radd),2)    + "," + to_str((r.zxW*radd),2)    + "  \e[34m"
-     + to_str((r.Sdp[0]*radd),0) + "," + to_str((r.Sdp[1]*radd),0) + "  "
-     + to_str(r.sf,4) + "  \e[36m" + to_str(r.dw,0) + "  \e[37m" + m2fm(r.tt*86400,0,2) + "\e[0m\n";
+     + "\e[31;1m"+JD2str(r.jd+J2000)  //时间
+     + "  \e[33m" + to_str(r.D,4)     //伽马
+     + "  \e[32m" + fill_str(r.lx, 2, " ") + "  \e[35m" //类型
+     + to_str((r.zxJ*radd),2,3) + "," + to_str((r.zxW*radd),2,3)  + "  \e[34m"
+     + to_str((r.Sdp[0]*radd),0,3) + "," + to_str((r.Sdp[1]*radd),0,2) + "  "
+     + to_str(r.sf,4) + "  \e[36m" + to_str(r.dw,0, 3) 
+     + "  \e[37m" + m2fm(r.tt*86400,0,2) + "\e[0m\n";
   }
   std::cout<<s<<std::endl;
  }

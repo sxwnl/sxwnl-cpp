@@ -227,8 +227,15 @@ _FEATURE rsGS::feature(double jd)
   ls = 1;        dt=0; if(re.d<ls) dt=sqrt(ls*ls-re.d*re.d)/v; t2=t0-dt, t3=t0+dt; //偏食始终参数,t2,t3
   ls = 1+Bc.r1;  dt=0; if(re.d<ls) dt=sqrt(ls*ls-re.d*re.d)/v; t4=t0-dt, t5=t0+dt; //偏食始终参数,t4,t5
   t6 = -b[0]/vx; //视午参数l6
-  re.gk1 = rsGS::qrd(t2+jd,vx,vy,0); //中心始
-  re.gk2 = rsGS::qrd(t3+jd,vx,vy,0); //中心终
+  
+  if(re.d<1) {
+   re.gk1 = rsGS::qrd(t2+jd,vx,vy,0); //中心始
+   re.gk2 = rsGS::qrd(t3+jd,vx,vy,0); //中心终
+  } else {
+   re.gk1 = {0,0,0};
+   re.gk2 = {0,0,0};
+  }
+  
   re.gk3 = rsGS::qrd(t4+jd,vx,vy,1); //偏食始
   re.gk4 = rsGS::qrd(t5+jd,vx,vy,1); //偏食终
   re.gk5 = rsGS::bseXY2db(t6*vx+b[0],t6*vy+b[1], rsGS::bse(t6+jd), 1);
@@ -424,7 +431,7 @@ _FEATURE rsGS::jieX(double jd)
   _FEATURE re=rsGS::feature(jd);  //求特征参数
 
   double T = 1.7*1.7-re.d*re.d; if(T<0) T=0; T=sqrt(T)/re.v+0.01;
-  double t=re.jd-T, N=200, dt=2*T/N;
+  double t=re.jd-T, N=400, dt=2*T/N;
   int n1=0, n4=0; //n1切入时序
 
   _FLAG F1={},F2={},F3={},F4={},F5={},F6;

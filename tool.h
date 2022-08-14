@@ -8,6 +8,7 @@
 #include <string>
 #include <vector>
 #include <cmath>
+#include <cstdio>
 #define A2R(x) ((x) / 180 * M_PI)
 
 inline int int2(double v) {return (int)floor(v);};
@@ -20,11 +21,17 @@ struct Date
 
 //实现数字转字符
 template <class T>
-std::string to_str(T in, int n = 0)
+std::string to_str(T in, int n = 0, int len = 0)
 {
 	std::ostringstream str;
-	str << (n==-1?(in>0?" ":""):"")<<std::fixed << std::setprecision(n) << in;
-	return str.str();
+	str << (in >= 0 && n != -1 ? " " : "") << std::fixed << std::setprecision(n) << in;
+	std::string s = str.str();
+	int slen = s.length()-(n?2:1);
+	for (int i = 0; i < (len + n - slen) && len; i++)
+	{
+		s = " " + s;
+	}
+	return s;
 }
 
 std:: vector<std::string> split(const std::string& src, const std::string& separator);
@@ -38,4 +45,5 @@ double toJD(Date date);
 Date setFromJD(double jd);
 std::string DD2str(Date r);
 std::string JD2str(double jd);
+std::string fill_str(std::string s, int n, std::string c);
 #endif

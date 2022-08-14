@@ -15,6 +15,8 @@ API测试
 #include "../eph/eph0.h"
 #include "../eph/eph.h"
 #include "../lat_lon_data.h"
+#include "../tool.h"
+
 #define MAP_H 18
 #define MAP_W  7
 std::array<std::array<std::string,MAP_W>,MAP_H> strmap;
@@ -404,18 +406,18 @@ int main()
 	// 	std::cout<<"C"<<lun.day[i].C;
 	
 	// }
-	/*
-	rysCalc();
-	std::cout<<rs_search(2008,8,200,1)<<std::endl;
-	rs2_calc(5,0);
-	rs2_jxb();
 	
-	pCalc(10,{2008,1,1});
-	tianXiang(11,1,{2018,1,1});
-	suoCalc(2018);
-	qiCalc(2018);
-	houCalc(2018);
-	*/
+//	rysCalc();
+//	std::cout<<rs_search(2008,8,200,1)<<std::endl;
+//	rs2_calc(5,0);
+//	rs2_jxb();
+	
+//	pCalc(10,{2008,1,1});
+//	tianXiang(11,1,{2018,1,1});
+//	suoCalc(2018);
+//	qiCalc(2018);
+//	houCalc(2018);
+	
 	// dingQi_v();
 	// dingSuo_v();
 	
@@ -423,12 +425,16 @@ int main()
 	// dingSuo_cmp(2000,10);
 	
 	// ML_calc(dat);
+	
 	std::cout<<rs_search(2008,8,200,1)<<std::endl;
-	rs2_calc(5,0);
-	rs2_jxb();
-
-	Date d = {2008, 8, 1, 16, 15, 15.0};
+	rs2_calc(5,0); 
+//	rs2_jxb(); //界限
+	
+	
+	// 日月食
+	Date d = {2008, 8, 1, 18, 17, 15.0};
 	rysCalc(d, true, false);
+	
 	#ifdef WIN32
 	#endif
 	return 0;

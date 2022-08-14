@@ -17,9 +17,9 @@ API测试
 
 int main()
 {
-	Date date = { 2008, 1, 1, 16, 01, 06, };
-    double jd1 = toJD(date);
-    std::string ss = xingX(1, jd1, 116.383333, 39.900000);
+	Date date = { 2008, 1, 1, 0, 0, 0};
+    double jd1 = toJD(date) - J2000;
+    std::string ss = xingX(1, jd1, A2R(116.383333), A2R(39.900000));
 	std::cout<<ss<<std::endl;
 	return 0;
 }

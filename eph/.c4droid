@@ -1,8 +1,8 @@
-#Sat Aug 13 19:18:53 GMT+08:00 2022
+#Sun Aug 14 18:47:10 GMT+08:00 2022
 binary_fname=
 run_mode=0
 use_cmake=false
-sm_names=test.cpp test1.cpp
+sm_names=eph.cpp eph0.cpp eph_msc.cpp eph_rsgs.cpp eph_rspl.cpp eph_show.cpp eph_szj.cpp eph_yspl.cpp
 qmake_cmd=export PATH\=(c4droid\:GCCROOT)qt/bin/\:$PATH\nqmake -spec android-g++
 cmake_cmd=cmake .
 prepare_cmds=export PATH\=/busybox-virtual\:(c4droid\:DATADIR)\:(c4droid\:DATADIR)/bintools\:(c4droid\:GCCROOT)bin\:(c4droid\:GCCROOT)(c4droid\:PREFIX)/bin/\:$PATH\nexport CC\="(c4droid\:PREFIX)-gcc (c4droid\:PIE) (c4droid\:MAKEMODEARGS)"\nexport CXX\="(c4droid\:PREFIX)-g++ (c4droid\:PIE) (c4droid\:MAKEMODEARGS)"\nexport SHELL\="(c4droid\:DATADIR)sh"\ncd (c4droid\:CURSRCDIR)

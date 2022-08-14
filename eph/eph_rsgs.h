@@ -1,6 +1,7 @@
 #ifndef EPH_RSGS_H
 #define EPH_RSGS_H
 
+#include <map>
 #include <array>
 #include <vector>
 #include <string>
@@ -128,4 +129,6 @@ private:
 	
 };
 typedef _rsGS rsGS;
+
+// extern std::map<std::string,std::string> lxb;
 #endif

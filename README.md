@@ -1,5 +1,5 @@
 # sxwnl-cpp  
-寿星万年历c++版  
+寿星万年历c++版
 sxwnl for cpp version
 # build
 ## 1.use cmake  
