@@ -9,6 +9,9 @@ bool rsPL::nasa_r = 0;//为1表示采用NASA的视径比
 std::array<double, 5> rsPL::sT;//地方日食时间表
 std::string rsPL::LX;
 double rsPL::sf;
+double rsPL::sf2;
+double rsPL::sf3;
+std::string rsPL::sflx;
 double rsPL::b1;
 double rsPL::dur;
 double rsPL::sun_s;
@@ -77,7 +80,9 @@ void rsPL::secMax(double jd,double L,double fa,double high)
   rsPL::P1 = rsPL::V1 = 0;  //初亏方位,P北点起算,V顶点起算
   rsPL::P2 = rsPL::V2 = 0;  //复圆方位,P北点起算,V顶点起算
   rsPL::sun_s = rsPL::sun_j = 0; //日出日没
-  
+  rsPL::sf2=0; //食分(日出食分)
+  rsPL::sf3=0; //食分(日没食分)
+  rsPL::sflx = " "; //食分类型
   rsGS::init(jd,7);
   jd=rsGS::Zjd; //食甚初始估值为插值表中心时刻(粗朔)
 
@@ -94,10 +99,31 @@ void rsPL::secMax(double jd,double L,double fa,double high)
    v = (g.x-G.x)/dt;
    dt2 = -(G.y*u+G.x*v)/(u*u+v*v);
    jd += dt2; //极值时间
-   }
+  }
 
-  //求直线到太阳中心的最小值
-  double x=G.x+dt2*v, y=G.y+dt2*u, rmin=sqrt(x*x+y*y);
+  // 求直线到太阳中心的最小值
+  // double x=G.x+dt2*v, y=G.y+dt2*u, rmin=sqrt(x*x+y*y); 
+  // js v5.10更新计算公式
+  double maxsf = 0, maxjd = jd, rmin, ls, tt;
+  for (i = -30; i < 30; i += 6) {
+   tt = jd + i / 86400.0;
+   rsPL::secXY(tt, L, fa, high, g);
+   ls = (g.mr + g.sr - sqrt(g.x * g.x + g.y * g.y)) / g.sr / 2;
+   if (ls > maxsf) maxsf = ls, maxjd = tt;
+  }
+  jd = maxjd;
+  for (i = -5; i < 5; i += 1) {
+   tt = jd + i / 86400.0;
+   rsPL::secXY(tt, L, fa, high, g);
+   ls = (g.mr + g.sr - sqrt(g.x * g.x + g.y * g.y)) / g.sr / 2;
+   if (ls > maxsf) maxsf = ls, maxjd = tt;
+  }
+  jd = maxjd;
+  rsPL::secXY(jd, L, fa, high, G);
+  rmin = sqrt(G.x * G.x + G.y * G.y);
+
+  rsPL::sun_s = sunShengJ(jd-dt_T(jd)+L/pi2,L,fa,-1) + dt_T(jd);; //日出 统一用力学时
+  rsPL::sun_j = sunShengJ(jd-dt_T(jd)+L/pi2,L,fa, 1) + dt_T(jd);; //日没 统一用力学时
 
   if(rmin<=G.mr+G.sr)
   { //偏食计算
@@ -105,9 +131,14 @@ void rsPL::secMax(double jd,double L,double fa,double high)
    rsPL::LX="偏";
    rsPL::sf=(G.mr+G.sr-rmin)/G.sr/2.0; //食分
    rsPL::b1=G.mr/G.sr;
+   
+   rsPL::secXY(rsPL::sun_s,L,fa,high,g); //日出食分
+   rsPL::sf2=(g.mr+g.sr-sqrt(g.x*g.x+g.y*g.y))/g.sr/2; //日出食分
+   if(rsPL::sf2<0) rsPL::sf2=0;
 
-   rsPL::sun_s = sunShengJ(jd-dt_T(jd)+L/pi2,L,fa,-1); //日出
-   rsPL::sun_j = sunShengJ(jd-dt_T(jd)+L/pi2,L,fa, 1); //日没
+   rsPL::secXY(rsPL::sun_j,L,fa,high,g); //日没食分
+   rsPL::sf3=(g.mr+g.sr-sqrt(g.x*g.x+g.y*g.y))/g.sr/2; //日没食分
+   if(rsPL::sf3<0) rsPL::sf3=0;
 
    rsPL::sT[0] = rsPL::lineT(G,v,u, G.mr+G.sr, 0); //初亏
    for(i=0;i<3;i++)
@@ -150,6 +181,17 @@ void rsPL::secMax(double jd,double L,double fa,double high)
    rsPL::sT[4] = rsPL::lineT(g,v,u, g.sr-g.mr, 1); //生光再算1次
    rsPL::dur = rsPL::sT[4]-rsPL::sT[3];
   }
+  
+  
+  if(rsPL::sT[1]<rsPL::sun_s && rsPL::sf2>0 ) rsPL::sf=rsPL::sf2,rsPL::sflx="#"; //食甚在日出前，取日出食分
+  if(rsPL::sT[1]>rsPL::sun_j && rsPL::sf3>0 ) rsPL::sf=rsPL::sf3,rsPL::sflx="*"; //食甚在日没后，取日没食分
+
+  for(i=0;i<5;i++){
+    if(rsPL::sT[i]<rsPL::sun_s || rsPL::sT[i]>rsPL::sun_j) rsPL::sT[i]=0; //升降时间之外的日食算值无效，因为地球不是透明的
+  }
+
+  rsPL::sun_s -= dt_T(jd);
+  rsPL::sun_j -= dt_T(jd);
 }
 
  //以下涉及南北界计算

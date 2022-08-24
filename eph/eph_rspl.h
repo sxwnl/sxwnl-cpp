@@ -53,6 +53,9 @@ public:
 	static std::array<double, 5> sT;//地方日食时间表
 	static std::string LX;
 	static double sf;
+	static double sf2; //食分(日出食分)
+    static double sf3; //食分(日没食分)
+    static std::string sflx; //食分类型
 	static double b1;
 	static double dur;
 	static double sun_s;

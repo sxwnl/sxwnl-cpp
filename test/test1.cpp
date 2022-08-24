@@ -413,9 +413,9 @@ int main()
 //	rs2_jxb();
 	
 //	pCalc(10,{2008,1,1});
-//	tianXiang(11,1,{2018,1,1});
-//	suoCalc(2018);
-//	qiCalc(2018);
+//	tianXiang(11,1,{2022,1,1});
+//	suoCalc(2022);
+//	qiCalc(2022);
 //	houCalc(2018);
 	
 	// dingQi_v();
@@ -424,10 +424,10 @@ int main()
 	// dingQi_cmp();
 	// dingSuo_cmp(2000,10);
 	
-	// ML_calc(dat);
+	ML_calc(dat);
 	
-	std::cout<<rs_search(2008,8,200,1)<<std::endl;
-	rs2_calc(5,0); 
+//	std::cout<<rs_search(2008,8,200,1)<<std::endl;
+//	rs2_calc(5,0); 
 //	rs2_jxb(); //界限
 	
 	

@@ -46,7 +46,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		// 显示南北界数据
 		rsPL::nasa_r = nasa_r;		// 视径选择
 		s = s + "\n--------------------------------------\n" + JD2str(jd + J2000) + " TD\n--------------------------------------\n" + "南北界点：经度　　　　纬度\n";
-		std::array < std::string, 5 > mc =
+		std::array <std::string, 5> mc =
 		{
 		"食中心点", "本影北界", "本影南界", "半影北界", "半影南界"};
 		rsPL::nbj(jd);
@@ -65,7 +65,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 
 		// 显示食甚等时间
 		std::string td = " TD";
-		mc ={"初亏", "食甚", "复圆", "食既", "生光"};
+		mc = {"初亏", "食甚", "复圆", "食既", "生光"};
 		rsPL::secMax(jd, vJ, vW, 0);
 		if (rsPL::LX == "环")
 			mc[3] = "环食始", mc[4] = "环食终";	// 环食没有食既和生光
