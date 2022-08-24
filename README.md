@@ -1,8 +1,8 @@
 # sxwnl-cpp  
 寿星天文历(万年历)c++版  
 sxwnl for cpp version
-# Build
-## 1.Use cmake  
+# build
+## 1.use cmake  
 ```bash
 # build or update bin
 ./autobuild.sh
@@ -11,7 +11,7 @@ sxwnl for cpp version
 ./rebuild.sh
 
 ```
-## 2.Use make  
+## 2.use make  
 ```bash
 # clean obj files
 make clean
@@ -27,7 +27,7 @@ make
 
 ```
 
-# Run test  
+# run test  
 ```bash
 # cmake build
 ./build/test0
