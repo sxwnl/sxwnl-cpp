@@ -22,7 +22,7 @@
 *************************/
 
 //实朔实气计算器
-double ssq::suoKB[]={ //朔直线拟合参数
+double SSQ::suoKB[]={ //朔直线拟合参数
   1457698.231017,29.53067166, // -721-12-17 h=0.00032 古历·春秋
   1546082.512234,29.53085106, // -479-12-11 h=0.00053 古历·战国
   1640640.735300,29.53060000, // -221-10-31 h=0.01010 古历·秦汉
@@ -38,7 +38,7 @@ double ssq::suoKB[]={ //朔直线拟合参数
   1947168.00//  619-01-21
 };
 
-double ssq::qiKB[]={ //气直线拟合参数
+double SSQ::qiKB[]={ //气直线拟合参数
   1640650.479938,15.21842500, // -221-11-09 h=0.01709 古历·秦汉
   1642476.703182,15.21874996, // -216-11-09 h=0.01557 古历·秦汉
 
@@ -78,10 +78,10 @@ double ssq::qiKB[]={ //气直线拟合参数
   2322147.76// 1645-09-21
 };
 
-char* ssq::str_qi;
-char* ssq::str_so;
+char* SSQ::str_qi;
+char* SSQ::str_so;
 
-char *ssq::jieya(int type)
+char *SSQ::jieya(int type)
 {
 
 	 std::string suoS = //  619-01-21开始16598个朔日修正表 d0=1947168
@@ -162,13 +162,13 @@ char *ssq::jieya(int type)
 	return result;
 }
 
-void ssq::init()
+void SSQ::init()
 {
 	str_qi=jieya(0);
 	str_so=jieya(1);	
 }
 
-double ssq::so_low(double W)
+double SSQ::so_low(double W)
 { //低精度定朔计算,在2000年至600，误差在2小时以内(仍比古代日历精准很多)
     double v = 7771.37714500204;
     double 
@@ -182,7 +182,7 @@ double ssq::so_low(double W)
  }
  
  
-double ssq::qi_low(double W)
+double SSQ::qi_low(double W)
 { //最大误差小于30分钟，平均5分
     double t,L,v= 628.3319653318;
     t =  ( W - 4.895062166 )/v; //第一次估算,误差2天以内
@@ -197,7 +197,7 @@ double ssq::qi_low(double W)
     return t*36525 + 8.0/24;
  }
  
-double ssq::qi_high(double W)
+double SSQ::qi_high(double W)
 { //较高精度气
     double t = S_aLon_t2(W)*36525;
     t = t - dt_T(t)+8.0/24;
@@ -206,7 +206,7 @@ double ssq::qi_high(double W)
     return  t;
  }
  
-double ssq::so_high(double W)
+double SSQ::so_high(double W)
 { //较高精度朔
     double t = MS_aLon_t2(W)*36525;
     t = t - dt_T(t)+8.0/24;
@@ -215,7 +215,7 @@ double ssq::so_high(double W)
     return  t;
 }
 
-int ssq::calc(double jd, int qs)
+int SSQ::calc(double jd, int qs)
 {// jd应靠近所要取得的气朔日,qs=1定气
 	jd += 2451545;
 	int i,L=sizeof (suoKB)/sizeof (double);
@@ -270,14 +270,14 @@ int ssq::calc(double jd, int qs)
 	return 0;
 }
 
-int ssq::leap;  //闰月位置
-std::array<std::string,14> ssq::ym;//各月名称索引
-int ssq::ZQ[25];//中气表
-int ssq::HS[15];//合朔表
-int ssq::dx[14];//各月大小
-int ssq::pe[2]; //补算二气
+int SSQ::leap;  //闰月位置
+std::array<std::string,14> SSQ::ym;//各月名称索引
+int SSQ::ZQ[25];//中气表
+int SSQ::HS[15];//合朔表
+int SSQ::dx[14];//各月大小
+int SSQ::pe[2]; //补算二气
 
-void ssq::calcY(double jd)
+void SSQ::calcY(double jd)
 {//农历排月序计算,可定出农历,有效范围：两个冬至之间(冬至一 <= d < 冬至二)
 
     int *A=ZQ, *B=HS;  //中气表,日月合朔表(整日)
@@ -332,7 +332,7 @@ void ssq::calcY(double jd)
         {
             for (nn=2;nn>=0;nn--) if (HS[i]>=ns[nn]) break;
             f1 = int2( (HS[i]-ns[nn]+15)/29.5306 ); //该月积数
-            if (f1 < 12) ssq::ym[i] = str_ymc[(f1+ns[nn+6])%12]; else ssq::ym[i] = str[ns[nn+3]];
+            if (f1 < 12) SSQ::ym[i] = str_ymc[(f1+ns[nn+6])%12]; else SSQ::ym[i] = str[ns[nn+3]];
         }
         return;
     }
@@ -360,7 +360,7 @@ void ssq::calcY(double jd)
         	if (v2==2)    mc="一";
         } //689.12.18至700.11.15 建子为正月,建寅为一月,其它不变
         if (Dm==1729794||Dm==1808699) mc="拾贰"; //239.12.13及23.12.02均为十二月,为避免两个连续十二月，此处改名
-        ssq::ym[i]=mc;
+        SSQ::ym[i]=mc;
     }
 
 }

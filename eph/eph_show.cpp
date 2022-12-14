@@ -21,75 +21,75 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		jd+=-8/24.0+dt_T(jd);
 	}
 	
-	msc::calc(jd,vJ,vW,0);
+	MSC::calc(jd,vJ,vW,0);
 	std::string s = "",s2;
 	double J1, W1, J2, W2;
 	double sr, mr, er, Er, d0, d1, d2;
-	double msHJ = rad2mrad(msc::mHJ - msc::sHJ);
+	double msHJ = rad2mrad(MSC::mHJ - MSC::sHJ);
 	int i;
 	
 	if (msHJ < 3 / radd || msHJ > 357 / radd)
 	{// 日食图表放大计算
-		J1 = msc::mCJ2, W1 = msc::mCW2, J2 = msc::sCJ2, W2 = msc::sCW2;	// 用未做大气折射的来计算日食
-		sr = msc::sRad, mr = msc::mRad;
+		J1 = MSC::mCJ2, W1 = MSC::mCW2, J2 = MSC::sCJ2, W2 = MSC::sCW2;	// 用未做大气折射的来计算日食
+		sr = MSC::sRad, mr = MSC::mRad;
 		d1 = j1_j2(J1, W1, J2, W2) * rad, d0 = mr + sr;
 		s2 = "此刻月亮本影中心线不经过地球。";
-		if (msc::zx_W != 100)
+		if (MSC::zx_W != 100)
 		{
-			std::string zxsJ = to_str(msc::zx_J / _pi * 180, 5);
-			std::string zxsW = to_str(msc::zx_W / _pi * 180, 5);
+			std::string zxsJ = to_str(MSC::zx_J / _pi * 180, 5);
+			std::string zxsW = to_str(MSC::zx_W / _pi * 180, 5);
 			s2 = "食中心地标：经 " + zxsJ + " 纬 " + zxsW;
 		}
 		s = "日月站心视半径 " + m2fm(sr, 2, 0) + "及" + m2fm(mr, 2, 0) + " \n\e[31m" + s2 + "\e[0m\n"
 			+ "日月中心视距 " + m2fm(d1, 2, 0) + " 日月半径和 " + m2fm(d0, 2, 0) + "\n半径差 " + m2fm(sr - mr, 2, 0) + "\t距外切 " + m2fm(d1 - d0, 2, 0);
 
 		// 显示南北界数据
-		rsPL::nasa_r = nasa_r;		// 视径选择
+		RS_PL::nasa_r = nasa_r;		// 视径选择
 		s = s + "\n--------------------------------------\n" + JD2str(jd + J2000) + " TD\n--------------------------------------\n" + "南北界点：经度　　　　纬度\n";
 		std::array <std::string, 5> mc =
 		{
 		"食中心点", "本影北界", "本影南界", "半影北界", "半影南界"};
-		rsPL::nbj(jd);
+		RS_PL::nbj(jd);
 		for (i = 0; i < 5; i++)
 		{
 			s += mc[i] + "：";
-			if (rsPL::V[i * 2 + 1] == 100)
+			if (RS_PL::V[i * 2 + 1] == 100)
 			{
 				s += "无　　　　　无\n";
 				continue;
 			}
-			s += to_str(rsPL::V[i * 2] * radd, 5) + "　" + to_str(rsPL::V[i * 2 + 1] * radd, 5) + "\n";
+			s += to_str(RS_PL::V[i * 2] * radd, 5) + "　" + to_str(RS_PL::V[i * 2 + 1] * radd, 5) + "\n";
 		}
-		s += "中心类型：" + rsPL::Vc + "食\n";
-		s += "本影南北界距约" + rsPL::Vb;
+		s += "中心类型：" + RS_PL::Vc + "食\n";
+		s += "本影南北界距约" + RS_PL::Vb;
 
 		// 显示食甚等时间
 		std::string td = " TD";
 		mc = {"初亏", "食甚", "复圆", "食既", "生光"};
-		rsPL::secMax(jd, vJ, vW, 0);
-		if (rsPL::LX == "环")
+		RS_PL::secMax(jd, vJ, vW, 0);
+		if (RS_PL::LX == "环")
 			mc[3] = "环食始", mc[4] = "环食终";	// 环食没有食既和生光
-		s = s + "\n--------------------------------------\n" + "时间表 (日" + rsPL::LX + "食)\n";
+		s = s + "\n--------------------------------------\n" + "时间表 (日" + RS_PL::LX + "食)\n";
 		for (i = 0; i < 5; i++)
 		{
-			jd = rsPL::sT[i];
+			jd = RS_PL::sT[i];
 			if (!jd)
 				continue;
 			if (is_utc)
 				jd -= -8 / 24.0 + dt_T(jd), td = " UTC";	// 转为UTC(本地时间)
 			s += mc[i] + ":" + JD2str(jd + J2000) + td + "\n";
 		}
-		s += "时长: " + m2fm(rsPL::dur * 86400, 1, 1) + "\n";
-		s += "食分: " + to_str(rsPL::sf, 5) + "\n";
-		s += "月日视径比: " + to_str(rsPL::b1, 5) + "(全或环食分)\n";
-		s += "是否NASA径比(1是,0否): " + to_str(rsPL::nasa_r) + "\n";
+		s += "时长: " + m2fm(RS_PL::dur * 86400, 1, 1) + "\n";
+		s += "食分: " + to_str(RS_PL::sf, 5) + "\n";
+		s += "月日视径比: " + to_str(RS_PL::b1, 5) + "(全或环食分)\n";
+		s += "是否NASA径比(1是,0否): " + to_str(RS_PL::nasa_r) + "\n";
 		s += "食分指日面直径被遮比例\n\n";
 	}
 
 	if (msHJ > 170 / radd && msHJ < 190 / radd)
 	{// 月食图表放大计算
-		J1 = msc::mCJ, W1 = msc::mCW, J2 = msc::sCJ + _pi, W2 = -msc::sCW;
-		er = msc::eShadow, Er = msc::eShadow2, mr = msc::e_mRad;	// 用未做大气折射的来计算日食
+		J1 = MSC::mCJ, W1 = MSC::mCW, J2 = MSC::sCJ + _pi, W2 = -MSC::sCW;
+		er = MSC::eShadow, Er = MSC::eShadow2, mr = MSC::e_mRad;	// 用未做大气折射的来计算日食
 		d1 = j1_j2(J1, W1, J2, W2) * rad, d0 = mr + er, d2 = mr + Er;
 		s = "本影半径 " + m2fm(er, 2, 0) + " 半影半径 " + m2fm(Er, 2,0) +
 			" 月亮地心视半径 " + m2fm(mr, 2, 0) + "\n" + "影月中心距 " + m2fm(d1, 2, 0) +
@@ -97,21 +97,21 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 
 		std::string td = " TD";
 		std::array<std::string,7> mc = {"初亏", "食甚", "复圆", "半影食始", "半影食终", "食既", "生光"};
-		ysPL::lecMax(jd);
-		s = s + "\n\n时间表(月" + ysPL::LX + "食)\n";
+		YS_PL::lecMax(jd);
+		s = s + "\n\n时间表(月" + YS_PL::LX + "食)\n";
 		for (int i = 0; i < 7; i++)
 		{
-			jd = ysPL::lT[i];
+			jd = YS_PL::lT[i];
 			if (!jd)
 				continue;
 			if (is_utc)
 				jd -= -8 / 24.0 + dt_T(jd), td = " UTC";	// 转为UTC(本地时间)
 			s = s+mc[i] + ":" + JD2str(jd + J2000) + td + "\n";
 		}
-		s += "食分:" + to_str(ysPL::sf, 5) + "\n";
+		s += "食分:" + to_str(YS_PL::sf, 5) + "\n";
 		s += "食分指月面直径被遮比例\n\n";
 	}
-	s += msc::toStr(true);
+	s += MSC::toStr(true);
 	std::cout<<s<<std::endl;
 }
 
@@ -128,9 +128,9 @@ std::string rs_search(int Y,int M,int n,bool fs)
    if(r.lx=="NN") { jd += 29.5306; continue; } //排除不可能的情况，加速计算
    if(!r.ac)
    {
-     if(fs==0) rsGS::init(jd, 2); //低精度
-     if(fs==1) rsGS::init(jd, 7); //高精度
-      _FEATURE rr = rsGS::feature(jd);
+     if(fs==0) RS_GS::init(jd, 2); //低精度
+     if(fs==1) RS_GS::init(jd, 7); //高精度
+      _FEATURE rr = RS_GS::feature(jd);
       r={rr.jd,rr.jdSuo,r.ac,rr.lx};
    }
    if(r.lx!="N")
@@ -166,8 +166,8 @@ void rs2_calc(int fs,double jd0)
  //计算单个日食
  if(fs==1||fs==2||fs==3||fs==4)
  {
-  rsGS::init(jd,7);
-  _FEATURE r = rsGS::feature(jd); //特征计算
+  RS_GS::init(jd,7);
+  _FEATURE r = RS_GS::feature(jd); //特征计算
   if(r.lx=="N") s = "无日食";
   else s = s+"\n"
    + "\e[1m本次日食概述(力学时)\e[0m\n"
@@ -200,8 +200,8 @@ void rs2_calc(int fs,double jd0)
   s = "\e[41;37;1m       力学时           γ      型      中心地标      方位角    食分    食带 食延 \n\e[0m";
   for(i=0;i<bn;i++,jd+=step)
   {
-   rsGS::init(jd,3);  //中精度计算
-   r = rsGS::feature(jd);
+   RS_GS::init(jd,3);  //中精度计算
+   r = RS_GS::feature(jd);
    if(r.lx=="N") continue;
    s = s
      + "\e[31;1m"+JD2str(r.jd+J2000)  //时间
@@ -220,8 +220,8 @@ void rs2_jxb()
 { //显示界线表
  double jd = 2454679.926741-J2000; //取屏幕时间
  jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //归朔
- rsGS::init(jd,7);
- std::cout<<rsGS::jieX3(jd)<<std::endl;
+ RS_GS::init(jd,7);
+ std::cout<<RS_GS::jieX3(jd)<<std::endl;
 }
 
 

@@ -4,7 +4,7 @@
 #include <array>
 #include <string>
 
-class _SSQ
+class SSQ
 {
 	static char *str_qi;
 	static char *str_so;
@@ -26,7 +26,5 @@ public:
 	static void init();
 	static void calcY(double jd);
 };
-
-typedef _SSQ ssq;
 
 #endif

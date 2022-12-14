@@ -5,7 +5,7 @@
 #include <string>
 
 //========太阳月亮计算类=============
-class _MSC
+class MSC
 {
 public:
 	static double T;	//TD力学时
@@ -63,5 +63,5 @@ public:
 	static void calc(double T,double L,double fa,double high);
 	static std::string toStr(bool fs);
 };
-typedef _MSC msc;
+typedef MSC msc;
 #endif

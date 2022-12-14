@@ -6,9 +6,9 @@
 
 void init_ob()
 {
-	oba::init();
-	obb::init();
-	ssq::init();
+	OBA::init();
+	OBB::init();
+	SSQ::init();
 }
 
 /*返回公历某一个月的'公农回'三合历*/
@@ -30,7 +30,7 @@ OB_LUN yueLiCalc(int By, int Bm)
 	lun.d0 = Bd0;
 	lun.dn = Bdn;
 	
-	lun.nianhao = obb::getNH(By);
+	lun.nianhao = OBB::getNH(By);
 	
 	double w;
 	OB_DAY *ob,*ob2;
@@ -51,27 +51,27 @@ OB_LUN yueLiCalc(int By, int Bm)
 		ob->d = JD.D;			//公历日名称
 
 		//农历月历
-		if (!ssq::ZQ[0] || ob->d0 < ssq::ZQ[0] || ob->d0 >= ssq::ZQ[24])	//如果d0已在计算农历范围内则不再计算
-			ssq::calcY(ob->d0);
-		int mk = int2((ob->d0 - ssq::HS[0]) / 30);
-		if (mk < 13 && ssq::HS[mk + 1] <= ob->d0)
+		if (!SSQ::ZQ[0] || ob->d0 < SSQ::ZQ[0] || ob->d0 >= SSQ::ZQ[24])	//如果d0已在计算农历范围内则不再计算
+			SSQ::calcY(ob->d0);
+		int mk = int2((ob->d0 - SSQ::HS[0]) / 30);
+		if (mk < 13 && SSQ::HS[mk + 1] <= ob->d0)
 			mk++;				//农历所在月的序数
 
-		ob->Ldi = ob->d0 - ssq::HS[mk];	//距农历月首的编移量,0对应初一
+		ob->Ldi = ob->d0 - SSQ::HS[mk];	//距农历月首的编移量,0对应初一
 		ob->Ldc=str_rmc[ob->Ldi];	//农历日名称
 		
-		ob->cur_dz = ob->d0 - ssq::ZQ[0]; 	// 距冬至的天数
-		ob->cur_xz = ob->d0 - ssq::ZQ[12];	// 距夏至的天数
-		ob->cur_lq = ob->d0 - ssq::ZQ[15];	// 距立秋的天数
-		ob->cur_mz = ob->d0 - ssq::ZQ[11];	// 距芒种的天数
-		ob->cur_xs = ob->d0 - ssq::ZQ[13];	// 距小暑的天数
+		ob->cur_dz = ob->d0 - SSQ::ZQ[0]; 	// 距冬至的天数
+		ob->cur_xz = ob->d0 - SSQ::ZQ[12];	// 距夏至的天数
+		ob->cur_lq = ob->d0 - SSQ::ZQ[15];	// 距立秋的天数
+		ob->cur_mz = ob->d0 - SSQ::ZQ[11];	// 距芒种的天数
+		ob->cur_xs = ob->d0 - SSQ::ZQ[13];	// 距小暑的天数
 
-		if (ob->d0 == ssq::HS[mk] || ob->d0 == Bd0)
+		if (ob->d0 == SSQ::HS[mk] || ob->d0 == Bd0)
 		{						//月的信息
-			ob->Lmc = ssq::ym[mk];	//月名称
-			ob->Ldn = ssq::dx[mk];	//月大小
-			ob->Lleap = (ssq::leap && ssq::leap == mk) ? "闰" : "";	//闰状况
-			ob->Lmc2= mk<13?ssq::ym[mk+1]:"未知";
+			ob->Lmc = SSQ::ym[mk];	//月名称
+			ob->Ldn = SSQ::dx[mk];	//月大小
+			ob->Lleap = (SSQ::leap && SSQ::leap == mk) ? "闰" : "";	//闰状况
+			ob->Lmc2= mk<13?SSQ::ym[mk+1]:"未知";
 		}
 		else
 		{
@@ -81,10 +81,10 @@ OB_LUN yueLiCalc(int By, int Bm)
 			ob->Lleap = ob2->Lleap;
 			ob->Lmc2=ob2->Lmc2;
 		}
-		int qk = int2((ob->d0 - ssq::ZQ[0] - 7) / 15.2184);
-		if (qk < 23 && ob->d0 >= ssq::ZQ[qk + 1])
+		int qk = int2((ob->d0 - SSQ::ZQ[0] - 7) / 15.2184);
+		if (qk < 23 && ob->d0 >= SSQ::ZQ[qk + 1])
 			qk++;	//节气的取值范围是0-23
-		if (ob->d0 == ssq::ZQ[qk])
+		if (ob->d0 == SSQ::ZQ[qk])
 			ob->Ljq =str_jqmc[qk];
 		else
 			ob->Ljq = "";
@@ -94,15 +94,15 @@ OB_LUN yueLiCalc(int By, int Bm)
 
 		//干支纪年处理
 		//以立春为界定年首
-		D = ssq::ZQ[3] + (ob->d0 < ssq::ZQ[3] ? -365 : 0) + 365.25 * 16 - 35;	//以立春为界定纪年
+		D = SSQ::ZQ[3] + (ob->d0 < SSQ::ZQ[3] ? -365 : 0) + 365.25 * 16 - 35;	//以立春为界定纪年
 		ob->Lyear = floor(D / 365.2422 + 0.5);	//农历纪年(10进制,1984年起算)
 		//以下几行以正月初一定年首
-		D = ssq::HS[2];	//一般第3个月为春节
+		D = SSQ::HS[2];	//一般第3个月为春节
 		for (j = 0; j < 14; j++)
 		{						//找春节
-			if (ssq::ym[j] != "正" || ssq::leap == j && j)
+			if (SSQ::ym[j] != "正" || SSQ::leap == j && j)
 				continue;
-			D = ssq::HS[j];
+			D = SSQ::HS[j];
 			if (ob->d0 < D)
 			{
 				D -= 365;
@@ -120,11 +120,11 @@ OB_LUN yueLiCalc(int By, int Bm)
 		ob->Lyear4 = ob->Lyear0 + 1984 + 2698;//黄帝纪年
 
 		//纪月处理,1998年12月7(大雪)开始连续进行节气计数,0为甲子
-		mk = int2((ob->d0 - ssq::ZQ[0]) / 30.43685);
-		if (mk < 12 && ob->d0 >= ssq::ZQ[2 * mk + 1])
+		mk = int2((ob->d0 - SSQ::ZQ[0]) / 30.43685);
+		if (mk < 12 && ob->d0 >= SSQ::ZQ[2 * mk + 1])
 			mk++;//相对大雪的月数计算,mk的取值范围0-12
 
-		D = mk + int2((ssq::ZQ[12] + 390) / 365.2422) * 12 + 900000;	//相对于1998年12月7(大雪)的月数,900000为正数基数
+		D = mk + int2((SSQ::ZQ[12] + 390) / 365.2422) * 12 + 900000;	//相对于1998年12月7(大雪)的月数,900000为正数基数
 		ob->Lmonth = D % 12;
 		ob->Lmonth2 = str_gan[D % 10];
 		ob->Lmonth2 += str_zhi[D % 12];
@@ -135,17 +135,17 @@ OB_LUN yueLiCalc(int By, int Bm)
 		ob->Lday2 += str_zhi[D % 12];
 
 		//星座
-		mk = int2((ob->d0 - ssq::ZQ[0] - 15) / 30.43685);
-		if (mk < 11 && ob->d0 >= ssq::ZQ[2 * mk + 2])
+		mk = int2((ob->d0 - SSQ::ZQ[0] - 15) / 30.43685);
+		if (mk < 11 && ob->d0 >= SSQ::ZQ[2 * mk + 2])
 			mk++;				//星座所在月的序数,(如果j=13,ob->d0不会超过第14号中气)
 		ob->XiZ = str_xz[(mk + 12) % 12];
 		
 		
 		//回历
-		oba::getHuiLi(ob->d0,*ob);
+		OBA::getHuiLi(ob->d0,*ob);
 		//节日
-	    oba::getDayName(*ob); //公历
-	    obb::getDayName2(*ob); //农历
+	    OBA::getDayName(*ob); //公历
+	    OBB::getDayName2(*ob); //农历
 	}
 
 	//以下是月相与节气的处理
@@ -155,7 +155,7 @@ OB_LUN yueLiCalc(int By, int Bm)
 	w = int2((w - 0.78) / M_PI * 2) * M_PI / 2;
 	do
 	{
-		d = obb::so_accurate(w);
+		d = OBB::so_accurate(w);
 		D = int2(d + 0.5);
 		xn = int2(w / pi2 * 4 + 4000000.01) % 4;
 		w += pi2 / 4;
@@ -175,7 +175,7 @@ OB_LUN yueLiCalc(int By, int Bm)
 	w = int2((w - 0.13) / pi2 * 24) * pi2 / 24;
 	do
 	{
-		d = obb::qi_accurate(w);
+		d = OBB::qi_accurate(w);
 		D = int2(d + 0.5);
 		xn = int2(w / pi2 * 24 + 24000006.01) % 24;
 		w += pi2 / 24.0;
@@ -197,35 +197,35 @@ std::string nianLiSTR(int y)
  int i,j;
  std::string s="", s1,s2;
  double v,qi;
- ssq::calcY( int2((y-2000.0)*365.2422+180) );
+ SSQ::calcY( int2((y-2000.0)*365.2422+180) );
  for(i=0;i<14;i++)
  {
-  if(ssq::HS[i+1]>ssq::ZQ[24]) break; //已包含下一年的冬至
-  if(ssq::leap && i==ssq::leap) s1="闰"; else s1="  ";
-  s1 += ssq::ym[i];
-  if(s1.length()<6 || (s1.length()<9&&(ssq::leap && i==ssq::leap))) 
+  if(SSQ::HS[i+1]>SSQ::ZQ[24]) break; //已包含下一年的冬至
+  if(SSQ::leap && i==SSQ::leap) s1="闰"; else s1="  ";
+  s1 += SSQ::ym[i];
+  if(s1.length()<6 || (s1.length()<9&&(SSQ::leap && i==SSQ::leap))) 
   s1 += "月";
-  s1 += ssq::dx[i]>29?"大":"小";
-  s1 += " "+JD2str(ssq::HS[i]+J2000).substr(6,5);
+  s1 += SSQ::dx[i]>29?"大":"小";
+  s1 += " "+JD2str(SSQ::HS[i]+J2000).substr(6,5);
 
-  v = obb::so_accurate2(ssq::HS[i]);
+  v = OBB::so_accurate2(SSQ::HS[i]);
   s2 = "("+ JD2str(v+J2000).substr(9,11)+")";
-  if(int2(v+0.5)!=ssq::HS[i]) s2 = "\e[31m"+s2+"\e[0m";
+  if(int2(v+0.5)!=SSQ::HS[i]) s2 = "\e[31m"+s2+"\e[0m";
  // s2+="\n";
   //v=(v+0.5+J2000)%1; if(v>0.5) v=1-v; if(v<8/1440) s2 = "<u>"+s2+"</u>"; //对靠近0点的加注
   s1 += s2;
 
   for(j=-2;j<24;j++)
   {
-    if(j>=0)  qi=ssq::ZQ[j];
-    if(j==-1) qi=ssq::pe[0];
-    if(j==-2) qi=ssq::pe[1];
+    if(j>=0)  qi=SSQ::ZQ[j];
+    if(j==-1) qi=SSQ::pe[0];
+    if(j==-2) qi=SSQ::pe[1];
 
-    if(qi<ssq::HS[i] || qi>=ssq::HS[i+1]) continue;
+    if(qi<SSQ::HS[i] || qi>=SSQ::HS[i+1]) continue;
     s1 += "  ";
     s1 += str_jqmc[(j+24)%24]+JD2str(qi+J2000).substr(6,5);
 
-    v = obb::qi_accurate2(qi);
+    v = OBB::qi_accurate2(qi);
     s2 = "("+ JD2str(v+J2000).substr(9,11)+")";
     if(int2(v+0.5)!=qi) s2 = "\e[31m"+s2+"\e[0m";
     //v=(v+0.5+J2000)%1; if(v>0.5) v=1-v; if(v<8/1440) s2 = "<u>"+s2+"</u>"; //对靠近0点的加注

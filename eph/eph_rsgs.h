@@ -87,15 +87,15 @@ struct _FLAG
 	int f2;
 };
 
-class _rsGS
+class RS_GS
 {
 public:
 	
 	static double Zjd;
 	static void init(double jd,int n);
 	static _FEATURE feature(double jd);
-	//static _FEATURE _rsGS::jieX(double jd);
-	//static _JIEX2 _rsGS::jieX2(double jd);
+	//static _FEATURE __rsGS::jieX(double jd);
+	//static _JIEX2 __rsGS::jieX2(double jd);
 	static std::string jieX3(double jd);
 	static inline std::array<double,3> sun (double jd){ return chazhi(jd,0); } //传回值可能超过360度
 	static inline std::array<double,3> moon(double jd){ return chazhi(jd,1); }
@@ -124,11 +124,10 @@ private:
 	static void push(std::array<double,3> z,std::vector<double> &p);
 	static std::array<double,4> nanbei(std::array<double,3> M,double vx0,double vy0, double h,double r,std::array<double,3> I);
 	static bool mDian(std::array<double,3> M,double vx0,double vy0,bool AB, double r,std::array<double,3> I,std::vector<double> &A);
-	//static void _rsGS::elmCpy(std::vector<double> &a,int n,std::vector<double> b,int m);
-	//static void _rsGS::mQie(std::array<double,3> M,double vx0,double vy0,double h, double r,std::array<double,3> I, std::vector<double> &A,_FLAG &FLAG);
+	//static void __rsGS::elmCpy(std::vector<double> &a,int n,std::vector<double> b,int m);
+	//static void __rsGS::mQie(std::array<double,3> M,double vx0,double vy0,double h, double r,std::array<double,3> I, std::vector<double> &A,_FLAG &FLAG);
 	
 };
-typedef _rsGS rsGS;
 
 // extern std::map<std::string,std::string> lxb;
 #endif

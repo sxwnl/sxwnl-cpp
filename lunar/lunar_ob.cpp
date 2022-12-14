@@ -21,7 +21,7 @@ const char *str_sjd[] ={"凌晨","早晨","上午","中午","下午","晚上","�
 const char *str_ry[]  ={"  ","闰"};
 const char *str_ry2[] ={"","闰"};
 
-std::vector<std::string> oba::wFtv =
+std::vector<std::string> OBA::wFtv =
 { //某月的第几个星期几,如第2个星期一指从月首开始顺序找到第2个“星期一”
 	"0150I世界麻风日", //一月的最后一个星期日（月倒数第一个星期日）
 	"0520.国际母亲节",
@@ -35,10 +35,10 @@ std::vector<std::string> oba::wFtv =
 	"1013I国际减轻自然灾害日(减灾日)",
 	"1144I感恩节"
 };
-std::vector<std::vector<std::string>> oba::sFtv;
-std::vector<std::string> obb::JNB;
+std::vector<std::vector<std::string>> OBA::sFtv;
+std::vector<std::string> OBB::JNB;
 
-void oba::init()
+void OBA::init()
 { //构造函数初始化
   int i;
   std::string s = ""; //国历节日,#表示放假日,I表示重要节日或纪念日
@@ -79,7 +79,7 @@ void oba::init()
   sFtv[i]=split(sF[i],",");
 }
 
-void oba::getDayName(OB_DAY &r)
+void OBA::getDayName(OB_DAY &r)
  {
   //取某日节日,传入日对象
   /****************
@@ -141,7 +141,7 @@ void oba::getDayName(OB_DAY &r)
   }
  }
  
-void oba::getHuiLi(double d0,OB_DAY &r)
+void OBA::getHuiLi(double d0,OB_DAY &r)
 { //回历计算
   //以下算法使用Excel测试得到,测试时主要关心年临界与月临界
 	int z,y,m;
@@ -155,7 +155,7 @@ void oba::getHuiLi(double d0,OB_DAY &r)
 	r.Hday  = d+1;
 }
 
-void obb::init()
+void OBB::init()
 { //初始化
   int i;
   //纪年数据结构：数据用逗号分开，每7个描述一个年号，格式为:起始公元,使用年数,已用年数,朝代,朝号,皇帝,年号
@@ -201,7 +201,7 @@ void obb::init()
   JNB = split(s,",");
 }
 
-std::string obb::getNH(int y)
+std::string OBB::getNH(int y)
 { //取年号
   int i,j;
   std::string c,s="";
@@ -216,7 +216,7 @@ std::string obb::getNH(int y)
   return s;
 }
 
-void obb::getDayName2(OB_DAY &r)
+void OBB::getDayName2(OB_DAY &r)
 { //计算农历节日
   //按农历日期查找重量点节假日
   std::string d;
@@ -275,7 +275,7 @@ void obb::getDayName2(OB_DAY &r)
   if(r.cur_xs>=0  && r.cur_xs<12 &&w2=="未") r.B += "出梅 ";
 }
 
-void obb::mingLiBaZi(double jd, double J, MLBZ &ob)
+void OBB::mingLiBaZi(double jd, double J, MLBZ &ob)
 {								//命理八字计算。jd为格林尼治UT(J2000起算),J为本地经度,返回在物件ob中
 	int i,v;
 	double c;
@@ -307,19 +307,19 @@ void obb::mingLiBaZi(double jd, double J, MLBZ &ob)
 	}
 }
 
-double obb::qi_accurate(double W)  
+double OBB::qi_accurate(double W)  
 {
 	double t=S_aLon_t(W)*36525;
 	return t - dt_T(t) + 8.0/24; 
 } //精气
 
-double obb::so_accurate(double W) 
+double OBB::so_accurate(double W) 
 {
 	double t=MS_aLon_t(W)*36525; 
 	return t - dt_T(t) + 8.0/24; 
 } //精朔
 
-double obb::qi_accurate2(double jd) 
+double OBB::qi_accurate2(double jd) 
 { //精气
     double d = M_PI/12;
     double w=floor((jd+293)/365.2422*24) * d;
@@ -329,7 +329,7 @@ double obb::qi_accurate2(double jd)
     return a;
 }
 
-double obb::so_accurate2(double jd) 
+double OBB::so_accurate2(double jd) 
 { //精朔
 	return so_accurate (floor((jd+8)/29.5306) * M_PI*2 ); 
 }

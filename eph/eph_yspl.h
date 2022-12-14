@@ -17,7 +17,7 @@ struct RE0
 	double t;
 };
 
-class ysPL
+class YS_PL
 { //月食快速计算器
 public:
 	static std::array<double,7> lT;

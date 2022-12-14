@@ -46,7 +46,7 @@ struct _GJW
 };
 
 
-class _rsPL
+class RS_PL
 {//日食批量快速计算器
 public:
 	static bool nasa_r;//为1表示采用NASA的视径比
@@ -83,6 +83,5 @@ public:
 	static void secXY(double jd,double L,double fa,double high,_SECXY &re);
 
 };
-typedef _rsPL rsPL;
 
 #endif

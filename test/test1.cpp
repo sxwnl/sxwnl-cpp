@@ -298,7 +298,7 @@ void ML_calc(Date dat)
 {
 	MLBZ ob={};
 	double jd = toJD({dat.Y,dat.M,dat.D,dat.h,dat.m,dat.s});
-	obb::mingLiBaZi( jd+(-8.0)/24-J2000, jw.J/radd, ob ); //八字计算
+	OBB::mingLiBaZi( jd+(-8.0)/24-J2000, jw.J/radd, ob ); //八字计算
 
 	std::cout<<
      "\e[31;1m[日标]：\e[0m"<<"公历 "<<dat.Y<<"-"<<dat.M<<"-"<<dat.D << " 儒略日数 " << int2(jd+0.5) << " 距2000年首" << int2(jd+0.5-J2000) << "日\n"

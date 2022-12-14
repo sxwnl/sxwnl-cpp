@@ -70,7 +70,7 @@ struct MLBZ
 	std::string bz_zty;
 };
 
-class _OBA
+class OBA
 {
 public:
 	static void init();
@@ -82,7 +82,7 @@ private:
 	static std::vector<std::string> wFtv;
 };
 
-class _OBB//农历对象，气朔计算等
+class OBB//农历对象，气朔计算等
 {
 public:
 	static void init();
@@ -97,9 +97,6 @@ public:
 private:
 	static std::vector<std::string> JNB;
 };
-
-typedef _OBB obb;
-typedef _OBA oba;
 
 extern const char *str_num[];
 extern const char *str_ymc[];
