@@ -63,5 +63,4 @@ public:
 	static void calc(double T,double L,double fa,double high);
 	static std::string toStr(bool fs);
 };
-typedef MSC msc;
 #endif
