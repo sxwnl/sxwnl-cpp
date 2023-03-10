@@ -269,29 +269,29 @@ void dingQi_v()
 { //定气计算速度测试
 	int i;
 	auto d1 = std::chrono::system_clock::now();
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 10000; i++)
 		S_aLon_t(0);
 	auto d2 = std::chrono::system_clock::now();
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 10000; i++)
 		S_aLon_t2(0);
 		
 	auto d3 = std::chrono::system_clock::now();
-	std::cout<< "定气测试\n\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/千个\n\e[0m";
+	std::cout<< "定气测试\n\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\e[0m";
 }
 
 void dingSuo_v() 
 { //定朔计算速度测试
 	int i;
 	auto d1 = std::chrono::system_clock::now();
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 10000; i++)
 		MS_aLon_t(0);
 
 	auto d2 = std::chrono::system_clock::now();
-	for (i = 0; i < 1000; i++)
+	for (i = 0; i < 10000; i++)
 		MS_aLon_t2(0);
 
 	auto d3 = std::chrono::system_clock::now(); 
-	std::cout<< "\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/千个\n\e[0m";
+	std::cout<< "\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\e[0m";
 }
 
 void ML_calc(Date dat)
@@ -418,8 +418,8 @@ int main()
 //	qiCalc(2022);
 //	houCalc(2018);
 	
-	// dingQi_v();
-	// dingSuo_v();
+	dingQi_v();
+	dingSuo_v();
 	
 	// dingQi_cmp();
 	// dingSuo_cmp(2000,10);
