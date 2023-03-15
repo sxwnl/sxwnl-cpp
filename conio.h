@@ -5,92 +5,74 @@
 
 // Update.2021-11-01 兼容Cygwin 修改getch实现方式
 // Update.2021-11-03 添加windows下MinGW-GCC编译支持
+// Update.2023-03-15 修改getch和kbhit的实现
 
 #ifndef CONIO_H
 #define CONIO_H
 
-#ifdef __unix__
+#if defined (__unix__)
 #include <stdio.h>
+#include <fcntl.h>
 #include <unistd.h>
 #include <termios.h>
-#include <sys/select.h>
 
-static void terminal_lnbuf(int yn) {
-   struct termios oldt, newt;
-   tcgetattr(0, &oldt);
-   newt = oldt;
-   if (!yn) newt.c_lflag &= ~ICANON;
-   else newt.c_lflag |= ICANON;
-   tcsetattr(0, TCSANOW, &newt);
+//读取单字符 https://my.oschina.net/yougui/blog/111345
+static char getch() 
+{
+    struct termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    memcpy(&newt, &oldt, sizeof(newt));
+    newt.c_lflag &= ~(ICANON | ECHO | ECHOE | ECHOK | ECHONL | ECHOKE | ICRNL);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    char c=getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    return c;
 }
- 
-static void terminal_echo(int yn) {
-   struct termios oldt, newt;
-   tcgetattr(0, &oldt);
-   newt = oldt;
-   if (!yn) newt.c_lflag &= ~ECHO;
-   else newt.c_lflag |= ECHO;
-   tcsetattr(0, TCSANOW, &newt);
+
+//判断输入 https://www.cnblogs.com/xiayong123/archive/2011/07/19/3717262.html
+static int kbhit(void)
+{
+    struct termios oldt, newt;
+    tcgetattr(STDIN_FILENO, &oldt);
+    newt = oldt;
+    newt.c_lflag &= ~(ICANON | ECHO);
+    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
+    int oldf = fcntl(STDIN_FILENO, F_GETFL, 0);
+    fcntl(STDIN_FILENO, F_SETFL, oldf | O_NONBLOCK);
+    int ch = getchar();
+    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
+    fcntl(STDIN_FILENO, F_SETFL, oldf);
+    return (ch != EOF)? ungetc(ch, stdin),1:0;
 }
-	 
-static void gotoxy(int x, int y) { printf("\x1B[%d;%df", y, x); }
+
+static void gotoxy(int x, int y) { printf("\033[%d;%df", y, x); }
 
 static void _gotoxy(int x,int y) {gotoxy(x,y);}
 	 
-static void clrscr() { printf("\x1B[2J\x1B[0;0f"); }
+static void clrscr() { printf("\033[2J\033[0;0f"); }
 
 static void _clrscr() {clrscr();}
-	 
-static int getch() {
-   int ch;
-   terminal_lnbuf(0);
-   terminal_echo(0);
-   ch = getchar();
-   terminal_lnbuf(1);
-   terminal_echo(1);
-   return ch;
-}
 
 static int _getch() {return getch();}
-	 
-static int getche() {
-   int ch;
-   terminal_lnbuf(0);
-   ch = getchar();
-   terminal_lnbuf(1);
-   return ch;
-}
-
-static int _getche() {return getche();}
-
-static int kbhit() {
-   int ret;
-   fd_set fds;
-   terminal_lnbuf(0);
-   terminal_echo(0);
-   struct timeval tv;
-   tv.tv_sec = 0;
-   tv.tv_usec = 0;
-   FD_ZERO(&fds);
-   FD_SET(0, &fds);
-   select(1, &fds, 0, 0, &tv);
-   ret = FD_ISSET(0, &fds);
-   terminal_lnbuf(1);
-   terminal_echo(1);
-   return ret;
-}
 
 static int _kbhit() {return kbhit();}
 
-#endif // __unix__
-#ifdef __WIN32__
+#elif defined (__WIN32__) || defined (__GNUC__) // __unix__
 #include <windows.h>
 #include <conio.h>
+#include <stdio.h>
 
 static void clrscr() {system("cls");}
 
 static void _clrscr() {clrscr();}
 
+static void gotoxy(int x, int y) {
+  COORD c;
+  c.X = x;
+  c.Y = y;
+  SetConsoleCursorPosition (GetStdHandle(STD_OUTPUT_HANDLE), c);
+}
+static void _gotoxy(int x,int y) {gotoxy(x,y);}
 #endif // __WIN32__
 
 #endif // CONIO_H
