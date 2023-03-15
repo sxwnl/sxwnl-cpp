@@ -14,8 +14,6 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <termios.h>
-#include <sys/select.h>
-
 
 //读取单字符 https://my.oschina.net/yougui/blog/111345
 static char getch() 
