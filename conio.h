@@ -13,6 +13,7 @@
 #if defined (__unix__)
 #include <stdio.h>
 #include <unistd.h>
+#include <fcntl.h>
 #include <termios.h>
 
 //读取单字符 https://my.oschina.net/yougui/blog/111345
