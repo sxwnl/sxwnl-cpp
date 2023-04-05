@@ -3,6 +3,7 @@ project(sxwnl-cpp)
 set(CMAKE_VERBOSE_MAKEFILE on)
 set(PRIVATE_CXX_FLAGS
 	"-std=c++1z"
+	"-fexceptions"
 	"-g"
 	"-Os"
 	)

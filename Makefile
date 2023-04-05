@@ -7,12 +7,11 @@ eph_szj.o eph_show.o lunar.o lunar_ob.o lunar_ssq.o tool.o lat_lon_data.o
 OBJ1	:= test1.o $(OBJ0)
 OBJ2	:= test.o $(OBJ0)
 LIBS	:= -lm
-
-ifeq ($(CC), gcc)
-    CXXFLAGS = -Os -s -pie -std=c++17
+FLAG    := -fexceptions -std=c++1z
+ifdef CXXFLAGS
+    CXXFLAGS := $(CXXFLAGS) $(FLAG)
 else
-    CXXFLAGS = -Os -std=c++17
-#    CXXFLAGS = -Os -s -pie -std=c++17
+    CXXFLAGS := -Os $(FLAG)
 endif
 
 
