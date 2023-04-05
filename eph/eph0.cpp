@@ -1,8 +1,8 @@
-#include <cmath>
 #include <cstring>
 
 #include "eph_data.h"
 #include "eph0.h"
+#include "../mylib/math_patch.h"
 
 static inline int int2(double v) {return (int)floor(v);};
 

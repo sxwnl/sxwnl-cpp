@@ -1,8 +1,10 @@
 #include <cstring>
+
 #include "lunar_ssq.h"
 #include "lunar_ob.h"
 #include "../eph/eph0.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 
 #define int2(v) ((int)floor(v))
 /************************
@@ -84,7 +86,7 @@ char* SSQ::str_so;
 char *SSQ::jieya(int type)
 {
 
-	 std::string suoS = //  619-01-21开始16598个朔日修正表 d0=1947168
+	 mystl::string suoS = //  619-01-21开始16598个朔日修正表 d0=1947168
 		"EqoFscDcrFpmEsF2DfFideFelFpFfFfFiaipqti1ksttikptikqckstekqttgkqttgkqteksttikptikq2fjstgjqttjkqttgkqt"
 		"ekstfkptikq2tijstgjiFkirFsAeACoFsiDaDiADc1AFbBfgdfikijFifegF1FhaikgFag1E2btaieeibggiffdeigFfqDfaiBkF"
 		"1kEaikhkigeidhhdiegcFfakF1ggkidbiaedksaFffckekidhhdhdikcikiakicjF1deedFhFccgicdekgiFbiaikcfi1kbFibef"
@@ -121,7 +123,7 @@ char *SSQ::jieya(int type)
 	o5 = "00000000000000000000000000000000000000000000000000",
 	o6 = "000000000000000000000000000000000000000000000000000000000000";
 	
-	std::string str;
+	mystl::string str;
 	if (type) {
 		str=suoS;
 	} else {
@@ -271,7 +273,7 @@ int SSQ::calc(double jd, int qs)
 }
 
 int SSQ::leap;  //闰月位置
-std::array<std::string,14> SSQ::ym;//各月名称索引
+std::array<mystl::string,14> SSQ::ym;//各月名称索引
 int SSQ::ZQ[25];//中气表
 int SSQ::HS[15];//合朔表
 int SSQ::dx[14];//各月大小
@@ -350,7 +352,7 @@ void SSQ::calcY(double jd)
     {
         double Dm = HS[i]+J2000;
         int v2=ym[i]; //Dm初一的儒略日,v2为月建序号
-        std::string mc = str_ymc[v2%12]; //月建对应的默认月名称：建子十一,建丑十二,建寅为正……
+        mystl::string mc = str_ymc[v2%12]; //月建对应的默认月名称：建子十一,建丑十二,建寅为正……
         if      ( Dm>=1724360 && Dm<=1729794 ) mc = str_ymc[(v2+1)%12]; //  8.01.15至 23.12.02 建子为十二,其它顺推
         else if ( Dm>=1807724 && Dm<=1808699 ) mc = str_ymc[(v2+1)%12]; //237.04.12至239.12.13 建子为十二,其它顺推
         else if ( Dm>=1999349 && Dm<=1999467 ) mc = str_ymc[(v2+2)%12]; //761.12.02至762.03.30 建子为正月,其它顺推

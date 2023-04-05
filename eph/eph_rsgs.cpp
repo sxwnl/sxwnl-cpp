@@ -2,11 +2,11 @@
 
 #include "eph0.h"
 #include "eph.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
 #include "eph_rsgs.h"
 
 double RS_GS::Zjd  = 0;
-std::vector<double> RS_GS::Zs;  //日月赤道坐标插值表
+mystl::vector<double> RS_GS::Zs;  //日月赤道坐标插值表
 double RS_GS::Zdt  = 0.04;   //插值点之间的时间间距
 double RS_GS::dT   = 0;      //deltatT
 double RS_GS::tanf1= 0.0046; //半影锥角
@@ -27,7 +27,7 @@ void RS_GS::init(double jd,int n)
   double E = hcjj(jd/36525.0)+zd[1]; //黄赤交角
   double T;
   std::array<double,3> S,M,B;
-  std::vector<double> a(n*9);
+  mystl::vector<double> a(n*9);
   int i,k;
   
   for (i=0;i<n;i++)
@@ -76,7 +76,7 @@ std::array<double,3> RS_GS::chazhi(double jd,int xt)
 {//日月坐标快速计算(贝赛尔插值法),计算第p个根数开始的m个根数
   int p=xt*3,m=3; //计算第p个根数开始的m个根数
   int i, N=RS_GS::Zs.size()/9;
-  std::vector<double> B=RS_GS::Zs;
+  mystl::vector<double> B=RS_GS::Zs;
   std::array<double,3> z;
   int w = B.size()/N; //每节点个数
   double t = (jd-RS_GS::Zjd)/RS_GS::Zdt+N/2.0-0.5; //相对于第一点的时间距离
@@ -291,7 +291,7 @@ _FEATURE RS_GS::feature(double jd)
 }
 
  //界线图
-void RS_GS::push(std::array<double,3> z,std::vector<double> &p)
+void RS_GS::push(std::array<double,3> z,mystl::vector<double> &p)
 {
    p.push_back(z[0]); //保存第一食甚线A或B根
    p.push_back(z[1]);
@@ -328,7 +328,7 @@ std::array<double,4> RS_GS::nanbei(std::array<double,3> M,double vx0,double vy0,
    return {p.J, p.W, x, y};
  }
 
-bool RS_GS::mDian(std::array<double,3> M,double vx0,double vy0,bool AB, double r,std::array<double,3> I,std::vector<double> &A)
+bool RS_GS::mDian(std::array<double,3> M,double vx0,double vy0,bool AB, double r,std::array<double,3> I,mystl::vector<double> &A)
 { //日出日没食甚
    double R;
    NODE p;
@@ -353,7 +353,7 @@ bool RS_GS::mDian(std::array<double,3> M,double vx0,double vy0,bool AB, double r
 }
 
 
-std::string RS_GS::jieX3(double jd)
+mystl::string RS_GS::jieX3(double jd)
  { //界线表
   double k, ls;
   std::array<double,4> p;
@@ -362,7 +362,7 @@ std::string RS_GS::jieX3(double jd)
 
   double t = floor(re.jd*1440)/1440.0 - 3/24.0;
   double N=360, dt=1/1440.0;
-  std::string s="",s2;
+  mystl::string s="",s2;
 
   for(i=0;i<N;i++,t+=dt)
   {
@@ -390,7 +390,7 @@ std::string RS_GS::jieX3(double jd)
 /*
 1.暂时还没有作图工具
 2.可能存在bug
-void RS_GS::elmCpy(std::vector<double> &a,int n,std::vector<double> b,int m)
+void RS_GS::elmCpy(mystl::vector<double> &a,int n,mystl::vector<double> b,int m)
 { //数据元素复制
    if(!b.size()) return;
    if(n==-2) n=a.size();
@@ -402,7 +402,7 @@ void RS_GS::elmCpy(std::vector<double> &a,int n,std::vector<double> b,int m)
    a[n]=b[m], a[n+1]=b[m+1];
 }
 
-void RS_GS::mQie(std::array<double,3> M,double vx0,double vy0,double h, double r,std::array<double,3> I, std::vector<double> &A,_FLAG &FLAG)
+void RS_GS::mQie(std::array<double,3> M,double vx0,double vy0,double h, double r,std::array<double,3> I, mystl::vector<double> &A,_FLAG &FLAG)
 { //vx0,vy0为影足速度(也是整个影子速度),h=1计算北界,h=-1计算南界
    std::array<double,4> p=RS_GS::nanbei(M,vx0,vy0,h,r,I);
    if(!FLAG.f2) FLAG.f2=0;   FLAG.f = p[1]==100?0:1; //记录有无解
@@ -436,7 +436,7 @@ _FEATURE RS_GS::jieX(double jd)
 
   _FLAG F1={},F2={},F3={},F4={},F5={},F6;
   //对日出日没食甚线预置一个点
-  std::vector<double> &Ua=re.q1,&Ub=re.q2;
+  mystl::vector<double> &Ua=re.q1,&Ub=re.q2;
   
   RS_GS::push({0,0},re.q2); RS_GS::push({0,0},re.q3); RS_GS::push({0,0},re.q4);
 
@@ -508,7 +508,7 @@ _FEATURE RS_GS::jieX(double jd)
 _JIEX2 RS_GS::jieX2(double jd)
 { //jd力学时
   _JIEX2 re={};
-  std::vector<double> p1, p2, p3;
+  mystl::vector<double> p1, p2, p3;
 
   if(fabs(jd-RS_GS::Zjd)>0.5) return re;
   

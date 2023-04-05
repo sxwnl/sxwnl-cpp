@@ -2,7 +2,7 @@
 #define EPH_YSPL_H
 
 #include <array>
-#include <string>
+#include "../mylib/mystl/string.h"
 
 struct RE0
 {
@@ -21,7 +21,7 @@ class YS_PL
 { //月食快速计算器
 public:
 	static std::array<double,7> lT;
-	static std::string LX;
+	static mystl::string LX;
 	static double sf;
 	static void lecXY(double jd, RE0 &re);
 	static double lineT(RE0 G,double v,double u, double r, bool n);

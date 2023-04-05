@@ -1,15 +1,15 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
-
 #include "eph_szj.h"
 #include "eph0.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
 
 double SZJ::L = 0;
 double SZJ::fa = 0;
 double SZJ::dt = 0;
 double SZJ::E = 0.409092614;
 
-std::vector <SJ_S> SZJ::rts;	//多天的升中降
+mystl::vector <SJ_S> SZJ::rts;	//多天的升中降
 
 static inline double mod2(double a,double b)
 { //临界余数(a与最近的整倍数b相差的距离)

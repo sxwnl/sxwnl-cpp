@@ -1,17 +1,17 @@
-#include <cmath>
 #include "eph.h"
 #include "eph0.h"
 #include "eph_rsgs.h"
 #include "eph_rspl.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 
 bool RS_PL::nasa_r = 0;//为1表示采用NASA的视径比
 std::array<double, 5> RS_PL::sT;//地方日食时间表
-std::string RS_PL::LX;
+mystl::string RS_PL::LX;
 double RS_PL::sf;
 double RS_PL::sf2;
 double RS_PL::sf3;
-std::string RS_PL::sflx;
+mystl::string RS_PL::sflx;
 double RS_PL::b1;
 double RS_PL::dur;
 double RS_PL::sun_s;
@@ -26,8 +26,8 @@ std::array<double,3> RS_PL::B={}; //本半影锥顶点坐标
 _ZB RS_PL::P={};//t1时刻的日月坐标,g为恒星时
 _ZB RS_PL::Q={};//t2时刻的日月坐标
 std::array<double,10> RS_PL::V;//食界表
-std::string RS_PL::Vc = "";
-std::string RS_PL::Vb = "";  //食中心类型,本影南北距离
+mystl::string RS_PL::Vc = "";
+mystl::string RS_PL::Vb = "";  //食中心类型,本影南北距离
 
 void RS_PL::secXY(double jd,double L,double fa,double high,_SECXY &re)
 { //日月xy坐标计算。参数：jd是力学时,站点经纬L,fa,海拔high(千米)
@@ -199,7 +199,7 @@ void RS_PL::secMax(double jd,double L,double fa,double high)
  _ZB P={};//t1时刻的日月坐标,g为恒星时
  _ZB Q={};//t2时刻的日月坐标
  std::array<double,10> V;//食界表
- std::string Vc = "", Vb = "";  //食中心类型,本影南北距离
+ mystl::string Vc = "", Vb = "";  //食中心类型,本影南北距离
 
 void RS_PL::zb0(double jd)
 {

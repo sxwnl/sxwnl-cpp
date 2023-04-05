@@ -2,7 +2,7 @@
 #define EPH_H
 
 #include <array>
-#include <string>
+#include "../mylib/mystl/string.h"
 
 struct COORDP
 {
@@ -42,7 +42,7 @@ typedef struct
 	double jd;
 	double jdSuo;
 	double ac;
-	std::string lx;
+	mystl::string lx;
 }_ECFAST;
 
 //========行星天象及星历=============
@@ -56,7 +56,7 @@ std::array<double,4> xingHY(int xt, double t);
 std::array<double,4> xingSP(int xt, double t, int n, double w0, double ts, double tp);
 std::array<double,2> xingHR(int xt, double t, bool f);
 
-std::string xingX(int xt,double jd,double L,double fa);
+mystl::string xingX(int xt,double jd,double L,double fa);
 COORDP lineEll(double x1,double y1,double z1, double x2,double y2,double z2, double e,double r);
 COORDP lineEar2(double x1,double y1,double z1, double x2,double y2,double z2, double e,double r, std::array<double,3> I);
 COORDP lineEar(std::array<double,3> P,std::array<double,3> Q,double gst);

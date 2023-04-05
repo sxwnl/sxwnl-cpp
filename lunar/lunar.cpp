@@ -1,8 +1,11 @@
 #include <cstring>
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "lunar.h"
 #include "lunar_ssq.h"
 #include "../eph/eph0.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
 
 void init_ob()
 {
@@ -192,10 +195,10 @@ OB_LUN yueLiCalc(int By, int Bm)
 	return lun;
 }
 
-std::string nianLiSTR(int y)
+mystl::string nianLiSTR(int y)
 { //字符串年历生成
  int i,j;
- std::string s="", s1,s2;
+ mystl::string s="", s1,s2;
  double v,qi;
  SSQ::calcY( int2((y-2000.0)*365.2422+180) );
  for(i=0;i<14;i++)

@@ -1,7 +1,9 @@
 #include <cstring>
+#define _USE_MATH_DEFINES
+#include <cmath>
 #include "eph.h"
 #include "eph0.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
 //大距计算
 double xingJJ(int xt, double t, int jing)
 {								//行星的距角,jing为精度控
@@ -210,7 +212,7 @@ std::array<double,2> xingHR(int xt, double t, bool f)
 }
 
 
-std::string xingX(int xt,double jd,double L,double fa)
+mystl::string xingX(int xt,double jd,double L,double fa)
 { //行星计算,jd力学时
  //基本参数计算
 
@@ -223,7 +225,7 @@ std::string xingX(int xt,double jd,double L,double fa)
     double gst= gstPing + dL*cos(E); //真恒星时(不考虑非多项式部分)
 
 	std::array<double,3> z,a,z2,a2;
-	std::string s = "";
+	mystl::string s = "";
 	double ra,rb,rc;
 	int rfn=8;
 	if(xt==10)

@@ -1,9 +1,9 @@
-#include <cmath>
 #include "eph0.h"
 #include "eph_yspl.h"
+#include "../mylib/math_patch.h"
 
 std::array<double,7> YS_PL::lT;
-std::string YS_PL::LX;
+mystl::string YS_PL::LX;
 double YS_PL::sf;
 
 double YS_PL::lineT(RE0 G,double v,double u, double r, bool n)
