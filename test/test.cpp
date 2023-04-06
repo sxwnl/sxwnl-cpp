@@ -15,6 +15,10 @@ API测试
 #include "../eph/eph.h"
 int main()
 {
+#ifdef __WIN32__
+	system("@chcp 65001");
+#endif
+
 	Date date = { 2008, 1, 1, 0, 0, 0};
     double jd1 = toJD(date) - J2000;
     mystl::string ss = xingX(1, jd1, A2R(116.383333), A2R(39.900000));

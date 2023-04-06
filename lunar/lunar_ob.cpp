@@ -1,9 +1,7 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
-
 #include "lunar_ob.h"
-#include "../mylib/tool.h"
 #include "../eph/eph0.h"
+#include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 
 const char *str_num[] ={"零","一","二","三","四","五","六","七","八","九","十"};
 const char *str_ymc[] ={"十","冬","腊","正","二","三","四","五","六","七","八","九"};
