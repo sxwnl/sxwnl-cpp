@@ -33,7 +33,6 @@
 *.app
 
 # Test bin files
-test
 test0
 test1
 test2
