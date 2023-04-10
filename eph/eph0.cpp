@@ -1,8 +1,8 @@
-#include <cmath>
 #include <cstring>
 
 #include "eph_data.h"
 #include "eph0.h"
+#include "../mylib/math_patch.h"
 
 static inline int int2(double v) {return (int)floor(v);};
 
@@ -70,9 +70,9 @@ double rad2rrad(double v)
 	return v;
 }
 
-std::array<double,3> llr2xyz(std::array<double,3> JW)
+mystl::array3 llr2xyz(mystl::array3 JW)
 {//球面转直角坐标
-	std::array<double,3> r = { };
+	mystl::array3 r = { };
 	double J = JW[0], W = JW[1], R = JW[2];
 	r[0] = R * cos(W) * cos(J);
 	r[1] = R * cos(W) * sin(J);
@@ -80,9 +80,9 @@ std::array<double,3> llr2xyz(std::array<double,3> JW)
 	return r;
 }
 
-std::array<double,3> xyz2llr(std::array<double,3> xyz)
+mystl::array3 xyz2llr(mystl::array3 xyz)
 {//直角坐标转球
-	std::array<double,3> r = { };
+	mystl::array3 r = { };
 	double x = xyz[0], y = xyz[1], z = xyz[2];
 	r[2] = sqrt(x * x + y * y + z * z);
 	r[1] = asin(z / r[2]);
@@ -90,10 +90,10 @@ std::array<double,3> xyz2llr(std::array<double,3> xyz)
 	return r;
 }
 
-std::array<double,3> llrConv(std::array<double,3> JW, double E)
+mystl::array3 llrConv(mystl::array3 JW, double E)
 {//球面坐标旋转
 	//黄道赤道坐标变换
-	std::array<double,3> r = { };
+	mystl::array3 r = { };
 	double J = JW[0], W = JW[1];
 	r[0] = atan2(sin(J) * cos(E) - tan(W) * sin(E), cos(J));
 	r[1] = asin(cos(E) * sin(W) + sin(E) * cos(W) * sin(J));
@@ -102,9 +102,9 @@ std::array<double,3> llrConv(std::array<double,3> JW, double E)
 	return r;
 }
 
-std::array<double,3> CD2DP(std::array<double,3> z, double L, double fa, double gst)
+mystl::array3 CD2DP(mystl::array3 z, double L, double fa, double gst)
 {//赤道坐标转为地平坐标
-	std::array<double,3> a = { z[0] + _pi / 2 - gst - L, z[1], z[2] };	//转到相对于地平赤道分点的赤道坐标
+	mystl::array3 a = { z[0] + _pi / 2 - gst - L, z[1], z[2] };	//转到相对于地平赤道分点的赤道坐标
 	a = llrConv(a, _pi / 2 - fa);
 	a[0] = rad2mrad(_pi / 2 - a[0]);
 	return a;
@@ -121,7 +121,7 @@ double j1_j2(double J1, double W1, double J2, double W2)
 	return acos(sin(W1) * sin(W2) + cos(W1) * cos(W2) * cos(dJ));
 }
 
-std::array<double,3> h2g(std::array<double,3> z, std::array<double,3> a)
+mystl::array3 h2g(mystl::array3 z, mystl::array3 a)
 {//日心球面转地心球面,Z星体球面坐标,A地球球面坐标
 	//本含数是通用的球面坐标中心平移函数,行星计算中将反复使用
 	a = llr2xyz(a);	//地球
@@ -231,7 +231,7 @@ double prece(double t, const char *ss, const char *mx)
 }
 
 //==========================岁差旋转==========================
-std::array<double,3> CDllr_J2D(double t, std::array<double,3> llr, const char *mx)
+mystl::array3 CDllr_J2D(double t, mystl::array3 llr, const char *mx)
 {//J2000赤道转Date赤道
 	double Z = prece(t, "Z", mx) + llr[0];
 	double z = prece(t, "z", mx);
@@ -241,11 +241,11 @@ std::array<double,3> CDllr_J2D(double t, std::array<double,3> llr, const char *m
 	double A = cosW * sin(Z);
 	double B = cosH * cosW * cos(Z) - sinH * sinW;
 	double C = sinH * cosW * cos(Z) + cosH * sinW;
-	std::array<double,3> p = { rad2mrad(atan2(A, B) + z), asin(C), llr[2] };
+	mystl::array3 p = { rad2mrad(atan2(A, B) + z), asin(C), llr[2] };
 	return p;
 }
 
-std::array<double,3> CDllr_D2J(double t, std::array<double,3> llr, const char *mx)
+mystl::array3 CDllr_D2J(double t, mystl::array3 llr, const char *mx)
 {//Date赤道转J2000赤道
 	double Z = -prece(t, "z", mx) + llr[0];
 	double z = -prece(t, "Z", mx);
@@ -255,14 +255,14 @@ std::array<double,3> CDllr_D2J(double t, std::array<double,3> llr, const char *m
 	double A = cosW * sin(Z);
 	double B = cosH * cosW * cos(Z) - sinH * sinW;
 	double C = sinH * cosW * cos(Z) + cosH * sinW;
-	std::array<double,3> p = { rad2mrad(atan2(A, B) + z), asin(C), llr[2] };
+	mystl::array3 p = { rad2mrad(atan2(A, B) + z), asin(C), llr[2] };
 	return p;
 }
 
-std::array<double,3> HDllr_J2D(double t, std::array<double,3> llr, const char *mx)
+mystl::array3 HDllr_J2D(double t, mystl::array3 llr, const char *mx)
 {//黄道球面坐标_J2000转Date分点,t为儒略世纪数
 	//J2000黄道旋转到Date黄道(球面对球面),也可直接由利用球面旋转函数计算,但交角接近为0时精度很低
-	std::array<double,3> r = { llr[0], llr[1], llr[2] };
+	mystl::array3 r = { llr[0], llr[1], llr[2] };
 	r[0] += prece(t, "fi", mx);
 	r = llrConv(r, prece(t, "w", mx));
 	r[0] -= prece(t, "x", mx);
@@ -270,9 +270,9 @@ std::array<double,3> HDllr_J2D(double t, std::array<double,3> llr, const char *m
 	return r;
 }
 
-std::array<double,3> HDllr_D2J(double t, std::array<double,3> llr, const char *mx)
+mystl::array3 HDllr_D2J(double t, mystl::array3 llr, const char *mx)
 {//黄道球面坐标_Date分点转J2000,t为儒略世纪数
-	std::array<double,3> r = { llr[0], llr[1], llr[2] };
+	mystl::array3 r = { llr[0], llr[1], llr[2] };
 	r = llrConv(r, prece(t, "E", mx));
 	r[0] += prece(t, "x", mx);
 	r = llrConv(r, -prece(t, "w", mx));
@@ -291,7 +291,7 @@ double MQC2(double ho)
 	return -0.0002909 / tan(ho + 0.002227 / (ho + 0.07679));
 }//大气折射,ho是视高度
 
-std::array<double,3> parallax(std::array<double,3> z, double H, double fa, double high)
+mystl::array3 parallax(mystl::array3 z, double H, double fa, double high)
 {//视差修正
 	//z赤道坐标,fa地理纬度,H时角,high海拔(千米)
 	double dw = 1;
@@ -304,14 +304,14 @@ std::array<double,3> parallax(std::array<double,3> z, double H, double fa, doubl
 	z0 = cs_rEar * sin(u) * f + high * sin(fa);	//站点与地地心向径的轴向投影长度
 	x0 = r0 * cos(g);
 	y0 = r0 * sin(g);
-	std::array<double,3> s = llr2xyz(z);
+	mystl::array3 s = llr2xyz(z);
 	s[0] -= x0, s[1] -= y0, s[2] -= z0;
 	s = xyz2llr(s);
 	s[2] /= dw;
 	return s;
 }
 
-std::array<double,2> nutation2(double t)
+mystl::array2 nutation2(double t)
 {//中精度章动计算,t是世纪数
 	double c, a, t2 = t * t, *B = nutB, dL = 0, dE = 0;
 	for (int i = 0; i < sizeof(nutB) / sizeof(double); i += 5)
@@ -324,14 +324,14 @@ std::array<double,2> nutation2(double t)
 		dL += (B[i + 3] + a) * sin(c);
 		dE += B[i + 4] * cos(c);
 	}
-	std::array<double,2> nu = { dL / 100 / rad, dE / 100 / rad };
+	mystl::array2 nu = { dL / 100 / rad, dE / 100 / rad };
 	return nu;					//黄经章动,交角章动
 }
 
 /*高精度算章动*/
-std::array<double,2> nutation(double t, int zq)
+mystl::array2 nutation(double t, int zq)
 {//章动计算,t是J2000.0起算的儒略世纪数,zq表示只计算周期天于zq(天)的项
-	std::array<double,2> nutation;
+	mystl::array2 nutation;
 	double t2 = t * t, t3 = t2 * t, t4 = t3 * t;	//t的二、三、四次方
 	double l = 485868.249036 + 1717915923.2178 * t + 31.8792 * t2 + 0.051635 * t3 - 0.00024470 * t4;
 	double l1 = 1287104.79305 + 129596581.0481 * t - 0.5532 * t2 + 0.000136 * t3 - 0.00001149 * t4;
@@ -422,13 +422,13 @@ double XL0_calc(int xt, int zn, double t, int n)
 	return v;
 }
 
-std::array<double,3> pluto_coord(double t)
+mystl::array3 pluto_coord(double t)
 {// 返回冥王星J2000直角坐标
 	double c0 = _pi / 180 / 100000;
 	double x = -1 + 2 * (t * 36525 + 1825394.5) / 2185000;
 	double T = t / 100000000;
 	double r[3] = { };
-	std::array<double,3> p = { };
+	mystl::array3 p = { };
 
 	int len[] = {
 		sizeof(PL0) / sizeof(double),
@@ -458,9 +458,9 @@ std::array<double,3> pluto_coord(double t)
 	return p;
 }
 
-std::array<double,3> p_coord(int xt, double t, int n1, int n2, int n3)
+mystl::array3 p_coord(int xt, double t, int n1, int n2, int n3)
 {//xt星体,T儒略世纪数,TD
-	std::array<double,3> z = { };
+	mystl::array3 z = { };
 	if (xt < 8)
 	{
 		z[0] = XL0_calc(xt, 0, t, n1);
@@ -477,36 +477,24 @@ std::array<double,3> p_coord(int xt, double t, int n1, int n2, int n3)
 	return z;
 }
 
-std::array<double,3> e_coord(double t, int n1, int n2, int n3)
+mystl::array3 e_coord(double t, int n1, int n2, int n3)
 {//返回地球坐标,t为世纪数
-	std::array<double,3> re = { };
+	mystl::array3 re = { };
 	re[0] = XL0_calc(0, 0, t, n1);
 	re[1] = XL0_calc(0, 1, t, n2);
 	re[2] = XL0_calc(0, 2, t, n3);
 	return re;
 }
 
+/*数组长度表 */
+static int len0[]   = {4, 3, 3 };
+static int len_ML[] = {2652, 894, 204, 12};
+static int len_MB[] = {1236, 270, 72	 };
+static int len_MR[] = {1326, 312, 72 	};
+static int *len_M[] = {len_ML, len_MB, len_MR};
+
 double XL1_calc(int zn, double t, int n)
 {//计算月亮
-	/*生成数组长度表 */
-	int len0[] = { 4, 3, 3 };
-	int len_ML[] = {
-		sizeof(ML0) / sizeof(double),
-		sizeof(ML1) / sizeof(double),
-		sizeof(ML2) / sizeof(double),
-		sizeof(ML3) / sizeof(double)
-	};
-	int len_MB[] = {
-		sizeof(MB0) / sizeof(double),
-		sizeof(MB1) / sizeof(double),
-		sizeof(MB2) / sizeof(double)
-	};
-	int len_MR[] = {
-		sizeof(MR0) / sizeof(double),
-		sizeof(MR1) / sizeof(double),
-		sizeof(MR2) / sizeof(double)
-	};
-	int *len_M[] = { len_ML, len_MB, len_MR };
 
 	int i, j, N;
 	double **ob = XL1[zn], *F;
@@ -540,9 +528,9 @@ double XL1_calc(int zn, double t, int n)
 	return v;
 }
 
-std::array<double,3> m_coord(double t, int n1, int n2, int n3)
+mystl::array3 m_coord(double t, int n1, int n2, int n3)
 {//返回月球坐标,t为世纪数
-	std::array<double,3> re = { };
+	mystl::array3 re = { };
 	re[0] = XL1_calc(0, t, n1);
 	re[1] = XL1_calc(1, t, n2);
 	re[2] = XL1_calc(2, t, n3);
@@ -672,7 +660,7 @@ double S_aLon_t2(double W)
 }
 
 
-std::array<double,2> moonMinR(double t, bool min)
+mystl::array2 moonMinR(double t, bool min)
 {//求月亮近点时间和距离,t为儒略世纪数力学时
 	double a = 27.55454988 / 36525, b;
 	if (min)
@@ -702,7 +690,7 @@ std::array<double,2> moonMinR(double t, bool min)
 	return {t, r2};
 }
 
-std::array<double,2> moonNode(double t, double asc)
+mystl::array2 moonNode(double t, double asc)
 {//月亮升交点
 	double a = 27.21222082 / 36525, b;
 	if (asc)
@@ -726,7 +714,7 @@ std::array<double,2> moonNode(double t, double asc)
 	return {t, XL1_calc(0, t, -1)};
 }
 
-std::array<double,2> earthMinR(double t, bool min)
+mystl::array2 earthMinR(double t, bool min)
 {//地球近远点
 	double a = 365.25963586 / 36525, b;
 	if (min)
@@ -790,7 +778,7 @@ double pty_zty(double t)
 	double L = (1753470142 + 628331965331.8 * t + 5296.74 * t2 + 0.432 * t3 - 0.1124 * t4 - 0.00009 * t5) / 1000000000 + _pi - 20.5 / rad;
 
 	double E, dE, dL, f;
-	std::array<double,3> z = { };
+	mystl::array3 z = { };
 	dL = -17.2 * sin(2.1824 - 33.75705 * t) / rad;//黄经章
 	dE = 9.2 * cos(2.1824 - 33.75705 * t) / rad;//交角章
 	E = hcjj(t) + dE;//真黄赤交角
@@ -809,7 +797,7 @@ double pty_zty(double t)
 double pty_zty2(double t)
 {//时差计算(低精度),误差约在1秒以内,t力学时儒略世纪数
 	double L = (1753470142 + 628331965331.8 * t + 5296.74 * t * t) / 1000000000 + _pi;
-	std::array<double,3> z = { };
+	mystl::array3 z = { };
 	double E = (84381.4088 - 46.836051 * t) / rad;
 	z[0] = XL0_calc(0, 0, t, 5) + _pi, z[1] = 0;	//地球坐标
 	z = llrConv(z, E);//z太阳地心赤道坐标

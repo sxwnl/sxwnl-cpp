@@ -1,5 +1,4 @@
 #!/bin/bash
-
 build_dir=build
 
 if [ ! -d "$build_dir" ]; then

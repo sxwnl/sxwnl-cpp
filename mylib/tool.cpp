@@ -1,44 +1,63 @@
+#include <cstdio>
+#include <cstdlib>
 #include <iostream>
-#include "tool.h"
 
-//实现字符分割
-std:: vector<std::string> split(const std::string& src, const std::string& separator)
+#include "mystl/string.h"
+#include "tool.h"
+#include "math_patch.h"
+
+mystl::string to_str(long in)
 {
-	std::vector<std::string> dest;
-	std::string str = src;
-	std::string substring;
-	std::string::size_type start = 0, index;
- 
-	do
-	{
-		index = str.find_first_of(separator,start);
-		if (index != std::string::npos)
-		{    
-			substring = str.substr(start,index-start);
-			dest.push_back(substring);
-		#if 0
-			start = str.find_first_not_of(separator,index);
-		#else
-			start = index+separator.length();
-		#endif
-			if (start == std::string::npos) return dest;
-		}
-	}while(index != std::string::npos);
- 
-	//the last token
-	substring = str.substr(start);
-	dest.push_back(substring);
-	return dest;
+	char temp[64] = "";
+	sprintf(temp, "%ld", in);
+	return mystl::string(temp);
 }
 
-//实现字符替换
-void string_replace( std::string &strBig, const std::string &strsrc, const std::string &strdst)
+mystl::string to_str(int in, uint8_t n)
 {
-    std::string::size_type pos = 0;
-    std::string::size_type srclen = strsrc.size();
-    std::string::size_type dstlen = strdst.size();
+	char temp[16] = {};
+	sprintf(temp, "%d", in);
+	return temp;
+}
 
-    while( (pos=strBig.find(strsrc, pos)) != std::string::npos )
+mystl::string to_str(int in)
+{
+	return to_str(in, 0);
+}
+
+mystl::string to_str(double in, uint8_t n)
+{
+	char temp[16] = "";
+	char format_str[8] = "%.";
+	sprintf(format_str, "%%.%dlf", n);
+	sprintf(temp, format_str, in);
+	return temp;
+}
+
+mystl::string to_str(double in, uint8_t n, uint8_t n2) {
+	return to_str(in, 6);
+}
+
+mystl::string to_str(double in) {
+	return to_str(in, 6);
+}
+
+// mystl::string to_str(double in) {
+// 	return to_str(in, 0, 0);
+// }
+
+// mystl::string to_str(int  in) {
+// 	return to_str(in, 0, 0);
+// }
+
+//实现字符替换
+void string_replace( mystl::string &strBig, const mystl::string &strsrc, const mystl::string &strdst)
+{
+    mystl::string::size_type pos = 0;
+    mystl::string::size_type srclen = strsrc.size();
+    mystl::string::size_type dstlen = strdst.size();
+
+    while( (pos=strBig.find(strsrc, pos)) != mystl::string::npos )
     {
         strBig.replace( pos, srclen, strdst );
         pos += dstlen;
@@ -46,30 +65,30 @@ void string_replace( std::string &strBig, const std::string &strsrc, const std::
 }
 
 //提取jd中的时间(去除日期)
-std::string timeStr(double jd)
+mystl::string timeStr(double jd)
 {
 	int h, m, s;
 	jd += 0.5;
 	jd = (jd - int2(jd));
 	s = int2(jd * 86400 + 0.5);
-	h = int2(s / 3600);
+	h = int2(s / 3600.0);
 	s -= h * 3600;
-	m = int2(s / 60);
+	m = int2(s / 60.0);
 	s -= m * 60;
-	std::string H, M, S;
-	H = "0" + std::to_string(h);
-	M = "0" + std::to_string(m);
-	S = "0" + std::to_string(s);
+	mystl::string H, M, S;
+	H = "0" + to_str(h);
+	M = "0" + to_str(m);
+	S = "0" + to_str(s);
 	return H.substr(H.length() - 2, 2) + ":" + M.substr(M.length() - 2, 2) + ":" + S.substr(S.length() - 2, 2);
 }
 
 //===============角度格式化==================
-std::string rad2strE(double d, bool flag, int ext)
+mystl::string rad2strE(double d, bool flag, int ext)
 {	
 	//将弧度转为字串,ext为小数保留位数
 	//flag=0输出格式示例: -23°59" 48.23"
 	//flag=1输出格式示例:  18h 29m 44.52s
-	std::string s = " ", w1 = "°", w2 = "\'", w3 = "\"";
+	mystl::string s = " ", w1 = "°", w2 = "\'", w3 = "\"";
 	if (d < 0)
 		d = -d, s = "-";
 	if (flag)
@@ -95,11 +114,11 @@ std::string rad2strE(double d, bool flag, int ext)
 	if (b >= 60)
 		b -= 60, a++;
 
-	std::string A, B, C, D;
-	A = "   " + std::to_string(a);
-	B = "0" + std::to_string(b);
-	C = "0" + std::to_string(c);
-	D = "00000" + std::to_string((int)d);
+	mystl::string A, B, C, D;
+	A = "   " + to_str(a);
+	B = "0" + to_str(b);
+	C = "0" + to_str(c);
+	D = "00000" + to_str((int)d);
 	s += A.substr(A.length() - 3, 3) + w1;
 	s += B.substr(B.length() - 2, 2) + w2;
 	s += C.substr(C.length() - 2, 2);
@@ -109,16 +128,16 @@ std::string rad2strE(double d, bool flag, int ext)
 }
 
 //将弧度转为字串,保留2位
-std::string rad2str(double d, bool tim)
+mystl::string rad2str(double d, bool tim)
 {	
 	return rad2strE(d, tim, 2);
 }
 
 //将弧度转为字串,精确到分
-std::string rad2str2(double d)
+mystl::string rad2str2(double d)
 {	
 	//输出格式示例: -23°59"
-	std::string s = "+", w1 = "°", w2 = "\'", w3 = "\"";
+	mystl::string s = "+", w1 = "°", w2 = "\'", w3 = "\"";
 	if (d < 0)
 		d = -d, s = "-";
 	d *= 180 / M_PI;
@@ -126,26 +145,26 @@ std::string rad2str2(double d)
 	int b = floor((d - a) * 60 + 0.5);
 	if (b >= 60)
 		b -= 60, a++;
-	std::string A = "   " + std::to_string(a), B = "0" + std::to_string(b);
+	mystl::string A = "   " + to_str(a), B = "0" + to_str(b);
 	s += A.substr(A.length() - 3, 3) + w1;
 	s += B.substr(B.length() - 2, 2) + w2;
 	return s;
 }
 
 //秒转为分秒,fx为小数点位数,fs为1转为"分秒"格式否则转为"角度分秒"格式
-std::string m2fm(double v, int fx, int fs)
+mystl::string m2fm(double v, int fx, int fs)
 {
-	std::string gn = "";
+	mystl::string gn = "";
 	if (v < 0)
 		v = -v, gn = "-";
 	int f = floor(v / 60);
 	double m = v - f * 60;
 	if (!fs)
-		return gn + std::to_string(f) + "\'" + to_str(m, fx) + "\"";
+		return gn + to_str(f) + "\'" + to_str(m, fx) + "\"";
 	if (fs == 1)
-		return gn + std::to_string(f) + "分" + to_str(m, fx) + "秒";
+		return gn + to_str(f) + "分" + to_str(m, fx) + "秒";
 	if (fs == 2)
-		return gn + std::to_string(f) + "m" + to_str(m, fx) + "s";
+		return gn + to_str(f) + "m" + to_str(m, fx) + "s";
 	else
 		return "error";
 }
@@ -196,42 +215,64 @@ Date setFromJD(double jd)
 	return r;
 }
 
-//日期转为串
-std::string DD2str(Date r)
+// 日期对象转为字符串
+mystl::string DD2str(Date r)
 { 
-	std::string
-	Y = "     " + std::to_string(r.Y), M = "0" + std::to_string(r.M), D = "0" + std::to_string(r.D);
+	mystl::string
+	Y = "     " + to_str(r.Y), 
+	M = "0" + to_str(r.M), 
+	D = "0" + to_str(r.D);
+	
 	int h = r.h, m = r.m, s = int2(r.s + .5);
 	if (s >= 60)
 		s -= 60, m++;
 	if (m >= 60)
 		m -= 60, h++;
 
-	std::string _h, _m, _s;
-	_h = "0" + std::to_string(h);
-	_m = "0" + std::to_string(m);
-	_s = "0" + std::to_string(s);
+	mystl::string _h, _m, _s;
+	_h = "0" + to_str(h);
+	_m = "0" + to_str(m);
+	_s = "0" + to_str(s);
 	Y = Y.substr(Y.length() - 5, 5);
 	M = M.substr(M.length() - 2, 2);
 	D = D.substr(D.length() - 2, 2);
 	_h = _h.substr(_h.length() - 2, 2);
 	_m = _m.substr(_m.length() - 2, 2);
 	_s = _s.substr(_s.length() - 2, 2);
+	
 	return Y + "-" + M + "-" + D + " " + _h + ":" + _m + ":" + _s;
 }
 
-//JD转为串
-std::string JD2str(double jd)
+// JD转为字符串
+mystl::string JD2str(double jd)
 {
 	Date r=setFromJD(jd);
 	return DD2str(r);
 }
 
-
-std::string fill_str(std::string s, int n, std::string c) {
+mystl::string fill_str(mystl::string s, int n, mystl::string c) {
 	int len=s.length();
 	for(int i=0;i<len-n;i++){
 		s=c+s;
 	}
 	return s;
 }
+
+// mystl::astring->int
+int astoi(mystl::string as) {
+	int res;
+	sscanf(as.c_str(), "%d", &res);
+	return res;
+}
+
+/*
+int main() {
+	Date d = {-5621,11,12,10,30,50.6987};
+	// std::cout<<to_str(555)<<"\n";
+	// std::cout<<to_str(555.464,2)<<"\n";
+	// mystl::string ss = to_str(1234);
+	// std::cout<<ss.begin() <<"\n";
+	std::cout<<DD2str(d)<<"\n";
+	std::cout<<"-->"<<astoi("12333")<<"\n";
+}
+// */

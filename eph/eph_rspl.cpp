@@ -1,17 +1,17 @@
-#include <cmath>
 #include "eph.h"
 #include "eph0.h"
 #include "eph_rsgs.h"
 #include "eph_rspl.h"
-#include "../tool.h"
+#include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 
 bool RS_PL::nasa_r = 0;//为1表示采用NASA的视径比
-std::array<double, 5> RS_PL::sT;//地方日食时间表
-std::string RS_PL::LX;
+mystl::array5 RS_PL::sT;//地方日食时间表
+mystl::string RS_PL::LX;
 double RS_PL::sf;
 double RS_PL::sf2;
 double RS_PL::sf3;
-std::string RS_PL::sflx;
+mystl::string RS_PL::sflx;
 double RS_PL::b1;
 double RS_PL::dur;
 double RS_PL::sun_s;
@@ -21,22 +21,22 @@ double RS_PL::V1;
 double RS_PL::P2;
 double RS_PL::V2;
 
-std::array<double,3> RS_PL::A={};
-std::array<double,3> RS_PL::B={}; //本半影锥顶点坐标
+mystl::array3 RS_PL::A={};
+mystl::array3 RS_PL::B={}; //本半影锥顶点坐标
 _ZB RS_PL::P={};//t1时刻的日月坐标,g为恒星时
 _ZB RS_PL::Q={};//t2时刻的日月坐标
-std::array<double,10> RS_PL::V;//食界表
-std::string RS_PL::Vc = "";
-std::string RS_PL::Vb = "";  //食中心类型,本影南北距离
+mystl::array10 RS_PL::V;//食界表
+mystl::string RS_PL::Vc = "";
+mystl::string RS_PL::Vb = "";  //食中心类型,本影南北距离
 
 void RS_PL::secXY(double jd,double L,double fa,double high,_SECXY &re)
 { //日月xy坐标计算。参数：jd是力学时,站点经纬L,fa,海拔high(千米)
   //基本参数计算
   double deltat = dt_T(jd); //TD-UT
-  std::array<double,2> zd=nutation2(jd/36525.0);
+  mystl::array2 zd=nutation2(jd/36525.0);
   double gst= pGST(jd-deltat,deltat) + zd[0]*cos(hcjj(jd/36525.0) + zd[1]); //真恒星时(不考虑非多项式部分)
 
-  std::array<double,3> z;
+  mystl::array3 z;
   //=======月亮========
   z=RS_GS::moon(jd); re.mCJ=z[0]; re.mCW=z[1]; re.mR=z[2]; //月亮视赤经,月球赤纬
   double mShiJ = rad2rrad(gst + L - z[0]); //得到此刻月亮时角
@@ -195,18 +195,18 @@ void RS_PL::secMax(double jd,double L,double fa,double high)
 }
 
  //以下涉及南北界计算
- std::array<double,3> A={}, B={}; //本半影锥顶点坐标
+ mystl::array3 A={}, B={}; //本半影锥顶点坐标
  _ZB P={};//t1时刻的日月坐标,g为恒星时
  _ZB Q={};//t2时刻的日月坐标
- std::array<double,10> V;//食界表
- std::string Vc = "", Vb = "";  //食中心类型,本影南北距离
+ mystl::array10 V;//食界表
+ mystl::string Vc = "", Vb = "";  //食中心类型,本影南北距离
 
 void RS_PL::zb0(double jd)
 {
   //基本参数计算
   double deltat = dt_T(jd); //TD-UT
   double E=hcjj(jd/36525.0);
-  std::array<double,2> zd=nutation2(jd/36525.0);
+  mystl::array2 zd=nutation2(jd/36525.0);
   
   RS_PL::P.g = pGST(jd-deltat, deltat) + zd[0]*cos(E+zd[1]); //真恒星时(不考虑非多项式部分)
   RS_PL::P.S=RS_GS::sun(jd);
@@ -218,19 +218,19 @@ void RS_PL::zb0(double jd)
   RS_PL::Q.M=RS_GS::moon(t2);
 
   //转为直角坐标
-  std::array<double,3> z1={}, z2={};
+  mystl::array3 z1={}, z2={};
   z1 = llr2xyz(RS_PL::P.S);
   z2 = llr2xyz(RS_PL::P.M);
 
   double k=959.63/cs_sMoon*cs_AU; //k为日月半径比
   //本影锥顶点坐标计算
-  std::array<double,3> F = {
+  mystl::array3 F = {
    (z1[0]-z2[0])/(1-k)+z2[0],
    (z1[1]-z2[1])/(1-k)+z2[1],
    (z1[2]-z2[2])/(1-k)+z2[2]};
   RS_PL::A = xyz2llr(F);
   //半影锥顶点坐标计算
-  std::array<double,3> FF = {
+  mystl::array3 FF = {
    (z1[0]-z2[0])/(1+k)+z2[0],
    (z1[1]-z2[1])/(1+k)+z2[1],
    (z1[2]-z2[2])/(1+k)+z2[2]};
@@ -239,8 +239,8 @@ void RS_PL::zb0(double jd)
 
 void RS_PL::zbXY(_ZB &p,double L,double fa)
 {
-  std::array<double,3> s = {p.S[0],p.S[1],p.S[2]};
-  std::array<double,3> m = {p.M[0],p.M[1],p.M[2]};
+  mystl::array3 s = {p.S[0],p.S[1],p.S[2]};
+  mystl::array3 m = {p.M[0],p.M[1],p.M[2]};
   s=parallax(s, p.g+L-p.S[0],fa, 0); //修正了视差的赤道坐标
   m=parallax(m, p.g+L-p.M[0],fa, 0); //修正了视差的赤道坐标
   //=======视半径========
@@ -259,7 +259,7 @@ void RS_PL::p2p(double L,double fa,_GJW &re,bool fAB,int f)
 
   double u=q.y-p.y, v=q.x-p.x, a=sqrt(u*u+v*v),r=959.63/p.S[2]/rad*cs_AU;
   double W=p.S[1]+f*r*v/a, J=p.S[0]-f*r*u/a/cos((W+p.S[1])/2.0), R=p.S[2];
-  std::array<double,3> AA = fAB ? RS_PL::A : RS_PL::B;
+  mystl::array3 AA = fAB ? RS_PL::A : RS_PL::B;
   
   COORDP pp = lineEar({J,W,R}, AA, p.g );
   re.J = pp.J;
@@ -281,7 +281,7 @@ void RS_PL::nbj(double jd)
  { //南北界计算
   RS_GS::init(jd,7);
   _GJW G={};
-  std::array<double,10> &V=RS_PL::V;
+  mystl::array10 &V=RS_PL::V;
   int i;
   for(i=0;i<10;i++) V[i]=100; RS_PL::Vc="",RS_PL::Vb=""; //返回初始化,纬度值为100表示无解,经度100也是无解,但在以下程序中经度会被转为-PI到+PI
 

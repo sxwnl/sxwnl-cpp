@@ -1,5 +1,5 @@
-#include <string>
-#include <vector>
+#include "../mylib/mystl/string.h"
+#include "../mylib/mystl/vector.h"
 
 struct SJ
 {
@@ -19,28 +19,28 @@ struct SJ
 	double H2;
 	double H3;
 	double H4;
-	std::string sm;
+	mystl::string sm;
 };
 
 struct SJ_S
 {
-	std::string s;
-	std::string z;
-	std::string j;
-	std::string c;
-	std::string h;
-	std::string ch;
-	std::string sj;
-	std::string Ms;
-	std::string Mz;
-	std::string Mj;
+	mystl::string s;
+	mystl::string z;
+	mystl::string j;
+	mystl::string c;
+	mystl::string h;
+	mystl::string ch;
+	mystl::string sj;
+	mystl::string Ms;
+	mystl::string Mz;
+	mystl::string Mj;
 };
 
 
 class SZJ
 {	//日月的升中天降,不考虑气温和气压的影响  
 public:	
-	static std::vector <SJ_S> rts;	//多天的升中降
+	static mystl::vector <SJ_S> rts;	//多天的升中降
 	
 	static double getH(double h, double w);
 	static void Mcoord(double jd, double H0, SJ & r);

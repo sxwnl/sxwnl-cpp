@@ -1,8 +1,7 @@
-#include <cmath>
-
+#include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 #include "eph0.h"
 #include "eph.h"
-#include "../tool.h"
 #include "eph_msc.h"
 
 double MSC::T;//TD力学时
@@ -64,12 +63,12 @@ void MSC::calc(double T, double L, double fa, double high)
 	MSC::dt = dt_T(T);			//TD-UT
 	MSC::jd = T - MSC::dt;	//UT
 	T /= 36525.0;
-	std::array<double, 2> zd = nutation2(T);
+	mystl::array2 zd = nutation2(T);
 	MSC::dL = zd[0];			//黄经章
 	MSC::dE = zd[1];			//交角章动
 	MSC::E = hcjj(T) + MSC::dE;	//真黄赤交角
 	MSC::gst = pGST(MSC::jd, MSC::dt) + MSC::dL * cos(MSC::E);	//真恒星时(不考虑非多项式部分)
-	std::array<double, 3> z;
+	mystl::array3 z;
 
 	//=======月亮========
 	//月亮黄道坐标
@@ -180,9 +179,9 @@ void MSC::calc(double T, double L, double fa, double high)
 		MSC::zx_J = MSC::zx_W = 100;
 }
 
-std::string MSC::toStr(bool fs)
+mystl::string MSC::toStr(bool fs)
 {
-	std::string s;
+	mystl::string s;
 	s = "-------------------------------------------\n";
 	s = s + "平太阳 " + timeStr(MSC::pty) + " 真太阳 " + timeStr(MSC::zty) + "\n";
 	s = s + "时差 " + m2fm(MSC::sc * 86400, 2, 1) + " 月亮被照亮 " + to_str(MSC::mIll * 100, 2) + "% ";
