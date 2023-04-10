@@ -211,7 +211,7 @@ mystl::string nianLiSTR(int y)
 
   v = OBB::so_accurate2(SSQ::HS[i]);
   s2 = "("+ JD2str(v+J2000).substr(9,11)+")";
-  if(int2(v+0.5)!=SSQ::HS[i]) s2 = "\e[31m"+s2+"\e[0m";
+  if(int2(v+0.5)!=SSQ::HS[i]) s2 = "\033[31m"+s2+"\033[0m";
  // s2+="\n";
   //v=(v+0.5+J2000)%1; if(v>0.5) v=1-v; if(v<8/1440) s2 = "<u>"+s2+"</u>"; //对靠近0点的加注
   s1 += s2;
@@ -228,7 +228,7 @@ mystl::string nianLiSTR(int y)
 
     v = OBB::qi_accurate2(qi);
     s2 = "("+ JD2str(v+J2000).substr(9,11)+")";
-    if(int2(v+0.5)!=qi) s2 = "\e[31m"+s2+"\e[0m";
+    if(int2(v+0.5)!=qi) s2 = "\033[31m"+s2+"\033[0m";
     //v=(v+0.5+J2000)%1; if(v>0.5) v=1-v; if(v<8/1440) s2 = "<u>"+s2+"</u>"; //对靠近0点的加注
     s1 += s2;
   }

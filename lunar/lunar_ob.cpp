@@ -335,7 +335,7 @@ void OBB::mingLiBaZi(double jd, double J, MLBZ &ob)
 	{							//一天中包含有13个纪时
 		mystl::string c = mystl::string(str_gan[(v + i) % 10]) + str_zhi[(v + i) % 12];	//各时辰的八字
 		if (SC == i)
-			ob.bz_js = c, c = "\e[31m" + c + "\e[0m";	//红色显示这时辰
+			ob.bz_js = c, c = "\033[31m" + c + "\033[0m";	//红色显示这时辰
 		ob.bz_JS += (i ? " " : "") + c;
 	}
 }

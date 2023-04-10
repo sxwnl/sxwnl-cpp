@@ -212,20 +212,23 @@ double prece(double t, const char *ss, const char *mx)
 	char s[4] = { };
 	strcat(s, ss);
 	strcat(s, " ");
-	int i, n;
+	int n = 0;
 	double c = 0, *p, tn = 1;
 
 	if (!strcmp(mx, "IAU1976"))
 		n = 4, p = preceTab_IAU1976;
-	if (!strcmp(mx, "IAU2000"))
+	else if (!strcmp(mx, "IAU2000"))
 		n = 6, p = preceTab_IAU2000;
-	if (!strcmp(mx, "P03"))
+	else if (!strcmp(mx, "P03"))
 		n = 6, p = preceTab_P03;
+	else return 0;
 
 	const char *str = "fi w  P  Q  E  x  pi II p  th Z  z ";
-	int sc = (strlen(str) - strlen(strstr(str, s))) / 3;
+	const char* find_str = strstr(str, s);
+	if (find_str == NULL) return 0;
+	int sc = (strlen(str) - strlen(find_str)) / 3;
 
-	for (i = 0; i < n; i++, tn *= t)
+	for (int i = 0; i < n; i++, tn *= t)
 		c += p[sc * n + i] * tn;
 	return c / rad;
 }

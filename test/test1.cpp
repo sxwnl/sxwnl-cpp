@@ -5,6 +5,7 @@ API测试
 */
 #include <ctime>
 #include <iostream>
+#include <array>
 
 #include "../mylib/tool.h"
 #include "../lunar/lunar.h"
@@ -19,7 +20,7 @@ API测试
 
 #define MAP_H 18
 #define MAP_W  7
-mystl::static_array<mystl::static_array<mystl::string,MAP_W>,MAP_H> strmap;
+std::array<std::array<mystl::string,MAP_W>,MAP_H> strmap;
 
 #include <iostream>
 #include <chrono>
@@ -246,7 +247,7 @@ void dingQi_cmp(int y = 2000, int N = 10)
         if (T > maxT)
             maxT = T;
     }
-    std::cout << "\e[31;1m" << to_str(2000 + y) << "年之后" << to_str(N) << "个朔日粗算与精算的最大差异:" << to_str(maxT) << "秒。\e[0m" << std::endl;
+    std::cout << "\033[31;1m" << to_str(2000 + y) << "年之后" << to_str(N) << "个朔日粗算与精算的最大差异:" << to_str(maxT) << "秒。\033[0m" << std::endl;
 }
 
 void dingSuo_cmp(int y=2000,int N=10)
@@ -263,7 +264,7 @@ void dingSuo_cmp(int y=2000,int N=10)
         if (T > maxT)
             maxT = T;
     }
-    std::cout<<"\e[31;1m"<< to_str(2000 + y) << "年之后" << to_str(N) << "个朔日粗算与精算的最大差异:" << to_str(maxT) << "秒。\e[0m"<<std::endl;
+    std::cout<<"\033[31;1m"<< to_str(2000 + y) << "年之后" << to_str(N) << "个朔日粗算与精算的最大差异:" << to_str(maxT) << "秒。\033[0m"<<std::endl;
 }
 
 void dingQi_v()
@@ -277,7 +278,7 @@ void dingQi_v()
         S_aLon_t2(0);
         
     auto d3 = std::chrono::system_clock::now();
-    std::cout<< "定气测试\n\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\e[0m";
+    std::cout<< "定气测试\n\033[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\033[0m";
 }
 
 void dingSuo_v() 
@@ -292,7 +293,7 @@ void dingSuo_v()
         MS_aLon_t2(0);
 
     auto d3 = std::chrono::system_clock::now(); 
-    std::cout<< "\e[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\e[0m";
+    std::cout<< "\033[31;1m高精度:" << std::chrono::duration<double> (d2 - d1).count()*1000 << "毫秒/10千个\n" << "低精度:" << std::chrono::duration<double> (d3 - d2).count()*1000 << "毫秒/10千个\n\033[0m";
 }
 
 void ML_calc(Date dat)
@@ -302,10 +303,10 @@ void ML_calc(Date dat)
     OBB::mingLiBaZi( jd+(-8.0)/24-J2000, jw.J/radd, ob ); //八字计算
 
     std::cout<<
-     "\e[31;1m[日标]：\e[0m"<<"公历 "<<dat.Y<<"-"<<dat.M<<"-"<<dat.D << " 儒略日数 " << int2(jd+0.5) << " 距2000年首" << int2(jd+0.5-J2000) << "日\n"
-   << "\e[31;1m[八字]：\e[0m"    << ob.bz_jn<<"年 "<<ob.bz_jy<<"月 "<<ob.bz_jr<<"日 "<<ob.bz_js<<"时 真太阳 \e[31m" << ob.bz_zty<< "\e[0m"
-   << "\n\e[1;32m[纪时]：\e[0m" << ob.bz_JS << "\n"
-   << "\e[1;32m[时标]：\e[0;1;35m" << "23　 01　 03　 05　 07　 09　 11　 13　 15　 17　 19　 21　 23\e[0m"<<std::endl;
+     "\033[31;1m[日标]：\033[0m"<<"公历 "<<dat.Y<<"-"<<dat.M<<"-"<<dat.D << " 儒略日数 " << int2(jd+0.5) << " 距2000年首" << int2(jd+0.5-J2000) << "日\n"
+   << "\033[31;1m[八字]：\033[0m"    << ob.bz_jn<<"年 "<<ob.bz_jy<<"月 "<<ob.bz_jr<<"日 "<<ob.bz_js<<"时 真太阳 \033[31m" << ob.bz_zty<< "\033[0m"
+   << "\n\033[1;32m[纪时]：\033[0m" << ob.bz_JS << "\n"
+   << "\033[1;32m[时标]：\033[0;1;35m" << "23　 01　 03　 05　 07　 09　 11　 13　 15　 17　 19　 21　 23\033[0m"<<std::endl;
 }
 
 Date get_time(void)
@@ -328,13 +329,13 @@ Date get_time(void)
 
 void initmap(OB_LUN lun)
 {
-    mystl::map<mystl::string,mystl::string> str_yx={{"望","\e[33m●"},{"上弦","\e[33m∪"},{"朔","\e[38;5;245m●"},{"下弦","\e[33m∩"}};
+    mystl::map<mystl::string,mystl::string> str_yx={{"望","\033[33m●"},{"上弦","\033[33m∪"},{"朔","\033[38;5;245m●"},{"下弦","\033[33m∩"}};
     for (int i=0;i<18;i++)
     {
         for (int j=0;j<7;j++)
         {
             if (i%3==2)
-            strmap[i][j]="\e[32m--------";
+            strmap[i][j]="\033[32m--------";
             else 
             strmap[i][j]="        ";
         }
@@ -344,28 +345,28 @@ void initmap(OB_LUN lun)
         int y=lun.day[i].weeki;
         int x=lun.day[i].week;
         int j=i<9?6:4;
-        strmap[y*3][x] = x==0||x==6?"\e[31m":"\e[37m";
+        strmap[y*3][x] = x==0||x==6?"\033[31m":"\033[37m";
         strmap[y*3][x] += str_rmc0[i];
         if (lun.day[i].jqmc.length())
-            strmap[y*3][x]+="\e[32m◆",j--;
+            strmap[y*3][x]+="\033[32m◆",j--;
         if (lun.day[i].yxmc.length())
             strmap[y*3][x]+=str_yx[lun.day[i].yxmc],j--;
         for (int k = 0;k < j;k++)
-            strmap[y*3][x]+=" \e[0m\e[1m";
+            strmap[y*3][x]+=" \033[0m\033[1m";
         if (!j) 
-            strmap[y*3][x]+="\e[0m\e[1m";
+            strmap[y*3][x]+="\033[0m\033[1m";
         if (lun.day[i].Ldi==0)
-            strmap[y*3+1][x]="\e[38;5;123m",strmap[y*3+1][x]
+            strmap[y*3+1][x]="\033[38;5;123m",strmap[y*3+1][x]
             =strmap[y*3+1][x]+lun.day[i].Lleap+strmap[y*3+1][x]
             +lun.day[i].Lmc2+strmap[y*3+1][x]+"月"
             +strmap[y*3+1][x]+str_dx[lun.day[i].Ldn-29]+strmap[y*3+1][x]
-            +(lun.day[i].Lleap.length()?"\e[0m\e[1m":"  \e[0m\e[1m");
+            +(lun.day[i].Lleap.length()?"\033[0m\033[1m":"  \033[0m\033[1m");
         else
             strmap[y*3+1][x]="",strmap[y*3+1][x]=strmap[y*3+1][x]
-            +lun.day[i].Ldc+strmap[y*3+1][x]+"    \e[0m\e[1m";
+            +lun.day[i].Ldc+strmap[y*3+1][x]+"    \033[0m\033[1m";
         if (lun.day[i].Ljq.length())
-            strmap[y*3+1][x]="\e[34m",strmap[y*3+1][x]=strmap[y*3+1][x]
-            +lun.day[i].Ljq+strmap[y*3+1][x]+="    \e[0m\e[1m";
+            strmap[y*3+1][x]="\033[34m",strmap[y*3+1][x]=strmap[y*3+1][x]
+            +lun.day[i].Ljq+strmap[y*3+1][x]+="    \033[0m\033[1m";
             
     }
 //    printf("公元 %04d年%02d月%02d日 周%s %s座\n",lun.day[1].XiZ);
@@ -373,24 +374,25 @@ void initmap(OB_LUN lun)
 void drawmap()
 {
     for (int k=0;k<MAP_W;k++)
-        std::cout<<"\e[3"<<((k&&k<6)?3:1)<<";1m周"<<str_xqmc[k]<<"    ";
+        std::cout<<"\033[3"<<((k&&k<6)?3:1)<<";1m周"<<str_xqmc[k]<<"    ";
     std::cout<<std::endl;
     for (int k=0;k<MAP_W*4;k++)
-        std::cout<<"\e[33m--";
+        std::cout<<"\033[33m--";
     std::cout<<std::endl;
-    for (mystl::static_array<mystl::string,MAP_W> i:strmap)
+    for (std::array<mystl::string,MAP_W> i:strmap)
     {
         for (mystl::string j:i)
             std::cout<<j;
         std::cout<<std::endl;
     }
-    std::cout<<"\e[0m";
+    std::cout<<"\033[0m";
 }
 int main()
 {
-#ifdef __WIN32__
+#if defined(_WIN32) || defined(_MSC_VER)
     system("@chcp 65001");
 #endif
+
 
     Date dat=get_time();
     
@@ -446,6 +448,7 @@ int main()
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
 //    rs2_calc(2,0); 
 //    rs2_jxb();     // 日食界线表
+    system("pause");
     
 #ifdef WIN32
 
