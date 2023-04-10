@@ -1,8 +1,9 @@
 #ifndef DTOA_H
 #define DTOA_H
 
-#include <cassert>
+#include <assert.h>
 #include <cmath>
+#include <math.h>
 #include <cstring>
 
 #include <stdint.h>
