@@ -1,7 +1,6 @@
 #ifndef EPH_MSC_H
 #define EPH_MSC_H
 
-#include <array>
 #include "../mylib/mystl/string.h"
 
 //========太阳月亮计算类=============

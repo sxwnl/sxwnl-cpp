@@ -1,11 +1,9 @@
 #include <cstring>
-#define _USE_MATH_DEFINES
-#include <cmath>
-
 #include "lunar.h"
 #include "lunar_ssq.h"
 #include "../eph/eph0.h"
 #include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
 
 void init_ob()
 {

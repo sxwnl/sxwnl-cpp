@@ -1,67 +1,17 @@
-#ifndef DTOA_MILO_H
-#define DTOA_MILO_H
-/*
-Grisu2 Implemenation, based on
-   "Printing Floating-Point Numbers Quickly and Accurately with Integers" by Florian Loitsch
-
-Copyright (C) 2014 Milo Yip
-Source: https://github.com/miloyip/dtoa-benchmark
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
-*/
-
+#ifndef DTOA_H
+#define DTOA_H
 
 #include <cassert>
-#include <math.h>
-#include <cfloat>
-#include <cstdlib>
+#include <cmath>
 #include <cstring>
-#include <cstdint>
 
+#include <stdint.h>
 
-#if defined(_MSC_VER)
-namespace std {                                 // IEEE floats assumed
-#ifndef HAVE_STD_SIGNBIT
-#define HAVE_STD_SIGNBIT
-    template <typename T>
-    inline bool signbit(const T &x);
-    template <>
-    inline static bool signbit<float>(const float &x)
-      { return (*reinterpret_cast<const long *>(&x) & (1L << 31)) != 0; }
-    template <>
-    inline static bool signbit<double>(const double &x)
-      { return (*reinterpret_cast<const long long *>(&x) & (1LL << 63)) != 0; }
-#endif
-
-#pragma warning(push)
-#pragma warning(disable : 4127)                 // conditional expression is constant
-};
-
-#elif defined(__GNUC__)
 namespace gcc_ints
 {
     __extension__ typedef __int128 int128;
     __extension__ typedef unsigned __int128 uint128;
 }
-#endif
-
-namespace DtoaMilo {  //namespace DtoaMilo
 
 #define UINT64_C2(h, l) ((static_cast<uint64_t>(h) << 32) | static_cast<uint64_t>(l))
 
@@ -81,7 +31,7 @@ struct DiyFp {
 		if (biased_e != 0) {
 			f = significand + kDpHiddenBit;
 			e = biased_e - kDpExponentBias;
-		}
+		} 
 		else {
 			f = significand;
 			e = kDpMinExponent + 1;
@@ -245,7 +195,7 @@ inline DiyFp GetCachedPower(int e, int* K) {
 	//int k = static_cast<int>(ceil((-61 - e) * 0.30102999566398114)) + 374;
 	double dk = (-61 - e) * 0.30102999566398114 + 347;	// dk must be positive, so can do ceiling in positive
 	int k = static_cast<int>(dk);
-	if (dk - k >= DBL_MAX)
+	if (dk - k > 0.0)
 		k++;
 
 	unsigned index = static_cast<unsigned>((k >> 3) + 1);
@@ -300,7 +250,7 @@ inline void DigitGen(const DiyFp& W, const DiyFp& Mp, uint64_t delta, char* buff
 			case  3: d = p1 /        100; p1 %=        100; break;
 			case  2: d = p1 /         10; p1 %=         10; break;
 			case  1: d = p1;              p1 =           0; break;
-			default:
+			default: 
 #if defined(_MSC_VER)
 				__assume(0);
 #elif __GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5)
@@ -367,28 +317,27 @@ inline const char* GetDigitsLut() {
 	return cDigitsLut;
 }
 
-inline /*void*/ char* WriteExponent(int K, char* buffer) {
-	if (K < 0) {
-		*buffer++ = '-';
-		K = -K;
-	}
+inline char* WriteExponent(int K, char* buffer) {
+    if (K < 0) {
+        *buffer++ = '-';
+        K = -K;
+    }
 
-	if (K >= 100) {
-		*buffer++ = '0' + static_cast<char>(K / 100);
-		K %= 100;
-		const char* d = GetDigitsLut() + K * 2;
-		*buffer++ = d[0];
-		*buffer++ = d[1];
-	}
-	else if (K >= 10) {
-		const char* d = GetDigitsLut() + K * 2;
-		*buffer++ = d[0];
-		*buffer++ = d[1];
-	}
-	else
-		*buffer++ = '0' + static_cast<char>(K);
+    if (K >= 100) {
+        *buffer++ = static_cast<char>('0' + static_cast<char>(K / 100));
+        K %= 100;
+        const char* d = GetDigitsLut() + K * 2;
+        *buffer++ = d[0];
+        *buffer++ = d[1];
+    }
+    else if (K >= 10) {
+        const char* d = GetDigitsLut() + K * 2;
+        *buffer++ = d[0];
+        *buffer++ = d[1];
+    }
+    else
+        *buffer++ = static_cast<char>('0' + static_cast<char>(K));
 
-	*buffer = '\0';
     return buffer;
 }
 
@@ -548,13 +497,9 @@ inline char* Prettify(char* buffer, int length, int k, int precision, int rightp
     }
 }
 
-#undef  UINT64_C2
-
-};  //namespace DtoaMilo
-
 // Orignal
 inline char* dtoa_milo(double value, char* buffer) {
-    using namespace DtoaMilo;
+ //   using namespace DtoaMilo;
 
 	// Not handling NaN and inf
 	assert(!isnan(value));
@@ -578,9 +523,8 @@ inline char* dtoa_milo(double value, char* buffer) {
 	}
 }
 
-// Extended, include NAN support, precision and optional right padding.
+
 inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad) {
-    using namespace DtoaMilo;
 
     if (value == 0) {
         if (std::signbit(value)) *buffer++ = '-';
@@ -608,8 +552,4 @@ inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad)
     }
 }
 
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif //_MSC_VER
-
-#endif // DTOA_MILO_H
+#endif // DTOA_H

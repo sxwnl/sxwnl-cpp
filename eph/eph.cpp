@@ -1,13 +1,13 @@
 #include <cstring>
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include "eph.h"
 #include "eph0.h"
 #include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
+
 //大距计算
 double xingJJ(int xt, double t, int jing)
 {								//行星的距角,jing为精度控
-	std::array<double,3> a, z;
+	mystl::array3 a, z;
 	a = p_coord(0, t, 10, 10, 10);	//地球
 	z = p_coord(xt, t, 10, 10, 10);	//行星
 	z = h2g(z, a);				//转到地心
@@ -28,7 +28,7 @@ double xingJJ(int xt, double t, int jing)
 	return j1_j2(z[0], z[1], a[0], a[1]);
 }
 
-std::array<double,2> daJu(int xt, double t, bool dx)
+mystl::array2 daJu(int xt, double t, bool dx)
 {								//大距计算超底速算法, dx=1东大距,t儒略世纪TD
 	double a, b, c[5];
 	if (xt == 1)
@@ -62,10 +62,10 @@ std::array<double,2> daJu(int xt, double t, bool dx)
 	return {t, r2};
 }
 
-std::array<double,3> xingLiu0(int xt, double t, int n, double gxs)
+mystl::array3 xingLiu0(int xt, double t, int n, double gxs)
 {								//行星的视坐标
-	std::array<double,3> a, z;
-	std::array<double,2> zd;
+	mystl::array3 a, z;
+	mystl::array2 zd;
 	double E = hcjj(t);
 	a = p_coord(0, t - gxs, n, n, n);	//地球
 	z = p_coord(xt, t - gxs, n, n, n);	//行星
@@ -82,7 +82,7 @@ std::array<double,3> xingLiu0(int xt, double t, int n, double gxs)
 
 double xingLiu(int xt, double t, bool sn)
 {								//留,sn=1顺留
-	std::array<double,3> y1, y2, y3;
+	mystl::array3 y1, y2, y3;
 	double g;
 	int i,n;
 	//先求冲(下合)
@@ -129,9 +129,9 @@ double xingLiu(int xt, double t, bool sn)
 }
 
 //合月计算
-std::array<double,4> xingMP(int xt, double t, int n, double E, std::array<double, 4> g)
+mystl::array4 xingMP(int xt, double t, int n, double E, mystl::array4 g)
 {								//月亮行星视赤经差
-	std::array<double,3> a, p, m;
+	mystl::array3 a, p, m;
 	a = p_coord(0, t - g[1], n, n, n);	//地球
 	p = p_coord(xt, t - g[1], n, n, n);	//行星
 	m = m_coord(t - g[0], n, n, n);	//月亮
@@ -140,21 +140,21 @@ std::array<double,4> xingMP(int xt, double t, int n, double E, std::array<double
 	p[0] += g[2];
 	m = llrConv(m, E + g[3]);
 	p = llrConv(p, E + g[3]);
-	std::array<double, 4> re = { rad2rrad(m[0] - p[0]), m[1] - p[1], m[2] / cs_GS / 86400 / 36525.0, p[2] / cs_GS / 86400 / 36525.0 * cs_AU };	//赤经差及光行时
+	mystl::array4 re = { rad2rrad(m[0] - p[0]), m[1] - p[1], m[2] / cs_GS / 86400 / 36525.0, p[2] / cs_GS / 86400 / 36525.0 * cs_AU };	//赤经差及光行时
 	return re;
 }
 
-std::array<double,4> xingHY(int xt, double t)
+mystl::array4 xingHY(int xt, double t)
 {								//行星合月(视赤经),t儒略世纪TD
 	double i, v, E;
-	std::array<double, 4> d,d2,g = { 0, 0, 0, 0 };
+	mystl::array4 d,d2,g = { 0, 0, 0, 0 };
 	for (i = 0; i < 3; i++)
 	{
 		d = xingMP(xt, t, 8, 0.4091, g);
 		t -= d[0] / 8192;
 	}
 	E = hcjj(t);
-	std::array<double,2> zd = nutation2(t);
+	mystl::array2 zd = nutation2(t);
 	g = {d[2], d[3], zd[0], zd[1]};	//光行时,章动
 
 	d = xingMP(xt, t, 8, E, g);
@@ -165,27 +165,27 @@ std::array<double,4> xingHY(int xt, double t)
 	t -= d[0] / v;
 	d = xingMP(xt, t, -1, E, g);
 	t -= d[0] / v;
-	std::array<double, 4> re = { t, d[1] };
+	mystl::array4 re = { t, d[1] };
 	return re;
 }
 
 //合冲日计算(视黄经合冲)
-std::array<double,4> xingSP(int xt, double t, int n, double w0, double ts, double tp)
+mystl::array4 xingSP(int xt, double t, int n, double w0, double ts, double tp)
 {								//行星太阳视黄经差与w0的差
-	std::array<double,3> a, p, s;
+	mystl::array3 a, p, s;
 	a = p_coord(0, t - tp, n, n, n);	//地球
 	p = p_coord(xt, t - tp, n, n, n);	//行星
 	s = p_coord(0, t - ts, n, n, n);
 	s[0] += _pi;
 	s[1] = -s[1];					//太阳
 	p = h2g(p, a);
-	std::array<double, 4> re = { rad2rrad(p[0] - s[0] - w0), p[1] - s[1], s[2] * cs_Agx, p[2] * cs_Agx };	//赤经差及光行时
+	mystl::array4 re = { rad2rrad(p[0] - s[0] - w0), p[1] - s[1], s[2] * cs_Agx, p[2] * cs_Agx };	//赤经差及光行时
 	return re;
 }
 
-std::array<double,2> xingHR(int xt, double t, bool f)
+mystl::array2 xingHR(int xt, double t, bool f)
 {								//xt星体号,t儒略世纪TD,f=1求冲(或下合)否则求合(或下合)
-	std::array<double, 4> a, b;
+	mystl::array4 a, b;
 	double i, v, dt = 2e-5;
 	double w0 = _pi, w1 = 0;	//合(或上合)时,日心黄经差为180，地心黄经差为0
 	if (f)
@@ -207,7 +207,7 @@ std::array<double,2> xingHR(int xt, double t, bool f)
 	t -= a[0] / v;
 	a = xingSP(xt, t, -1, w1, a[2], a[3]);
 	t -= a[0] / v;
-	std::array<double, 2> re = { t, a[1] };
+	mystl::array2 re = { t, a[1] };
 	return re;
 }
 
@@ -217,14 +217,14 @@ mystl::string xingX(int xt,double jd,double L,double fa)
  //基本参数计算
 
 	double T=jd/36525;
-	std::array<double,2> zd = nutation2(T);
+	mystl::array2 zd = nutation2(T);
 	double dL = zd[0], dE = zd[1]; //章动
 	double E = hcjj(T) + dE; //真黄赤交角
 
     double gstPing = pGST2(jd); //平恒星时
     double gst= gstPing + dL*cos(E); //真恒星时(不考虑非多项式部分)
 
-	std::array<double,3> z,a,z2,a2;
+	mystl::array3 z,a,z2,a2;
 	mystl::string s = "";
 	double ra,rb,rc;
 	int rfn=8;
@@ -306,7 +306,7 @@ COORDP lineEll(double x1,double y1,double z1, double x2,double y2,double z2, dou
   return p;
 }
 
-COORDP lineEar2(double x1,double y1,double z1, double x2,double y2,double z2, double e,double r, std::array<double,3> I)
+COORDP lineEar2(double x1,double y1,double z1, double x2,double y2,double z2, double e,double r, mystl::array3 I)
 { //I是贝塞尔坐标参数
   double P=cos(I[1]), Q=sin(I[1]);
   double X1=x1, Y1=P*y1-Q*z1, Z1=Q*y1+P*z1;
@@ -319,9 +319,9 @@ COORDP lineEar2(double x1,double y1,double z1, double x2,double y2,double z2, do
   return p;
 }
 
-COORDP lineEar(std::array<double,3> P,std::array<double,3> Q,double gst)
+COORDP lineEar(mystl::array3 P,mystl::array3 Q,double gst)
 { //在分点坐标中求空间两点连线与地球的交点(靠近点P的交点),返回地标
-  std::array<double,3> p=llr2xyz(P), q=llr2xyz(Q);
+  mystl::array3 p=llr2xyz(P), q=llr2xyz(Q);
   COORDP r=lineEll(p[0],p[1],p[2], q[0],q[1],q[2], cs_ba,cs_rEar);
   if(r.D<0) 
   {

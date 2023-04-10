@@ -273,7 +273,7 @@ int SSQ::calc(double jd, int qs)
 }
 
 int SSQ::leap;  //闰月位置
-std::array<mystl::string,14> SSQ::ym;//各月名称索引
+mystl::static_array<mystl::string,14> SSQ::ym;//各月名称索引
 int SSQ::ZQ[25];//中气表
 int SSQ::HS[15];//合朔表
 int SSQ::dx[14];//各月大小

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef SIMD_STRING_H
+#define SIMD_STRING_H
 /*
 MIT License
 
@@ -23,26 +24,29 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
 
-#define USE_SSE_MEMCPY 1
-
-#include <string>
-#include <stdint.h>
-#include <assert.h>
-#include <algorithm>
+#include <cassert>
+//#include <algorithm>
 #include <cstring>
 #include <iterator>
 #include <cstddef>
 #include <limits>
 #include <ios>
-#include <iostream>
+#include <type_traits>
+//#include <iosfwd>
 #include <string_view>
 #include <initializer_list>
-#include <regex>
-#include <errno.h>
+//#include <regex>
+//#include <errno.h>
+#include "dtoa.h"
+#include "itoa.h"
 
 #ifndef __ARM_NEON
 #define __ARM_NEON 1
 #endif 
+
+#ifndef USE_SSE_MEMCPY
+#define USE_SSE_MEMCPY 1
+#endif
 
 #if defined(USE_SSE_MEMCPY) && USE_SSE_MEMCPY
 #   if (defined(__arm__) || defined(__arm64__) || defined (__aarch64__)) 
@@ -1981,104 +1985,110 @@ TEMPLATE inline SIMDString<INTERNAL_SIZE, Allocator> operator+(const SIMDString<
 }
 
 
-TEMPLATE std::ostream& operator<<(std::ostream& os, const SIMDString<INTERNAL_SIZE, Allocator>& str)
+TEMPLATE 
+std::basic_ostream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+                   typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>& 
+operator<<(
+std::basic_ostream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+                   typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>& os, 
+const SIMDString<INTERNAL_SIZE, Allocator>& str)
 {
-    std::ostream::sentry sen(os);
-    if (sen) {
-        try {
-            const std::streamsize w = os.width();
-
-            if (w > (std::streamsize) str.size()) {
-                const bool left = ((os.flags() & std::ostream::adjustfield) == std::ostream::left);
-
-                if (!left) {    
-                    const typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = os.fill();
-                    for (std::streamsize fillN = w - str.size(); fillN > 0; --fillN)
-                    {
-                        if (os.rdbuf()->sputc(c) == EOF) {
-                            os.setstate(std::ostream::badbit);
-                            break;
-                        }
-                    }
-                }
-
-                if (os.good() && (os.rdbuf()->sputn(str.data(), str.size()) != str.size())){
-                    os.setstate(std::ostream::badbit);
-                }
-                
-                if (left && os.good()){
-                    const typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = os.fill();
-                    for (std::streamsize fillN = w - str.size(); fillN > 0; --fillN)
-                    {
-                        if (os.rdbuf()->sputc(c) == EOF) {
-                            os.setstate(std::ostream::badbit);
-                            break;
-                        }
-                    }
-                }
-		    } else if (os.rdbuf()->sputn(str.data(), str.size()) != str.size()) {
-                os.setstate(std::ostream::badbit);
-            }
-	        os.width(0);
-	    }
-	    catch(...)
-	    { 
-            os.setstate(std::ostream::badbit); 
-        }
-	}
-    return os;
+  #if _LIBCPP_VERSION
+  typename std::basic_ostream<
+    typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+    typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>::sentry __s(os);
+  if (__s) {
+    typedef std::ostreambuf_iterator<
+      typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+      typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type> _Ip;
+    size_t __len = str.size();
+    bool __left =
+      (os.flags() & std::ios_base::adjustfield) == std::ios_base::left;
+    if (__pad_and_output(_Ip(os),
+                         str.data(),
+                         __left ? str.data() + __len : str.data(),
+                         str.data() + __len,
+                         os,
+                         os.fill()).failed()) {
+      os.setstate(std::ios_base::badbit | std::ios_base::failbit);
+    }
+  }
+#elif defined(_MSC_VER)
+  // MSVC doesn't define __ostream_insert
+  os.write(str.data(), std::streamsize(str.size()));
+#else
+  std::__ostream_insert(os, str.data(), str.size());
+#endif
+  return os;
 }
 
-TEMPLATE std::istream& operator>>(std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>& str)
-{
-    typename SIMDString<INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
-    std::istream::ios_base::iostate err = std::istream::ios_base::goodbit;
-    std::istream::sentry sen(is);
+TEMPLATE
+inline
+std::basic_istream<
+  typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+  typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>&
+  operator>>(
+    std::basic_istream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+    typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>& is,
+    SIMDString<INTERNAL_SIZE, Allocator>& str) {
 
-    if (sen) {
-        try
-        {
-            str.erase();
-            const typename SIMDString<INTERNAL_SIZE, Allocator>::size_type n =
-                is.width() > 0 ? static_cast<typename SIMDString<INTERNAL_SIZE, Allocator>::size_type>(is.width())
-                    : str.max_size();
-            typename SIMDString<INTERNAL_SIZE, Allocator>::value_type c = is.rdbuf()->sgetc();
-
-            while (numExtracted < n && c != EOF && !std::isspace(c, is.getloc())) {
-                str += c;
-                ++numExtracted;
-                c = is.rdbuf()->snextc();
-            }
-
-            if (numExtracted < n && c == EOF) {
-                err |= std::istream::ios_base::eofbit;
-            }
-            is.width(0);
-        }
-        catch (...) {
-            is.setstate(std::istream::ios_base::badbit);
-            throw;
-        }
+  typename std::basic_istream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+  typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>::sentry sentry(is);
+  typedef std::basic_istream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+                             typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type> __istream_type;
+  typedef typename __istream_type::ios_base __ios_base;
+  size_t extracted = 0;
+  auto err = __ios_base::goodbit;
+  if (sentry) {
+    auto n = is.width();
+    if (n <= 0) {
+      n = str.max_size();
     }
-
-    if (!numExtracted) {
-        err |= std::istream::ios_base::failbit;
+    str.erase();
+    for (auto got = is.rdbuf()->sgetc(); extracted != size_t(n); ++extracted) {
+      if (got == SIMDString<INTERNAL_SIZE, Allocator>::traits_type::eof()) {
+        err |= __ios_base::eofbit;
+        is.width(0);
+        break;
+      }
+      if (isspace(got)) {
+        break;
+      }
+      str.push_back(got);
+      got = is.rdbuf()->snextc();
     }
-    if (err) {
-        is.setstate(err);
-    }
-
-    return is;
+  }
+  if (!extracted) {
+    err |= __ios_base::failbit;
+  }
+  if (err) {
+    is.setstate(err);
+  }
+  return is;
 }
 
-TEMPLATE std::istream& getline(
-    std::istream& is, SIMDString<INTERNAL_SIZE, Allocator>& str, typename SIMDString<INTERNAL_SIZE, Allocator>::value_type delim = '\n')
+///*
+TEMPLATE 
+std::basic_istream<
+  typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+  typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>&
+getline(
+  std::basic_istream<
+  typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+  typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>& is, 
+  SIMDString<INTERNAL_SIZE, Allocator>& str,
+  typename SIMDString<INTERNAL_SIZE, Allocator>::value_type delim = '\n')
 {
+    typename std::basic_istream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+    typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type>::sentry sentry(is);
+    typedef std::basic_istream<typename SIMDString<INTERNAL_SIZE, Allocator>::value_type,
+                               typename SIMDString<INTERNAL_SIZE, Allocator>::traits_type> __istream_type;       
     typename SIMDString<INTERNAL_SIZE, Allocator>::size_type numExtracted = 0;
-    std::istream::ios_base::iostate  err = std::istream::ios_base::goodbit;
-    std::istream::sentry sen(is, true);
+    typedef typename __istream_type::ios_base __ios_base;
+    auto  err = __ios_base::goodbit;
+    // std::istream::sentry sen(is, true);
 
-    if (sen) {
+    if (sentry) {
         try
         {
             str.erase();
@@ -2092,22 +2102,22 @@ TEMPLATE std::istream& getline(
             }
 
             if (c == EOF) {
-                err |= std::istream::ios_base::eofbit;
+                err |= __ios_base::eofbit;
             } else if (c == delim) {
                 ++numExtracted;
                 is.rdbuf()->sbumpc();
             } else {
-                err |= std::istream::ios_base::eofbit;
+                err |= __ios_base::eofbit;
             }
         }
         catch (...) {
-            is.setstate(std::istream::ios_base::badbit);
+            is.setstate(__ios_base::badbit);
             throw;
         }
     }
 
     if (!numExtracted) {
-        err |= std::istream::ios_base::failbit;
+        err |= __ios_base::failbit;
     }
     if (err) {
         is.setstate(err);
@@ -2115,7 +2125,7 @@ TEMPLATE std::istream& getline(
 
     return is;
 }
-
+//*/
 
 TEMPLATE inline int stoi(
     const SIMDString<INTERNAL_SIZE, Allocator> &str, typename SIMDString<INTERNAL_SIZE, Allocator>::size_type* pos = nullptr, int base = 10)
@@ -2282,70 +2292,70 @@ TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(int value)
 {
     // digits10 returns floor value, so add 1 for remainder, 1 for - and 1 for null terminator
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned int>::digits10 + 3];
-    std::sprintf(str, "%d", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(long value)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned long>::digits10 + 3];
-    sprintf(str, "%ld", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(long long value)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned long long>::digits10 + 3];
-    sprintf(str, "%lld", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned int value)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned int>::digits10 + 3];
-    sprintf(str, "%u", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned long value)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned long>::digits10 + 3];
-    sprintf(str, "%lu", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
 TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(unsigned long long value)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type str[std::numeric_limits<unsigned long long>::digits10 + 3];
-    sprintf(str, "%llu", value);
+    jeaiii::to_text_from_integer(str, value);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
-TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(float value)
+TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(float value, int precision = 16, bool rightpad = false)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type
         str[std::numeric_limits<float>::max_exponent + std::numeric_limits<float>::max_digits10 + 6];
-    sprintf(str, "%f", value);
+    dtoa_milo2(value, str, precision, rightpad);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
-TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(double value)
+TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(double value, int precision = 16, bool rightpad = false)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type
         str[std::numeric_limits<double>::max_exponent + std::numeric_limits<double>::max_digits10 + 6];
-    sprintf(str, "%f", value);
+    dtoa_milo2(value, str, precision, rightpad);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
-TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(long double value)
+TEMPLATE SIMDString<INTERNAL_SIZE, Allocator> to_string(long double value, int precision = 16, bool rightpad = false)
 {
     typename SIMDString<INTERNAL_SIZE, Allocator>::value_type
         str[std::numeric_limits<long double>::max_exponent + std::numeric_limits<long double>::max_digits10 + 6];
-    sprintf(str, "%Lf", value);
+    dtoa_milo2(value, str, precision, rightpad);
     return SIMDString<INTERNAL_SIZE, Allocator>(str);
 }
 
-    
+
 template <size_t _Size, class _Alloc1>
 struct std::hash<SIMDString<_Size, _Alloc1>>
 { 
@@ -2370,9 +2380,10 @@ typename SIMDString<INTERNAL_SIZE, Allocator>::iterator end(SIMDString<INTERNAL_
 
 // TEMPLATE
 // specialization recognizes types that do have a nested ::iterator_category:
-
+/*
 template<size_t INTERNAL_SIZE, class Allocator>
 template<class InputIter>
 inline constexpr bool SIMDString<INTERNAL_SIZE, Allocator>::is_iterator<InputIter, std::void_t<typename std::iterator_traits<InputIter>::iterator_category>> = true;
-
+*/
 #undef TEMPLATE
+#endif // SIMD_STRING_H

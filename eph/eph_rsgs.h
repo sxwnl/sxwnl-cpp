@@ -1,10 +1,9 @@
 #ifndef EPH_RSGS_H
 #define EPH_RSGS_H
 
-#include <map>
-#include <array>
 #include "../mylib/mystl/vector.h"
 #include "../mylib/mystl/string.h"
+#include "../mylib/mystl/static_array.h"
 
 struct _VXY
 {
@@ -42,12 +41,12 @@ struct _FEATURE
 	double zc;
 	double D;
 	double d;
-	std::array<double, 3> I;
-	std::array<double, 3> gk1;
-	std::array<double, 3> gk2;
-	std::array<double, 3> gk3;
-	std::array<double, 3> gk4;
-	std::array<double, 3> gk5;
+	mystl::array3 I;
+	mystl::array3 gk1;
+	mystl::array3 gk2;
+	mystl::array3 gk3;
+	mystl::array3 gk4;
+	mystl::array3 gk5;
 	mystl::string lx;
 
 	double zxJ;
@@ -55,7 +54,7 @@ struct _FEATURE
 	double dw;
 	double sf;
 	double tt;
-	std::array<double, 3> Sdp;
+	mystl::array3 Sdp;
 
 	mystl::vector <double> p1;
 	mystl::vector <double> p2;
@@ -97,9 +96,9 @@ public:
 	//static _FEATURE __rsGS::jieX(double jd);
 	//static _JIEX2 __rsGS::jieX2(double jd);
 	static mystl::string jieX3(double jd);
-	static inline std::array<double,3> sun (double jd){ return chazhi(jd,0); } //传回值可能超过360度
-	static inline std::array<double,3> moon(double jd){ return chazhi(jd,1); }
-	static inline std::array<double,3> bse (double jd){ return chazhi(jd,2); }
+	static inline mystl::array3 sun (double jd){ return chazhi(jd,0); } //传回值可能超过360度
+	static inline mystl::array3 moon(double jd){ return chazhi(jd,1); }
+	static inline mystl::array3 bse (double jd){ return chazhi(jd,2); }
 
 private:
 	static mystl::vector<double> Zs;
@@ -112,20 +111,20 @@ private:
 	static double bhc;
 	static double dyj; 
 	
-	static std::array<double,3> chazhi(double jd,int xt);
-	static std::array<double,3> cd2bse(std::array<double,3> z,std::array<double,3> I);
-	static std::array<double,3> bse2cd(std::array<double,3> z,std::array<double,3> I );
-	static std::array<double,3> bse2db(std::array<double,3> z,std::array<double,3> I ,bool f);
-	static std::array<double,3> bseXY2db(double x,double y,std::array<double,3> I,bool f);
-	static std::array<double,3> bseM(double jd);
+	static mystl::array3 chazhi(double jd,int xt);
+	static mystl::array3 cd2bse(mystl::array3 z,mystl::array3 I);
+	static mystl::array3 bse2cd(mystl::array3 z,mystl::array3 I );
+	static mystl::array3 bse2db(mystl::array3 z,mystl::array3 I ,bool f);
+	static mystl::array3 bseXY2db(double x,double y,mystl::array3 I,bool f);
+	static mystl::array3 bseM(double jd);
 	static _VXY Vxy(double x,double y,double s, double vx,double vy);
 	static _RSM rSM(double mR);
-	static std::array<double,3> qrd(double jd,double dx,double dy,bool fs);
-	static void push(std::array<double,3> z,mystl::vector<double> &p);
-	static std::array<double,4> nanbei(std::array<double,3> M,double vx0,double vy0, double h,double r,std::array<double,3> I);
-	static bool mDian(std::array<double,3> M,double vx0,double vy0,bool AB, double r,std::array<double,3> I,mystl::vector<double> &A);
+	static mystl::array3 qrd(double jd,double dx,double dy,bool fs);
+	static void push(mystl::array3 z,mystl::vector<double> &p);
+	static mystl::array4 nanbei(mystl::array3 M,double vx0,double vy0, double h,double r,mystl::array3 I);
+	static bool mDian(mystl::array3 M,double vx0,double vy0,bool AB, double r,mystl::array3 I,mystl::vector<double> &A);
 	//static void __rsGS::elmCpy(mystl::vector<double> &a,int n,mystl::vector<double> b,int m);
-	//static void __rsGS::mQie(std::array<double,3> M,double vx0,double vy0,double h, double r,std::array<double,3> I, mystl::vector<double> &A,_FLAG &FLAG);
+	//static void __rsGS::mQie(mystl::array3 M,double vx0,double vy0,double h, double r,mystl::array3 I, mystl::vector<double> &A,_FLAG &FLAG);
 	
 };
 

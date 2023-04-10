@@ -63,12 +63,12 @@ void MSC::calc(double T, double L, double fa, double high)
 	MSC::dt = dt_T(T);			//TD-UT
 	MSC::jd = T - MSC::dt;	//UT
 	T /= 36525.0;
-	std::array<double, 2> zd = nutation2(T);
+	mystl::array2 zd = nutation2(T);
 	MSC::dL = zd[0];			//黄经章
 	MSC::dE = zd[1];			//交角章动
 	MSC::E = hcjj(T) + MSC::dE;	//真黄赤交角
 	MSC::gst = pGST(MSC::jd, MSC::dt) + MSC::dL * cos(MSC::E);	//真恒星时(不考虑非多项式部分)
-	std::array<double, 3> z;
+	mystl::array3 z;
 
 	//=======月亮========
 	//月亮黄道坐标

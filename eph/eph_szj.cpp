@@ -1,8 +1,8 @@
-#define _USE_MATH_DEFINES
-#include <cmath>
 #include "eph_szj.h"
 #include "eph0.h"
 #include "../mylib/tool.h"
+#include "../mylib/math_patch.h"
+#include "../mylib/mystl/static_array.h"
 
 double SZJ::L = 0;
 double SZJ::fa = 0;
@@ -31,7 +31,7 @@ double SZJ::getH(double h, double w)
 
 void SZJ::Mcoord(double jd, double H0, SJ &r)
 {								//章动同时影响恒星时和天体坐标,所以不计算章动。返回时角及赤经纬
-	std::array<double,3> z = m_coord((jd + SZJ::dt) / 36525, 40, 30, 8);	//低精度月亮赤经纬
+	mystl::array3 z = m_coord((jd + SZJ::dt) / 36525, 40, 30, 8);	//低精度月亮赤经纬
 	z = llrConv(z, SZJ::E);	//转为赤道坐标
 	r.H = rad2rrad(pGST(jd, SZJ::dt) + SZJ::L - z[0]);	//得到此刻天体时角
 	if (H0)
@@ -65,7 +65,7 @@ SJ SZJ::Mt(double jd)
 
 void SZJ::Scoord(double jd, int xm, SJ &r)
 {								//章动同时影响恒星时和天体坐标,所以不计算章动。返回时角及赤经纬
-	std::array<double,3> z = {E_Lon((jd + SZJ::dt) / 36525, 5) + M_PI - 20.5 / rad, 0, 1};	//太阳坐标(修正了光行差)
+	mystl::array3 z = {E_Lon((jd + SZJ::dt) / 36525, 5) + M_PI - 20.5 / rad, 0, 1};	//太阳坐标(修正了光行差)
 	z = llrConv(z, SZJ::E);	//转为赤道坐标
 	r.H = rad2rrad(pGST(jd, SZJ::dt) + SZJ::L - z[0]);	//得到此刻天体时角
 

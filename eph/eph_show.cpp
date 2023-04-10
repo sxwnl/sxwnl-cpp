@@ -1,5 +1,3 @@
-#include <map>
-#include <array>
 #include <iostream>
 #include "eph_show.h"
 #include "eph0.h"
@@ -11,7 +9,9 @@
 #include "eph_rspl.h"
 #include "../mylib/lat_lon_data.h"
 #include "../mylib/tool.h"
-  
+#include "../mylib/mystl/static_array.h"
+#include "../mylib/mystl/map.h"
+
 void rysCalc(Date d, bool is_utc, bool nasa_r)
 {
 	double vJ=jw.J/radd;
@@ -46,7 +46,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		// 显示南北界数据
 		RS_PL::nasa_r = nasa_r;		// 视径选择
 		s = s + "\n--------------------------------------\n" + JD2str(jd + J2000) + " TD\n--------------------------------------\n" + "南北界点：经度　　　　纬度\n";
-		std::array <mystl::string, 5> mc =
+		mystl::static_array<mystl::string, 5> mc =
 		{
 		"食中心点", "本影北界", "本影南界", "半影北界", "半影南界"};
 		RS_PL::nbj(jd);
@@ -96,7 +96,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 			" 影月半径和 " + m2fm(d0, 2, 0) + " \n距相切 \e[31m" + m2fm(d1 - d0, 2, 0) + "\e[0m 距第二相切 " + m2fm(d1 - d2, 2, 0);
 
 		mystl::string td = " TD";
-		std::array<mystl::string,7> mc = {"初亏", "食甚", "复圆", "半影食始", "半影食终", "食既", "生光"};
+		mystl::static_array<mystl::string,7> mc = {"初亏", "食甚", "复圆", "半影食始", "半影食终", "食既", "生光"};
 		YS_PL::lecMax(jd);
 		s = s + "\n\n时间表(月" + YS_PL::LX + "食)\n";
 		for (int i = 0; i < 7; i++)
@@ -152,15 +152,16 @@ void rs2_calc(int fs,double jd0)
  
  double step = 29.5306;
  double jd = 2454679.926741-J2000; //取屏幕时间
+ 
  if(fs==1) jd = jd0;
 // if(fs==2) ; //保持时间不变
  if(fs==3) jd -= step;
  if(fs==4) jd += step;
- jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //归朔
+ jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525.0; //归朔
  //Cp10_jd.value = Cp10_jd2.value = (jd+J2000),6);    //保存在屏幕上
  std::cout<<JD2str(jd+J2000)<<std::endl; //显示时间串
-  
- std::map<mystl::string,mystl::string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
+ 
+ mystl::map<mystl::string,mystl::string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
 
  mystl::string s="";
  //计算单个日食
