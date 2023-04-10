@@ -8,11 +8,14 @@
 
 #include <stdint.h>
 
+#ifdef __GNUC__
 namespace gcc_ints
 {
-    __extension__ typedef __int128 int128;
-    __extension__ typedef unsigned __int128 uint128;
+	__extension__ typedef __int128 int128;
+	__extension__ typedef unsigned __int128 uint128;
 }
+#endif // __GNUC__
+
 
 #define UINT64_C2(h, l) ((static_cast<uint64_t>(h) << 32) | static_cast<uint64_t>(l))
 

@@ -29,7 +29,7 @@ SOFTWARE.
 #include <random>
 #include <type_traits>
 
-#include "../itoa/jeaiii_to_text.h"
+#include "../mystl/string/itoa.h"
 
 template <typename T> struct is_float {const static bool value = false;};
 template <> struct is_float<long double> {const static bool value = true;};

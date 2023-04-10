@@ -62,7 +62,7 @@ JINGWEI GeographicalPosition(void)
 	"港澳台 MCf5香港 M8eK澳门 P2mU台北市 MblH高雄市 P8mi基隆市 O9le台中市 N0lC台南市 Onlv新竹市 NTlQ嘉义市 P1mS台北县 Okmj宜兰县 OwmI桃园县 OWlm苗栗县 OFlh台中县 O5lW彰化县 Ntle南投县 NhlW云林县 NJlJ台南县 MclM高雄县 MelT屏东县 Mjm9台东县 Nxma花莲县 NZkZ澎湖县	"
 	};
 	JINGWEI jw0={116.3833333,39.000,"默认","北京"};
-	JINGWEI jw;
+	JINGWEI jw = {};
 	char ch[32][210][48]={};
 	for (int i=0;i<32;i++)
 	{
@@ -80,19 +80,19 @@ JINGWEI GeographicalPosition(void)
 	}
 	for (int j=0;j<32;j++)
 	{
-		printf("\e[31;1m%02d \e[0;33m%-s\t",j+1,ch[j][0]);
+		printf("\033[31;1m%02d \033[0;33m%-s\t",j+1,ch[j][0]);
 		if ((j+1)%3==0)
 		printf("\n");
 	}
 	
-	printf("\n\e[32m请选择您所在的省市，输入'0'手动输入区/县查找");
+	printf("\n\033[32m请选择您所在的省市，输入'0'手动输入区/县查找");
 	int num,num0;
 	char str[48];
 	scanf("%d",&num);
 	clrscr();
 	if (num==0)
 	{
-		printf("\n\e[37m请输入您所在的区/县:");
+		printf("\n\033[37m请输入您所在的区/县:");
 		scanf("%s",str);
 	}
 	else if (num < 33)
@@ -101,15 +101,15 @@ JINGWEI GeographicalPosition(void)
 		num--;
 		for (int i=1;ch[num][i][0];i++)
 		{
-			printf("\e[35;1m%02d\e[0;36m%-8s  ",i,ch[num][i]);
+			printf("\033[35;1m%02d\033[0;36m%-8s  ",i,ch[num][i]);
 			if (i%5==0)
 				printf("\n");
 		}
-		printf("\n\e[32m(若显示不全请收起输入法)\n请选择您所在的区县，'0'手动输入区/县查找");
+		printf("\n\033[32m(若显示不全请收起输入法)\n请选择您所在的区县，'0'手动输入区/县查找");
 		scanf("%d",&num0);
 		if (num0==0)
 		{
-			printf("\n\e[37m请输入您所在的区/县:");
+			printf("\n\033[37m请输入您所在的区/县:");
 			scanf("%s",str);
 		}
 		else strcpy(str,ch[num][num0]);

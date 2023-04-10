@@ -57,7 +57,7 @@ static int _getch() {return getch();}
 
 static int _kbhit() {return kbhit();}
 
-#elif defined (__WIN32__) || defined (__GNUC__) // __unix__
+#elif defined (__WIN32__) || defined (__GNUC__) || defined (_MSC_VER) // __unix__
 #include <windows.h>
 #include <conio.h>
 #include <stdio.h>

@@ -30,7 +30,7 @@ double xingJJ(int xt, double t, int jing)
 
 mystl::array2 daJu(int xt, double t, bool dx)
 {								//大距计算超底速算法, dx=1东大距,t儒略世纪TD
-	double a, b, c[5];
+	double a = 0, b, c[5] = {};
 	if (xt == 1)
 	{
 		a = 115.8774777586 / 36525.0;
