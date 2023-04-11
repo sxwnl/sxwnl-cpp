@@ -351,7 +351,7 @@ bool RS_GS::mDian(mystl::array3 M,double vx0,double vy0,bool AB, double r,mystl:
 }
 
 
-mystl::string RS_GS::jieX3(double jd)
+mystl::my_string RS_GS::jieX3(double jd)
  { //界线表
   double k, ls;
   mystl::array4 p;
@@ -360,7 +360,7 @@ mystl::string RS_GS::jieX3(double jd)
 
   double t = floor(re.jd*1440)/1440.0 - 3/24.0;
   double N=360, dt=1/1440.0;
-  mystl::string s="",s2;
+  mystl::my_string s="",s2;
 
   for(i=0;i<N;i++,t+=dt)
   {

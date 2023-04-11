@@ -3,7 +3,7 @@
 #include "../mylib/math_patch.h"
 
 mystl::array7 YS_PL::lT;
-mystl::string YS_PL::LX;
+mystl::my_string YS_PL::LX;
 double YS_PL::sf;
 
 double YS_PL::lineT(RE0 G,double v,double u, double r, bool n)

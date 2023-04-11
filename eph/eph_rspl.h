@@ -3,7 +3,7 @@
 #ifndef EPH_RSPL_H
 #define EPH_RSPL_H
 
-#include "../mylib/mystl/string.h"
+#include "../mylib/mystl/my_string.h"
 #include "../mylib/mystl/static_array.h"
 
 struct _SECXY
@@ -44,7 +44,7 @@ struct _GJW
 {
 	double J;
 	double W;
-	mystl::string c;
+	mystl::my_string c;
 };
 
 
@@ -53,11 +53,11 @@ class RS_PL
 public:
 	static bool nasa_r;//为1表示采用NASA的视径比
 	static mystl::array5 sT;//地方日食时间表
-	static mystl::string LX;
+	static mystl::my_string LX;
 	static double sf;
 	static double sf2; //食分(日出食分)
     static double sf3; //食分(日没食分)
-    static mystl::string sflx; //食分类型
+    static mystl::my_string sflx; //食分类型
 	static double b1;
 	static double dur;
 	static double sun_s;
@@ -74,8 +74,8 @@ public:
 	static _ZB P;//t1时刻的日月坐标,g为恒星时
 	static _ZB Q;//t2时刻的日月坐标
 	static mystl::array10 V;//食界表
-	static mystl::string Vc;
-	static mystl::string Vb;  //食中心类型,本影南北距离
+	static mystl::my_string Vc;
+	static mystl::my_string Vb;  //食中心类型,本影南北距离
 	
 	static double lineT(_SECXY G, double v,double u, double r, bool n);
 	static void zbXY(_ZB &p,double L,double fa);

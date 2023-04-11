@@ -25,11 +25,11 @@ SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <string>
+#include <my_string>
 #include <random>
 #include <type_traits>
 
-#include "../mystl/string/itoa.h"
+#include "../mystl/my_string/itoa.h"
 
 template <typename T> struct is_float {const static bool value = false;};
 template <> struct is_float<long double> {const static bool value = true;};

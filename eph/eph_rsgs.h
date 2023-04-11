@@ -2,7 +2,7 @@
 #define EPH_RSGS_H
 
 #include "../mylib/mystl/vector.h"
-#include "../mylib/mystl/string.h"
+#include "../mylib/mystl/my_string.h"
 #include "../mylib/mystl/static_array.h"
 
 struct _VXY
@@ -47,7 +47,7 @@ struct _FEATURE
 	mystl::array3 gk3;
 	mystl::array3 gk4;
 	mystl::array3 gk5;
-	mystl::string lx;
+	mystl::my_string lx;
 
 	double zxJ;
 	double zxW;
@@ -95,7 +95,7 @@ public:
 	static _FEATURE feature(double jd);
 	//static _FEATURE __rsGS::jieX(double jd);
 	//static _JIEX2 __rsGS::jieX2(double jd);
-	static mystl::string jieX3(double jd);
+	static mystl::my_string jieX3(double jd);
 	static inline mystl::array3 sun (double jd){ return chazhi(jd,0); } //传回值可能超过360度
 	static inline mystl::array3 moon(double jd){ return chazhi(jd,1); }
 	static inline mystl::array3 bse (double jd){ return chazhi(jd,2); }
@@ -128,5 +128,5 @@ private:
 	
 };
 
-// extern std::map<mystl::string,mystl::string> lxb;
+// extern std::map<mystl::my_string,mystl::my_string> lxb;
 #endif

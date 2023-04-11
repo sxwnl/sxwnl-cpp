@@ -193,10 +193,10 @@ OB_LUN yueLiCalc(int By, int Bm)
 	return lun;
 }
 
-mystl::string nianLiSTR(int y)
+mystl::my_string nianLiSTR(int y)
 { //字符串年历生成
  int i,j;
- mystl::string s="", s1,s2;
+ mystl::my_string s="", s1,s2;
  double v,qi;
  SSQ::calcY( int2((y-2000.0)*365.2422+180) );
  for(i=0;i<14;i++)

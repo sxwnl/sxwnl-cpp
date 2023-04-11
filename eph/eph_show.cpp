@@ -22,7 +22,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 	}
 	
 	MSC::calc(jd,vJ,vW,0);
-	mystl::string s = "",s2;
+	mystl::my_string s = "",s2;
 	double J1, W1, J2, W2;
 	double sr, mr, er, Er, d0, d1, d2;
 	double msHJ = rad2mrad(MSC::mHJ - MSC::sHJ);
@@ -36,8 +36,8 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		s2 = "此刻月亮本影中心线不经过地球。";
 		if (MSC::zx_W != 100)
 		{
-			mystl::string zxsJ = to_str(MSC::zx_J / _pi * 180, 5);
-			mystl::string zxsW = to_str(MSC::zx_W / _pi * 180, 5);
+			mystl::my_string zxsJ = to_str(MSC::zx_J / _pi * 180, 5);
+			mystl::my_string zxsW = to_str(MSC::zx_W / _pi * 180, 5);
 			s2 = "食中心地标：经 " + zxsJ + " 纬 " + zxsW;
 		}
 		s = "日月站心视半径 " + m2fm(sr, 2, 0) + "及" + m2fm(mr, 2, 0) + " \n\033[31m" + s2 + "\033[0m\n"
@@ -46,7 +46,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		// 显示南北界数据
 		RS_PL::nasa_r = nasa_r;		// 视径选择
 		s = s + "\n--------------------------------------\n" + JD2str(jd + J2000) + " TD\n--------------------------------------\n" + "南北界点：经度　　　　纬度\n";
-		mystl::static_array<mystl::string, 5> mc =
+		mystl::static_array<mystl::my_string, 5> mc =
 		{
 		"食中心点", "本影北界", "本影南界", "半影北界", "半影南界"};
 		RS_PL::nbj(jd);
@@ -64,7 +64,7 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		s += "本影南北界距约" + RS_PL::Vb;
 
 		// 显示食甚等时间
-		mystl::string td = " TD";
+		mystl::my_string td = " TD";
 		mc = {"初亏", "食甚", "复圆", "食既", "生光"};
 		RS_PL::secMax(jd, vJ, vW, 0);
 		if (RS_PL::LX == "环")
@@ -95,8 +95,8 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 			" 月亮地心视半径 " + m2fm(mr, 2, 0) + "\n" + "影月中心距 " + m2fm(d1, 2, 0) +
 			" 影月半径和 " + m2fm(d0, 2, 0) + " \n距相切 \033[31m" + m2fm(d1 - d0, 2, 0) + "\033[0m 距第二相切 " + m2fm(d1 - d2, 2, 0);
 
-		mystl::string td = " TD";
-		mystl::static_array<mystl::string,7> mc = {"初亏", "食甚", "复圆", "半影食始", "半影食终", "食既", "生光"};
+		mystl::my_string td = " TD";
+		mystl::static_array<mystl::my_string,7> mc = {"初亏", "食甚", "复圆", "半影食始", "半影食终", "食既", "生光"};
 		YS_PL::lecMax(jd);
 		s = s + "\n\n时间表(月" + YS_PL::LX + "食)\n";
 		for (int i = 0; i < 7; i++)
@@ -115,11 +115,11 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 	std::cout<<s<<std::endl;
 }
 
-mystl::string rs_search(int Y,int M,int n,bool fs)
+mystl::my_string rs_search(int Y,int M,int n,bool fs)
 { //查找日食
   int i,k;
   _ECFAST r;
-  mystl::string s="",s2="";
+  mystl::my_string s="",s2="";
   double jd = toJD({Y,M,1,0,0,0}) - J2000;  //取屏幕时间
   jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //定朔
   for(i=0,k=0;i<n;i++)
@@ -161,9 +161,9 @@ void rs2_calc(int fs,double jd0)
  //Cp10_jd.value = Cp10_jd2.value = (jd+J2000),6);    //保存在屏幕上
  std::cout<<JD2str(jd+J2000)<<std::endl; //显示时间串
  
- mystl::map<mystl::string,mystl::string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
+ mystl::map<mystl::my_string,mystl::my_string> lxb={{"T","全食"},{"A","环食"},{"P","偏食"},{"T0","无中心全食"},{"T1","部分本影有中心全食"},{"A0","无中心环食"},{"A1","部分伪本影有中心全食"},{"H","全环全"},{"H2","全全环"},{"H3","环全全"}};
 
- mystl::string s="";
+ mystl::my_string s="";
  //计算单个日食
  if(fs==1||fs==2||fs==3||fs==4)
  {
@@ -236,7 +236,7 @@ void shengjiang(int y, int m, int d)
 	double jd = toJD(dt) - J2000;	//取屏幕时间
 	double sq = SZJ::L / pi2 * 24.0;
 
-	mystl::string s = "\033[31;1m北京时间(转为格林尼治时间请减8小时)：\033[0m\n";
+	mystl::my_string s = "\033[31;1m北京时间(转为格林尼治时间请减8小时)：\033[0m\n";
 	SJ r;
 	double c = J2000 + 8 / 24.0;
 
@@ -262,7 +262,7 @@ void shengjiang2(int y)
 	Date dt = { y, 1, 1, 12 };
 	double jd = toJD(dt) - J2000;	//取屏幕时间
 	int i;
-	mystl::string s = "", s2 = "";
+	mystl::my_string s = "", s2 = "";
 	double t;
 	for (i = 0; i < 368; i++)
 	{
@@ -280,7 +280,7 @@ void shengjiang3(int y)
 	double jd = toJD(dt);
 	int i;
 	double t, D;
-	mystl::string s = "", s2 = "";
+	mystl::my_string s = "", s2 = "";
 	for (i = 0; i < 368; i++)
 	{
 		D = jd + i - 8 / 24.0 - J2000, D += dt_T(D);

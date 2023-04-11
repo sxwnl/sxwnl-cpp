@@ -2,7 +2,7 @@
 #define TOOL_H
 
 #include <cstdlib>
-#include "../mylib/mystl/string.h"
+#include "../mylib/mystl/my_string.h"
 #include "../mylib/math_patch.h"
 
 #define A2R(x) ((x) / 180 * M_PI)
@@ -17,28 +17,28 @@ struct Date
 };
 
 //实现数字转字符
-// mystl::string to_str(int in, int n, int len);
-// mystl::string to_str(double in, int n, int len);
+// mystl::my_string to_str(int in, int n, int len);
+// mystl::my_string to_str(double in, int n, int len);
 
-//mystl::vector<mystl::string> split(const mystl::string& src, const mystl::string& separator);
-void string_replace( mystl::string &strBig, const mystl::string &strsrc, const mystl::string &strdst);
-mystl::string timeStr(double jd);
-mystl::string rad2strE(double d, bool tim, int ext);
-mystl::string rad2str(double d, bool tim);
-mystl::string rad2str2(double d);
-mystl::string m2fm(double v, int fx, int fs);
+//mystl::vector<mystl::my_string> split(const mystl::my_string& src, const mystl::my_string& separator);
+void string_replace( mystl::my_string &strBig, const mystl::my_string &strsrc, const mystl::my_string &strdst);
+mystl::my_string timeStr(double jd);
+mystl::my_string rad2strE(double d, bool tim, int ext);
+mystl::my_string rad2str(double d, bool tim);
+mystl::my_string rad2str2(double d);
+mystl::my_string m2fm(double v, int fx, int fs);
 double toJD(Date date);
 Date setFromJD(double jd);
-mystl::string DD2str(Date r);
-mystl::string JD2str(double jd);
-mystl::string fill_str(mystl::string s, int n, mystl::string c);
+mystl::my_string DD2str(Date r);
+mystl::my_string JD2str(double jd);
+mystl::my_string fill_str(mystl::my_string s, int n, mystl::my_string c);
 
-mystl::string to_str(long in);
-mystl::string to_str(int in);
-mystl::string to_str(int in, uint8_t n);
-mystl::string to_str(double in);
-mystl::string to_str(double in, uint8_t n);
-mystl::string to_str(double in, uint8_t n, uint8_t n2);
-int astoi(mystl::string as);
+mystl::my_string to_str(long in);
+mystl::my_string to_str(int in);
+mystl::my_string to_str(int in, uint8_t n);
+mystl::my_string to_str(double in);
+mystl::my_string to_str(double in, uint8_t n);
+mystl::my_string to_str(double in, uint8_t n, uint8_t n2);
+int astoi(mystl::my_string as);
 
 #endif

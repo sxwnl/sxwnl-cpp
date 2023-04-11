@@ -21,7 +21,7 @@ int main()
 
 	Date date = { 2008, 1, 1, 0, 0, 0};
     double jd1 = toJD(date) - J2000;
-    mystl::string ss = xingX(1, jd1, A2R(116.383333), A2R(39.900000));
+    mystl::my_string ss = xingX(1, jd1, A2R(116.383333), A2R(39.900000));
 	std::cout<<ss<<std::endl;
 	system("pause");
 	return 0;
