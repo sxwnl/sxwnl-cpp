@@ -448,10 +448,11 @@ int main()
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
 //    rs2_calc(2,0); 
 //    rs2_jxb();     // 日食界线表
-    system("pause");
-    
-#ifdef WIN32
 
+
+
+#if defined(_WIN32) || defined(_MSC_VER)
+    system("pause");
 #endif
     return 0;
 }
