@@ -60,6 +60,6 @@ public:
 	static double zx_W;
 
 	static void calc(double T,double L,double fa,double high);
-	static mystl::my_string toStr(bool fs);
+	static mystl::string toStr(bool fs);
 };
 #endif

@@ -1,6 +1,7 @@
 #include "../mystl/static_array.h"
-
 #include "../mystl/my_string.h"
+
+
 using namespace mystl;
 array3 get(){
     return {1.6,65.9,6.8};
@@ -34,12 +35,15 @@ int main(){
     }
     printf("arr -> %lf\n", arr.get(0));
     
-    static_array <mystl::my_string, 5> mc =
+    static_array <mystl::string, 5> mc =
     {"食中心点", "本影北界", "本影南界", "半影北界", "半影南界"};
     
-	
-    for (auto i:mc){
-        printf("mc -> %s\n", i.c_str());
+	array4 aaa={13.664, -1.64331, 64.64615181, 1141.9};
+    for (auto i:aaa){
+        printf("mc -> %s|%s|\n", to_str_fmt(i, 2, 8, true).c_str(), to_str_fmt(i, 2, 8).c_str());
+    }
+    for (auto i:aaa){
+        printf("mc -> %s|%s|\n", to_str(i, 2, 8, true).c_str(), to_str_fmt(i, 2, 8).c_str());
     }
 		
 }

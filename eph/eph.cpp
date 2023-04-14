@@ -212,7 +212,7 @@ mystl::array2 xingHR(int xt, double t, bool f)
 }
 
 
-mystl::my_string xingX(int xt,double jd,double L,double fa)
+mystl::string xingX(int xt,double jd,double L,double fa)
 { //行星计算,jd力学时
  //基本参数计算
 
@@ -225,7 +225,7 @@ mystl::my_string xingX(int xt,double jd,double L,double fa)
     double gst= gstPing + dL*cos(E); //真恒星时(不考虑非多项式部分)
 
 	mystl::array3 z,a,z2,a2;
-	mystl::my_string s = "";
+	mystl::string s = "";
 	double ra,rb,rc;
 	int rfn=8;
 	if(xt==10)

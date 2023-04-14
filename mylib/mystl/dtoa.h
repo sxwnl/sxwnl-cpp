@@ -510,25 +510,24 @@ inline char* dtoa_milo(double value, char* buffer) {
 	assert(!isinf(value));
 
 	if (value == 0) {
-		buffer[0] = '0';
-		buffer[1] = '.';
-		buffer[2] = '0';
-		buffer[3] = '\0';
+        buffer[0] = '0';
+        buffer[1] = '.';
+        buffer[2] = '0';
+        buffer[3] = '\0';
         return buffer + 3;
-	}
-	else {
-		if (value < 0) {
-			*buffer++ = '-';
-			value = -value;
-		}
-		int length, K;
-		Grisu2(value, buffer, &length, &K);
-		return Prettify(buffer, length, K);
-	}
+    } else {
+        if (value < 0) {
+            *buffer++ = '-';
+            value = -value;
+        }
+        int length, K;
+        Grisu2(value, buffer, &length, &K);
+        return Prettify(buffer, length, K);
+    }
 }
 
 
-inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad) {
+inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad, int *length, int *K) {
 
     if (value == 0) {
         if (std::signbit(value)) *buffer++ = '-';
@@ -541,19 +540,23 @@ inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad)
         }
         *++buffer = '\0';
         return buffer;
-    }
-    else {
+    } else {
         if (value < 0) {
             *buffer++ = '-';
             value = -value;
         }
-        int length, K;
-        Grisu2(value, buffer, &length, &K);
+    //    int length, K;
+        Grisu2(value, buffer, length, K);
         if (precision >= 0) {
-            return Prettify(buffer, length, K, precision, rightpad);
+            return Prettify(buffer, *length, *K, precision, rightpad);
         }
-        return Prettify(buffer, length, K);
+        return Prettify(buffer, *length, *K);
     }
+}
+
+inline char* dtoa_milo2(double value, char* buffer, int precision, int rightpad) {
+    int length, K;
+    return dtoa_milo2(value, buffer, precision, rightpad, &length, &K);
 }
 
 #endif // DTOA_H

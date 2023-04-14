@@ -19,21 +19,21 @@ struct SJ
 	double H2;
 	double H3;
 	double H4;
-	mystl::my_string sm;
+	mystl::string sm;
 };
 
 struct SJ_S
 {
-	mystl::my_string s;
-	mystl::my_string z;
-	mystl::my_string j;
-	mystl::my_string c;
-	mystl::my_string h;
-	mystl::my_string ch;
-	mystl::my_string sj;
-	mystl::my_string Ms;
-	mystl::my_string Mz;
-	mystl::my_string Mj;
+	mystl::string s;
+	mystl::string z;
+	mystl::string j;
+	mystl::string c;
+	mystl::string h;
+	mystl::string ch;
+	mystl::string sj;
+	mystl::string Ms;
+	mystl::string Mz;
+	mystl::string Mj;
 };
 
 

@@ -7,7 +7,7 @@ eph_szj.o eph_show.o lunar.o lunar_ob.o lunar_ssq.o tool.o lat_lon_data.o
 OBJ1	:= test1.o $(OBJ0)
 OBJ2	:= test.o $(OBJ0)
 LIBS	:= -lm
-FLAG    := -fexceptions -std=c++1z
+FLAG    := -fexceptions -std=c++11
 ifdef CXXFLAGS
     CXXFLAGS := $(CXXFLAGS) $(FLAG)
 else

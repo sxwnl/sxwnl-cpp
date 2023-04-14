@@ -19,55 +19,55 @@ struct OB_DAY
 	int weekN; 	// 本月的总周数
 	/* 日的农历信息 */
 	int Ldi;	   // 日距农历月首偏移
-	mystl::my_string Ldc;   // 日名称(农历),即'初一,初二等'
+	mystl::string Ldc;   // 日名称(农历),即'初一,初二等'
 	
 	int cur_dz; //冬至的天数
 	int cur_xz; //夏至的天数
 	int cur_lq; //立秋的天数
 	int cur_mz; //芒种的天数
 	int cur_xs; //小暑的天数
-	mystl::my_string Lmc;
-	mystl::my_string Lmc2;  // 月名称
+	mystl::string Lmc;
+	mystl::string Lmc2;  // 月名称
 	int Ldn;   		// 月大小
-	mystl::my_string Lleap; 	// 闰状况 
+	mystl::string Lleap; 	// 闰状况 
 	/* 日的农历纪年、月、日、时及星座 */
 	int Lyear;		 	// 农历纪年(10进制,1984年起算,分界点可以是立春也可以是春节,在程序中选择一个)
 	int Lyear0;
-	mystl::my_string Lyear2;	// 干支纪年
-	mystl::my_string Lyear3;	// 干支纪年(春节)
+	mystl::string Lyear2;	// 干支纪年
+	mystl::string Lyear3;	// 干支纪年(春节)
 	int Lyear4;			// 干支纪年(黄帝纪元)
 	int Lmonth;			// 纪月处理,1998年12月7日(大雪)开始连续进行节气计数,0为甲子
-	mystl::my_string Lmonth2;   // 干支纪月
-	mystl::my_string Lday2; 	// 纪日
-	mystl::my_string Ltime2;	// 纪时
-	mystl::my_string Ljq;	   // 节气
-	mystl::my_string XiZ;   	// 星座
+	mystl::string Lmonth2;   // 干支纪月
+	mystl::string Lday2; 	// 纪日
+	mystl::string Ltime2;	// 纪时
+	mystl::string Ljq;	   // 节气
+	mystl::string XiZ;   	// 星座
 	/* 日的回历信息 */
 	int Hyear;	 	// 年(回历)
 	int Hmonth;		// 月(回历)
 	int Hday;	  	// 日(回历)
 	/* 日的其它信息 */
-	mystl::my_string yxmc;	// 月相名称
+	mystl::string yxmc;	// 月相名称
 	double yxjd;   	  // 月相时刻(儒略日)
-	mystl::my_string yxsj;	// 月相时间串
-	mystl::my_string jqmc;	// 节气名称
+	mystl::string yxsj;	// 月相时间串
+	mystl::string jqmc;	// 节气名称
 	double jqjd;	     // 节气时刻(儒略日)
-	mystl::my_string jqsj;	// 节气时间串
+	mystl::string jqsj;	// 节气时间串
 	
 	bool Fjia;
-	mystl::my_string A;
-	mystl::my_string B;
-	mystl::my_string C;
+	mystl::string A;
+	mystl::string B;
+	mystl::string C;
 };
 
 struct MLBZ
 {
-	mystl::my_string bz_jn;
-	mystl::my_string bz_jy;
-	mystl::my_string bz_jr;
-	mystl::my_string bz_js;
-	mystl::my_string bz_JS;
-	mystl::my_string bz_zty;
+	mystl::string bz_jn;
+	mystl::string bz_jy;
+	mystl::string bz_jr;
+	mystl::string bz_js;
+	mystl::string bz_JS;
+	mystl::string bz_zty;
 };
 
 class OBA
@@ -78,15 +78,15 @@ public:
 	static void getHuiLi(double d0,OB_DAY &r);
 
 private:
-	static mystl::vector<mystl::vector<mystl::my_string>> sFtv; //假日表,由init初始化
-	static mystl::vector<mystl::my_string> wFtv;
+	static mystl::vector<mystl::vector<mystl::string>> sFtv; //假日表,由init初始化
+	static mystl::vector<mystl::string> wFtv;
 };
 
 class OBB//农历对象，气朔计算等
 {
 public:
 	static void init();
-	static mystl::my_string getNH(int y);
+	static mystl::string getNH(int y);
 	static void getDayName2(OB_DAY &r);
 	static void mingLiBaZi(double jd, double J, MLBZ &ob);
 	static double qi_accurate(double W);
@@ -95,7 +95,7 @@ public:
 	static double so_accurate2(double jd);
 	
 private:
-	static mystl::vector<mystl::my_string> JNB;
+	static mystl::vector<mystl::string> JNB;
 };
 
 extern const char *str_num[];

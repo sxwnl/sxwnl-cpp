@@ -9,7 +9,7 @@ if (WIN32)
   add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
   add_compile_options(-DWIN32)
 else()
-  set(CMAKE_BUILD_TYPE "Release")
+#  set(CMAKE_BUILD_TYPE "Release")
   set(ENV{CXXFLAGS} "$ENV{CXXFLAGS} -std=c++11 -w -s -fexceptions")
   set(CMAKE_CXX_FLAGS $ENV{CXXFLAGS})
   message("CMAKE_CXX_FLAGS:" ${CMAKE_CXX_FLAGS})
@@ -26,6 +26,7 @@ file(GLOB SRCS
 	"${PROJECT_SOURCE_DIR}/lunar/*"
 	"${PROJECT_SOURCE_DIR}/mylib/*"
 )
+
 # 测试
 # add_executable(test0 test/test.cpp ${SRCS})
 

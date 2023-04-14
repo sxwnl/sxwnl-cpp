@@ -179,9 +179,9 @@ void MSC::calc(double T, double L, double fa, double high)
 		MSC::zx_J = MSC::zx_W = 100;
 }
 
-mystl::my_string MSC::toStr(bool fs)
+mystl::string MSC::toStr(bool fs)
 {
-	mystl::my_string s;
+	mystl::string s;
 	s = "-------------------------------------------\n";
 	s = s + "平太阳 " + timeStr(MSC::pty) + " 真太阳 " + timeStr(MSC::zty) + "\n";
 	s = s + "时差 " + m2fm(MSC::sc * 86400, 2, 1) + " 月亮被照亮 " + to_str(MSC::mIll * 100, 2) + "% ";

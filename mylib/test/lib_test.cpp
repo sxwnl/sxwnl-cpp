@@ -1,10 +1,12 @@
-#include "../mystl/my_string/dtoa.h"
+//#include "../mystl/my_string.h"
 
-#include <stdio.h>
-
+#include <cstdio>
+#include <string>
+#include <limits>
+#include <cstdlib>
 int main() {
     char ss[32] = {};
-    dtoa_milo2(987.6666666, ss, 16, 0);
     printf("%s\n", ss);
+    printf("%d\n", std::numeric_limits<int>::digits10 + 3);
     return 0;
 }

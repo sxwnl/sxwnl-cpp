@@ -25,11 +25,11 @@ SOFTWARE.
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
-#include <my_string>
+#include <string>
 #include <random>
 #include <type_traits>
 
-#include "../mystl/my_string/itoa.h"
+#include "../mystl/itoa.h"
 
 template <typename T> struct is_float {const static bool value = false;};
 template <> struct is_float<long double> {const static bool value = true;};
@@ -39,7 +39,7 @@ template <> struct is_float<float> {const static bool value = true;};
 template <class T>
 void show(T n)
 {
-    std::cout << "is_pod<int> == " << std::boolalpha << is_float<T>::value << std::endl;
+    std::cout << "is_float<int> == " << std::boolalpha << is_float<T>::value << std::endl;
     char text[32] = {};
     jeaiii::to_text_from_integer(text, n);
     std::cout << text << "\n";
@@ -55,7 +55,7 @@ int main()
 {
     test(-1.2);
     test(-1);
-    test(1 << 31);
+    test(99963555669888.9687);
     test(0x7fffffff);
     test(-0x7fffffff - 1);
 

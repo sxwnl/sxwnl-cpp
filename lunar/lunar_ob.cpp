@@ -22,7 +22,7 @@ const char *str_sjd[] ={"凌晨","早晨","上午","中午","下午","晚上","�
 const char *str_ry[]  ={"  ","闰"};
 const char *str_ry2[] ={"","闰"};
 
-mystl::vector<mystl::my_string> OBA::wFtv =
+mystl::vector<mystl::string> OBA::wFtv =
 { //某月的第几个星期几,如第2个星期一指从月首开始顺序找到第2个“星期一”
 	"0150I世界麻风日", //一月的最后一个星期日（月倒数第一个星期日）
 	"0520.国际母亲节",
@@ -36,22 +36,22 @@ mystl::vector<mystl::my_string> OBA::wFtv =
 	"1013I国际减轻自然灾害日(减灾日)",
 	"1144I感恩节"
 };
-mystl::vector<mystl::vector<mystl::my_string>> OBA::sFtv;
-mystl::vector<mystl::my_string> OBB::JNB;
+mystl::vector<mystl::vector<mystl::string>> OBA::sFtv;
+mystl::vector<mystl::string> OBB::JNB;
 
 
 //实现字符分割
-mystl::vector<mystl::my_string> split(const mystl::my_string& src, const mystl::my_string& separator)
+mystl::vector<mystl::string> split(const mystl::string& src, const mystl::string& separator)
 {
-	mystl::vector<mystl::my_string> dest;
-	mystl::my_string str = src;
-	mystl::my_string substring;
-	mystl::my_string::size_type start = 0, index;
+	mystl::vector<mystl::string> dest;
+	mystl::string str = src;
+	mystl::string substring;
+	mystl::string::size_type start = 0, index;
  
 	do
 	{
 		index = str.find_first_of(separator,start);
-		if (index != mystl::my_string::npos)
+		if (index != mystl::string::npos)
 		{    
 			substring = str.substr(start,index-start);
 			dest.push_back(substring);
@@ -60,9 +60,9 @@ mystl::vector<mystl::my_string> split(const mystl::my_string& src, const mystl::
 		#else
 			start = index+separator.length();
 		#endif
-			if (start == mystl::my_string::npos) return dest;
+			if (start == mystl::string::npos) return dest;
 		}
-	}while(index != mystl::my_string::npos);
+	}while(index != mystl::string::npos);
  
 	//the last token
 	substring = str.substr(start);
@@ -74,7 +74,7 @@ mystl::vector<mystl::my_string> split(const mystl::my_string& src, const mystl::
 void OBA::init()
 { //构造函数初始化
   int i;
-  mystl::my_string s = ""; //国历节日,#表示放假日,I表示重要节日或纪念日
+  mystl::string s = ""; //国历节日,#表示放假日,I表示重要节日或纪念日
    s=s+"01#元旦|" //1月
   +"02I世界湿地日,10.国际气象节,14I情人节|" //2月
 
@@ -106,7 +106,7 @@ void OBA::init()
   +"01I1988-9999世界艾滋病日,03.世界残疾人日,05.国际经济和社会发展志愿人员日,08.国际儿童电视日,09.世界足球日,10.世界人权日," //12月
   +"12I西安事变纪念日,13I南京大屠杀(1937年)纪念日,20.澳门回归纪念,21.国际篮球日,24I平安夜,25I圣诞节,26.毛泽东诞辰纪念";
 
-  mystl::vector<mystl::my_string> sF=split(s,"|");
+  mystl::vector<mystl::string> sF=split(s,"|");
   sFtv.resize(sF.size());
   for(i=0;i<sF.size();i++)
   sFtv[i]=split(sF[i],",");
@@ -124,11 +124,11 @@ void OBA::getDayName(OB_DAY &r)
    r.C 各种日子名称(连成一大串)
    r.Fjia 放假日子(可用于日期数字置红)
   *****************/
-  mystl::my_string m0=(r.m<10?"0":"")+to_str(r.m);
-  mystl::my_string d0=(r.d<10?"0":"")+to_str(r.d);
+  mystl::string m0=(r.m<10?"0":"")+to_str(r.m);
+  mystl::string d0=(r.d<10?"0":"")+to_str(r.d);
  // std::cout<<m0<<"!"<<d0<<std::endl;
   int i,j;
-  mystl::my_string s,s2,type;
+  mystl::string s,s2,type;
 
   if (r.week==0||r.week==6) r.Fjia = 1; //星期日或星期六放假
 
@@ -142,7 +142,7 @@ void OBA::getDayName(OB_DAY &r)
    
    if (s.substr(5,1)=="-")
    { //有年限的
-     if( r.y<astoi(s.substr(1,4)) || r.y>astoi(s.substr(6,4)) ) continue;
+     if( r.y<my_stoi(s.substr(1,4)) || r.y>my_stoi(s.substr(6,4)) ) continue;
      s = s.substr(10,s.length()-10);
    }
    else 
@@ -158,8 +158,8 @@ void OBA::getDayName(OB_DAY &r)
   //按周查找
   int _w=r.weeki; if(r.week>=r.week0) _w+=1;
   int _w2=_w;      if(r.weeki==r.weekN-1) _w2=5;
-  mystl::my_string w = m0 + to_str(_w)  + to_str(r.week);  //d日在本月的第几个星期某
-  mystl::my_string w2= m0 + to_str(_w2) + to_str(r.week);
+  mystl::string w = m0 + to_str(_w)  + to_str(r.week);  //d日在本月的第几个星期某
+  mystl::string w2= m0 + to_str(_w2) + to_str(r.week);
 
   for (i=0;i<wFtv.size();i++)
   {
@@ -192,7 +192,7 @@ void OBB::init()
 { //初始化
   int i;
   //纪年数据结构：数据用逗号分开，每7个描述一个年号，格式为:起始公元,使用年数,已用年数,朝代,朝号,皇帝,年号
-  mystl::my_string s = "";
+  mystl::string s = "";
   s=s
   +"-2069,45,0,夏,禹,,禹,-2024,10,0,夏,启,,启,-2014,25,0,夏,太康,,太康,-1986,14,0,夏,仲康,,仲康,-1972,28,0,夏,相,,相,-1944,2,0,夏,后羿,,后羿,-1942,38,0,夏,寒浞,,寒浞,-1904,21,0,夏,少康,,少康,-1883,17,0,夏,杼,,杼,-1866,26,0,夏,槐,,槐,-1840,18,0,夏,芒,,芒,-1822,16,0,夏,泄,,泄,-1806,59,0,夏,不降,,不降,-1747,21,0,夏,扃,,扃,-1726,21,0,夏,廑,,廑,"
   +"-1705,31,0,夏,孔甲,,孔甲,-1674,11,0,夏,皋,,皋,-1663,11,0,夏,发,,发,-1652,53,0,夏,桀,,桀,-1599,11,0,商,商太祖,汤,商汤,-1588,1,0,商,商代王,太乙,商代王,-1587,2,0,商,哀王,子胜,外丙,-1585,4,0,商,懿王,子庸,仲壬,-1581,12,0,商,太宗,子至,太甲,-1569,29,0,商,昭王,子绚,沃丁,-1540,25,0,商,宣王,子辩,太庚,-1515,17,0,商,敬王,子高,小甲,-1498,13,0,商,元王,子密,雍己,-1485,75,0,商,中宗,子伷,太戊,-1410,11,0,商,孝成王,子庄,仲丁,"
@@ -234,16 +234,16 @@ void OBB::init()
   JNB = split(s,",");
 }
 
-mystl::my_string OBB::getNH(int y)
+mystl::string OBB::getNH(int y)
 { //取年号
   int i,j;
-  mystl::my_string c,s="";
-  mystl::vector<mystl::my_string> ob=JNB;
+  mystl::string c,s="";
+  mystl::vector<mystl::string> ob=JNB;
   for(i=0;i<ob.size();i+=7)
   {
-   j = astoi(ob[i].c_str());
-   if( y<j || y>=j+astoi(ob[i+1].c_str())) continue;
-   c = ob[i+6] + to_str(y-j+1+astoi(ob[i+2].c_str())) +"年"; //年号及年次
+   j = my_stoi(ob[i].c_str());
+   if( y<j || y>=j+my_stoi(ob[i+1].c_str())) continue;
+   c = ob[i+6] + to_str(y-j+1+my_stoi(ob[i+2].c_str())) +"年"; //年号及年次
    s = s+(s.size()?";":"") + "["+ob[i+3]+"]"+ob[i+4]+" "+ob[i+5]+" "+c; //i为年号元年,i+3朝代,i+4朝号,i+5皇帝,i+6年号
   }
   return s;
@@ -252,7 +252,7 @@ mystl::my_string OBB::getNH(int y)
 void OBB::getDayName2(OB_DAY &r)
 { //计算农历节日
   //按农历日期查找重量点节假日
-  mystl::my_string d;
+  mystl::string d;
   d=d+r.Lmc + "月" + r.Ldc;
  // std::cout<<d<<std::endl;
   if(r.Lleap != "闰")
@@ -290,7 +290,7 @@ void OBB::getDayName2(OB_DAY &r)
   }
 
   //农历杂节
-  mystl::my_string w,w2;
+  mystl::string w,w2;
   if(r.cur_dz>=0 && r.cur_dz<81)
   { //数九
    w = str_num[int2(r.cur_dz/9)+1];
@@ -322,18 +322,18 @@ void OBB::mingLiBaZi(double jd, double J, MLBZ &ob)
 	int D = floor(jd), SC = int2((jd - D) * 12);	//日数与时辰
 
 	v = int2(k / 12.0 + 6000000);
-	ob.bz_jn = mystl::my_string(str_gan[v % 10]) + str_zhi[v % 12];
+	ob.bz_jn = mystl::string(str_gan[v % 10]) + str_zhi[v % 12];
 	v = k + 2 + 60000000;
-	ob.bz_jy = mystl::my_string(str_gan[v % 10]) + str_zhi[v % 12];
+	ob.bz_jy = mystl::string(str_gan[v % 10]) + str_zhi[v % 12];
 	v = D - 6 + 9000000;
-	ob.bz_jr = mystl::my_string(str_gan[v % 10]) + str_zhi[v % 12];
+	ob.bz_jr = mystl::string(str_gan[v % 10]) + str_zhi[v % 12];
 	v = (D - 1) * 12 + 90000000 + SC;
-	ob.bz_js = mystl::my_string(str_gan[v % 10]) + str_zhi[v % 12];
+	ob.bz_js = mystl::string(str_gan[v % 10]) + str_zhi[v % 12];
 
 	v -= SC, ob.bz_JS = "";		//全天纪时表
 	for (i = 0; i < 13; i++)
 	{							//一天中包含有13个纪时
-		mystl::my_string c = mystl::my_string(str_gan[(v + i) % 10]) + str_zhi[(v + i) % 12];	//各时辰的八字
+		mystl::string c = mystl::string(str_gan[(v + i) % 10]) + str_zhi[(v + i) % 12];	//各时辰的八字
 		if (SC == i)
 			ob.bz_js = c, c = "\033[31m" + c + "\033[0m";	//红色显示这时辰
 		ob.bz_JS += (i ? " " : "") + c;

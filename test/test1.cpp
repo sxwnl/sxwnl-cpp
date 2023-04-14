@@ -20,12 +20,12 @@ API测试
 
 #define MAP_H 18
 #define MAP_W  7
-std::array<std::array<mystl::my_string,MAP_W>,MAP_H> strmap;
+std::array<std::array<mystl::string,MAP_W>,MAP_H> strmap;
 
 #include <iostream>
 #include <chrono>
 
-mystl::my_string txFormatT(double t)
+mystl::string txFormatT(double t)
 { //天象时间格式化输出
     double t1 = t * 36525 + J2000;
     double t2 = t1 - dt_T(t1 - J2000) + 8.0 / 24;
@@ -34,9 +34,9 @@ mystl::my_string txFormatT(double t)
 
 void tianXiang(int xm, int xm2, Date dat,int n=10)
 {
-    mystl::static_array<mystl::my_string,9> xxName = {"地球","水星","金星","火星","木星","土星","天王星","海王星","冥王星"};
+    mystl::static_array<mystl::string,9> xxName = {"地球","水星","金星","火星","木星","土星","天王星","海王星","冥王星"};
     double jd = toJD({dat.Y, dat.M, dat.D}) - J2000;//取屏幕时间
-    mystl::my_string s = "";
+    mystl::string s = "";
     int i;
     double re0;
     mystl::array2 re;
@@ -157,7 +157,7 @@ void pCalc(int xt,Date dat, int n=10, int dt=1, bool Cd_ut=1)
         std::cout<<"个数太多了"<<std::endl;
         return;
     }
-    mystl::my_string s = "";
+    mystl::string s = "";
     int i;
     //求星历
     for (i = 0; i < n; i++, jd += dt)
@@ -179,7 +179,7 @@ void suoCalc(int y,int n=24,int jiao=0)
     }
     int i;
     double r, T;
-    mystl::my_string s = "月-日黄经差" + to_str(jiao) + "\n", s2 = "";
+    mystl::string s = "月-日黄经差" + to_str(jiao) + "\n", s2 = "";
     int n0 = int2(y * (365.2422 / 29.53058886));//截止当年首经历朔望的个数
     for (i = 0; i < n; i++)
     {
@@ -198,7 +198,7 @@ void qiCalc(int y,int n=24)
     y-=2000;
     int i;
     double T;
-    mystl::my_string s = "", s2 = "";
+    mystl::string s = "", s2 = "";
     
     for (i = 0; i < n; i++)
     {
@@ -219,7 +219,7 @@ void houCalc(int y,int n=24)
     y-=2000;
     int i;
     double T;
-    mystl::my_string s = "初候　　　　　　　　　　　　二候　　　　　　　　　三候", s2 = "";    
+    mystl::string s = "初候　　　　　　　　　　　　二候　　　　　　　　　三候", s2 = "";    
     for (i = 0; i < n * 3; i++)
     {
         T = S_aLon_t((y + i * 5 / 360.0 + 1) * 2 * M_PI);//精确节气时间计算
@@ -329,7 +329,7 @@ Date get_time(void)
 
 void initmap(OB_LUN lun)
 {
-    mystl::map<mystl::my_string,mystl::my_string> str_yx={{"望","\033[33m●"},{"上弦","\033[33m∪"},{"朔","\033[38;5;245m●"},{"下弦","\033[33m∩"}};
+    mystl::map<mystl::string,mystl::string> str_yx={{"望","\033[33m●"},{"上弦","\033[33m∪"},{"朔","\033[38;5;245m●"},{"下弦","\033[33m∩"}};
     for (int i=0;i<18;i++)
     {
         for (int j=0;j<7;j++)
@@ -379,9 +379,9 @@ void drawmap()
     for (int k=0;k<MAP_W*4;k++)
         std::cout<<"\033[33m--";
     std::cout<<std::endl;
-    for (std::array<mystl::my_string,MAP_W> i:strmap)
+    for (std::array<mystl::string,MAP_W> i:strmap)
     {
-        for (mystl::my_string j:i)
+        for (mystl::string j:i)
             std::cout<<j;
         std::cout<<std::endl;
     }
@@ -446,7 +446,7 @@ int main()
     rysCalc(d, true, false);
     
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
-//    rs2_calc(2,0); 
+    rs2_calc(5,0); 
 //    rs2_jxb();     // 日食界线表
 
 

@@ -21,7 +21,7 @@ class YS_PL
 { //月食快速计算器
 public:
 	static mystl::array7 lT;
-	static mystl::my_string LX;
+	static mystl::string LX;
 	static double sf;
 	static void lecXY(double jd, RE0 &re);
 	static double lineT(RE0 G,double v,double u, double r, bool n);
