@@ -246,7 +246,7 @@ void shengjiang(int y, int m, int d)
 	s += "民用天亮 " + JD2str(r.c + c) + " 民用天黑 " + JD2str(r.h + c) + "\n";
 	s += "航海天亮 " + JD2str(r.c2 + c) + " 航海天黑 " + JD2str(r.h2 + c) + "\n";
 	s += "天文天亮 " + JD2str(r.c3 + c) + " 天文天黑 " + JD2str(r.h3 + c) + "\n";
-	s += "日照长度 " + timeStr(r.j - r.s - 0.5) + " 日光长度 " + timeStr(r.h - r.c - 0.5) + "\n";
+	s += "日照长度  " + timeStr(r.j - r.s - 0.5) + " \n日光长度  " + timeStr(r.h - r.c - 0.5) + "\n";
 	if (r.sm.length())
 		s += "注：" + r.sm + "\n";
 	r = SZJ::Mt(jd - sq / 24.0);

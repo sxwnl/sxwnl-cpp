@@ -441,13 +441,18 @@ int main()
     // 命理八字
     ML_calc(dat);
     
+    // 升降
+    std::cout<<"\n========--升降计算--========\n";
+    shengjiang(dat.Y, dat.M, dat.D);
+    
     // 日月食
     Date d = {2008, 8, 1, 18, 17, 15.0};
     rysCalc(d, true, false);
     
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
-    rs2_calc(5,0); 
-//    rs2_jxb();     // 日食界线表
+  //  rs2_calc(5,0);
+    
+  //  rs2_jxb();     // 日食界线表
 
 
 
