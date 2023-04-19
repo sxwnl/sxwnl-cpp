@@ -450,7 +450,7 @@ int main()
     rysCalc(d, true, false);
     
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
-  //  rs2_calc(5,0);
+    rs2_calc(5,0);
     
   //  rs2_jxb();     // 日食界线表
 

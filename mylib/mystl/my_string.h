@@ -201,40 +201,24 @@ template <class T>
 inline mystl::string to_str(T value, int precision = 4, int length = 0, bool right_align = false)
 {
     // digits10 returns floor value, so add 1 for remainder, 1 for - and 1 for null terminator
-    typename mystl::string::value_type str[std::numeric_limits<unsigned int>::digits10 + 3];
+    char str[32] = {};
     
     if ( is_float<T>::value) { // 浮点数
-        dtoa_milo2(value, str, precision, true);        
+        dtoa_milo2(value, str, precision, true);
     } else { // 整数
-        *jeaiii::to_text_from_integer(str, value)='\0';
+        jeaiii::to_text_from_integer(str, value);
     }
-    
-    int len=length - strlen(str);
-    char fill[64] = "";
-    for (int i = 0; i < len; i++) {
-        fill[i] = ' ';
-    }
-    return right_align ? 
-    (mystl::string(fill) + mystl::string(str)) : (mystl::string(str) + mystl::string(fill)); 
 
-//    return mystl::string(str);
-}
-
-// length 总长度，是否右对齐
-inline mystl::string to_str_fmt(long double value, int precision, int length = 0, bool right_align = false)
-{
-    // digits10 returns floor value, so add 1 for remainder, 1 for - and 1 for null terminator
-    typename mystl::string::value_type str[std::numeric_limits<unsigned int>::digits10 + 3];
-    
-    dtoa_milo2(value, str, precision, true);
-    int len=length - strlen(str);
     char fill[64] = "";
-    for (int i = 0; i < len; i++) {
-        fill[i] = ' ';
+    size_t s_len = strlen(str);
+    if (length > s_len) { 
+        size_t len = length - s_len;
+        for (size_t i = 0; i < len; i++) {
+            fill[i] = ' ';
+        }
     }
     return right_align ? 
     (mystl::string(fill) + mystl::string(str)) : (mystl::string(str) + mystl::string(fill)); 
 }
-
 
 #endif // !MY_STRING_H
