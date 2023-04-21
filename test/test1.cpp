@@ -443,14 +443,14 @@ int main()
     
     // 升降
     std::cout<<"\n========--升降计算--========\n";
-    shengjiang(dat.Y, dat.M, dat.D);
+    std::cout<<shengjiang(dat.Y, dat.M, dat.D)<<"\n";
     
     // 日月食
     Date d = {2008, 8, 1, 18, 17, 15.0};
-    rysCalc(d, true, false);
+    std::cout<<rysCalc(d, true, false)<<"\n";
     
     std::cout<<rs_search(2008,8,200,1)<<std::endl; // 日食粗搜索
-    rs2_calc(5,0);
+    std::cout<<rs2_calc(5,0,29.5306)<<"\n";
     
   //  rs2_jxb();     // 日食界线表
 

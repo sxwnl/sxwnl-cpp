@@ -12,7 +12,7 @@
 #include "../mylib/mystl/static_array.h"
 #include "../mylib/mystl/map.h"
 
-void rysCalc(Date d, bool is_utc, bool nasa_r)
+mystl::string rysCalc(Date d, bool is_utc, bool nasa_r)
 {
 	double vJ=jw.J/radd;
 	double vW=jw.W/radd;
@@ -112,46 +112,49 @@ void rysCalc(Date d, bool is_utc, bool nasa_r)
 		s += "食分指月面直径被遮比例\n\n";
 	}
 	s += MSC::toStr(true);
-	std::cout<<s<<std::endl;
+	return s;
 }
 
-mystl::string rs_search(int Y,int M,int n,bool fs)
-{ //查找日食
-  int i,k;
-  _ECFAST r;
-  mystl::string s="",s2="";
-  double jd = toJD({Y,M,1,0,0,0}) - J2000;  //取屏幕时间
-  jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //定朔
-  for(i=0,k=0;i<n;i++)
-  {
-   r=ecFast(jd); //低精度高速搜索
-   if(r.lx=="NN") { jd += 29.5306; continue; } //排除不可能的情况，加速计算
-   if(!r.ac)
-   {
-     if(fs==0) RS_GS::init(jd, 2); //低精度
-     if(fs==1) RS_GS::init(jd, 7); //高精度
-      _FEATURE rr = RS_GS::feature(jd);
-      r={rr.jd,rr.jdSuo,r.ac,rr.lx};
-   }
-   if(r.lx != "N")
-   {
-    s +=JD2str(r.jd+J2000).substr(0,11);
-    s += r.lx;
-    k++;
-    if(k%5==0) s+="\n";
-    if(k%100==0) s2+=s, s="";
-   }
-   jd = r.jd+29.5306;
-  }
-  return s2+s;
-}
-
-void rs2_calc(int fs,double jd0)
+mystl::string rs_search(int Y, int M, int n, bool fs)
 {
- if (fs==0) return;
- 
- double step = 29.5306;
- double jd = 2454679.926741-J2000; //取屏幕时间
+    //查找日食
+    int i, k;
+    _ECFAST r;
+    mystl::string s = "", s2 = "";
+    double jd = toJD({ Y, M, 1, 0, 0, 0 }) - J2000;     //取屏幕时间
+    jd = MS_aLon_t2(int2((jd + 8) / 29.5306) * _pi * 2) * 36525;        //定朔
+    for (i = 0, k = 0; i < n; i++) {
+        r = ecFast(jd);         //低精度高速搜索
+        if (r.lx == "NN") {
+            jd += 29.5306;
+            continue;
+        } 
+        //排除不可能的情况，加速计算
+        if (!r.ac) {
+            if (fs == 0) RS_GS::init(jd, 2);     //低精度
+            if (fs == 1) RS_GS::init(jd, 7);     //高精度
+            _FEATURE rr = RS_GS::feature(jd);
+            r = {rr.jd, rr.jdSuo, r.ac, rr.lx};
+        }
+        if (r.lx != "N") {
+            s += JD2str(r.jd + J2000).substr(0, 11);
+            s += r.lx;
+            k++;
+            if (k % 5 == 0)
+                s += "\n";
+            if (k % 100 == 0)
+                s2 += s, s = "";
+        }
+        jd = r.jd + 29.5306;
+    }
+    return s2 + s;
+}
+
+
+mystl::string rs2_calc(uint8_t fs,double jd0, double step)
+{
+ if (fs==0) return "";
+ static double jd = 2454679.926741-J2000; //取屏幕时间
  
  if(fs==1) jd = jd0;
 // if(fs==2) ; //保持时间不变
@@ -190,8 +193,8 @@ void rs2_calc(int fs,double jd0)
 		  + "食分=" + to_str(r.sf, 4) + ", 食延=" + m2fm(r.tt * 86400, 0, 2) + ", 食带=" + to_str(r.dw, 0) + "km\n"
 		  + "\n";
   }
-  std::cout<<s<<std::endl;
-  return;
+  // std::cout<<s<<std::endl;
+  return s;
  }
 
  //计算多个日食
@@ -215,20 +218,21 @@ void rs2_calc(int fs,double jd0)
      + to_str(r.sf,4) + "  \033[36m" + to_str(r.dw,0, 3) 
      + "  \033[37m" + m2fm(r.tt*86400,0,2) + "\033[0m\n";
   }
-  std::cout<<s<<std::endl;
+  //std::cout<<s<<std::endl;
+  return s;
  }
 }
 
-void rs2_jxb()
+mystl::string rs2_jxb()
 { //显示界线表
  double jd = 2454679.926741-J2000; //取屏幕时间
  jd = MS_aLon_t2( int2((jd+8)/29.5306)*_pi*2 )*36525; //归朔
  RS_GS::init(jd,7);
- std::cout<<RS_GS::jieX3(jd)<<std::endl;
+ //std::cout<<RS_GS::jieX3(jd)<<std::endl;
+ return RS_GS::jieX3(jd);
 }
 
-
-void shengjiang(int y, int m, int d)
+mystl::string shengjiang(int y, int m, int d)
 {
 	Date dt = { y, m, d, 12, 0, 0 };
 	SZJ::L = jw.J / radd;		//设置站点参数
@@ -252,10 +256,11 @@ void shengjiang(int y, int m, int d)
 	r = SZJ::Mt(jd - sq / 24.0);
 	s += "月亮升起 " + JD2str(r.s + c) + " 月亮降落 " + JD2str(r.j + c) + "\n";
 	s += "月上中天 " + JD2str(r.z + c) + " 月下中天 " + JD2str(r.x + c) + "\n";
-	std::cout << s << std::endl;
+//	std::cout << s << std::endl;
+	return s;
 }
 
-void shengjiang2(int y)
+mystl::string shengjiang2(int y)
 {								//太阳升降快算
 	double L = jw.J / radd;		//设置站点参数
 	double fa = jw.W / radd;
@@ -271,10 +276,12 @@ void shengjiang2(int y)
 		t = sunShengJ(jd + i, L, fa, 1) + J2000 + 8 / 24.0;
 		s2 += timeStr(t) + "\n";
 	}
-	std::cout<<y<<"年太阳年度升降表\n        升        降\n" + s + s2;
+	//std::cout<<;
+	return to_str(y)+"年太阳年度升降表\n        升        降\n" + s + s2;
+	
 }
 
-void shengjiang3(int y)
+mystl::string shengjiang3(int y)
 {	//年度时差
 	Date dt = { y, 1, 1, 12 };
 	double jd = toJD(dt);
@@ -287,7 +294,8 @@ void shengjiang3(int y)
 		t = pty_zty(D / 36525.0);
 		s2 += JD2str(jd + i).substr(0, 11) + " \033[31m" + m2fm(t * 86400, 2, 2) + "\033[0m\n";
 	}
-	std::cout<<"太阳时差表(所用时间为北京时间每日12点)\n" + s + s2;
+//	std::cout
+    return "太阳时差表(所用时间为北京时间每日12点)\n" + s + s2;
 }
 /*
 main()
