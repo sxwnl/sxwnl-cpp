@@ -8,7 +8,7 @@
 
 #include <stdint.h>
 
-#ifdef __GNUC__
+#if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)) && defined(__x86_64__) && (__INTPTR_WIDTH__ == 64)
 namespace gcc_ints
 {
 	__extension__ typedef __int128 int128;
@@ -55,7 +55,7 @@ struct DiyFp {
 		if (l & (uint64_t(1) << 63)) // rounding
 			h++;
 		return DiyFp(h, e + rhs.e + 64);
-#elif (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)) && defined(__x86_64__)
+#elif (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 6)) && defined(__x86_64__) && (__INTPTR_WIDTH__ == 64)
         gcc_ints::uint128 p = static_cast<gcc_ints::uint128>(f) * static_cast<gcc_ints::uint128>(rhs.f);
 		uint64_t h = p >> 64;
 		uint64_t l = static_cast<uint64_t>(p);
