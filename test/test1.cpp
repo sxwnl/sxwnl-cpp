@@ -358,7 +358,8 @@ void initmap(OB_LUN lun)
         if (lun.day[i].Ldi==0)
             strmap[y*3+1][x]="\033[38;5;123m",strmap[y*3+1][x]
             =strmap[y*3+1][x]+lun.day[i].Lleap+strmap[y*3+1][x]
-            +lun.day[i].Lmc2+strmap[y*3+1][x]+"月"
+            +lun.day[i].Lmc+strmap[y*3+1][x]
+            +(lun.day[i].Lmc.length()==6?"":"月")
             +strmap[y*3+1][x]+str_dx[lun.day[i].Ldn-29]+strmap[y*3+1][x]
             +(lun.day[i].Lleap.length()?"\033[0m\033[1m":"  \033[0m\033[1m");
         else
@@ -409,7 +410,7 @@ int main()
     // 节日
     for (int i = 0;i < 30;i++)
     {
-        std::cout<<lun.day[i].d<<"天:"<<lun.day[i].Lday2;
+        std::cout<<lun.day[i].y<<"年"<<lun.day[i].m<<"月"<<lun.day[i].d<<"日: "<<lun.day[i].Lday2;
         if (lun.day[i].A.length())
         std::cout<<"A"<<lun.day[i].A;
         if (lun.day[i].B.length())
@@ -428,6 +429,7 @@ int main()
     // 气朔测试
     dingQi_v ();
     dingSuo_v();
+    
     /*
     int y=dat.Y;
     suoCalc(y);
@@ -453,8 +455,6 @@ int main()
     std::cout<<rs2_calc(5,0,29.5306)<<"\n";
     
   //  rs2_jxb();     // 日食界线表
-
-
 
 #if defined(_WIN32) || defined(_MSC_VER)
     system("pause");

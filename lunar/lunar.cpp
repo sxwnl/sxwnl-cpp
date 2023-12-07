@@ -54,7 +54,7 @@ OB_LUN yueLiCalc(int By, int Bm)
 		//农历月历
 		if (!SSQ::ZQ[0] || ob->d0 < SSQ::ZQ[0] || ob->d0 >= SSQ::ZQ[24])	//如果d0已在计算农历范围内则不再计算
 			SSQ::calcY(ob->d0);
-		int mk = int2((ob->d0 - SSQ::HS[0]) / 30);
+		int mk = int2((ob->d0 - SSQ::HS[0]) / 30.0);
 		if (mk < 13 && SSQ::HS[mk + 1] <= ob->d0)
 			mk++;				//农历所在月的序数
 

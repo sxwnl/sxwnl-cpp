@@ -1,7 +1,7 @@
-#Thu Apr 06 01:26:53 GMT+08:00 2023
-binary_fname=build/test1
+#Thu Dec 07 15:47:24 GMT+08:00 2023
+binary_fname=./test1
 run_mode=0
-use_cmake=true
+use_cmake=false
 sm_names=lat_lon_data.cpp eph_msc.cpp eph_show.cpp eph.cpp lunar_ob.cpp lunar.cpp eph_rsgs.cpp eph_szj.cpp eph0.cpp eph_rspl.cpp eph_yspl.cpp lunar_ssq.cpp tool.cpp
 qmake_cmd=export PATH\=(c4droid\:GCCROOT)qt/bin/\:$PATH\nqmake -spec android-g++
 cmake_cmd=build_dir\=build\nif [ \! -d "$build_dir" ]; then\n    mkdir -p $build_dir\nfi\ncd build && cmake .. 
