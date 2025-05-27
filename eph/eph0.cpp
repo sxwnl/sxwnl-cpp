@@ -106,7 +106,7 @@ mystl::array3 CD2DP(mystl::array3 z, double L, double fa, double gst)
 {//赤道坐标转为地平坐标
 	mystl::array3 a = { z[0] + _pi / 2 - gst - L, z[1], z[2] };	//转到相对于地平赤道分点的赤道坐标
 	a = llrConv(a, _pi / 2 - fa);
-	a[0] = rad2mrad(_pi / 2 - a[0]);
+	a[0] = rad2mrad(-_pi / 2 - a[0]);
 	return a;
 }
 

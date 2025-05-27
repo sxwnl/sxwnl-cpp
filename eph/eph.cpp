@@ -279,7 +279,7 @@ mystl::string xingX(int xt,double jd,double L,double fa)
   
     z[0] += M_PI/2-gst-L;  //修正了视差的赤道坐标
     z = llrConv( z, M_PI/2-fa ); //转到时角坐标转到地平坐标
-    z[0] = rad2mrad( M_PI/2-z[0] );
+    z[0] = rad2mrad(-M_PI/2 - z[0]);
 
     if(z[1]>0)
         z[1] += MQC(z[1]); //大气折射修正

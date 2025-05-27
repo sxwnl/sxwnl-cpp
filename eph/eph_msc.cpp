@@ -98,7 +98,7 @@ void MSC::calc(double T, double L, double fa, double high)
 
 	//月亮地平坐标
 	z = llrConv(z, _pi / 2 - fa);	//转到地平坐标(只改经纬度)
-	z[0] = rad2mrad(_pi / 2 - z[0]);
+	z[0] = rad2mrad(-_pi / 2 - z[0]);
 	MSC::mDJ = z[0];
 	MSC::mDW = z[1];			//方位角,高度角
 	if (z[1] > 0)
@@ -134,7 +134,7 @@ void MSC::calc(double T, double L, double fa, double high)
 
 	//太阳地平坐标
 	z = llrConv(z, _pi / 2 - fa);
-	z[0] = rad2mrad(_pi / 2 - z[0]);
+	z[0] = rad2mrad(-_pi / 2 - z[0]);
 	//z[1] -= 8.794/rad/z[2]*cos(z[1]); //直接在地平坐标中视差修正(这里把地球看为球形,精度比parallax()稍差一些)
 	MSC::sDJ = z[0];
 	MSC::sDW = z[1];			//方位角,高度角
