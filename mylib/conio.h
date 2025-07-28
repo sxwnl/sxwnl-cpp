@@ -6,11 +6,12 @@
 // Update.2021-11-01 兼容Cygwin 修改getch实现方式
 // Update.2021-11-03 添加windows下MinGW-GCC编译支持
 // Update.2023-03-15 修改getch和kbhit的实现
+// Update.2025-07-28 添加MACOS下__llvm__宏定义
 
 #ifndef CONIO_H
 #define CONIO_H
 
-#if defined (__unix__)
+#if defined (__unix__) || defined(__llvm__)
 #include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
