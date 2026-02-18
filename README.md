@@ -39,3 +39,6 @@ make
 
 # Bugs
 TODO
+
+# 特别说明
+本次移植大多数工作在手机上完成，使用[C4droid](https://blog.qaiu.top/archives/c4droid)开发工具，所以代码格式不太规范，但不影响使用，经过了后续多次迭代精度已经和js版完全一致，计算效率远高于js版。
