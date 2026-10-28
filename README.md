@@ -1,5 +1,7 @@
 # Sxwnl-cpp  
 寿星天文历(万年历)c++版  
+最新版本：https://github.com/sxwnl/sxwnl-cpp-3d
+
 Sxwnl for cpp version
 # Build
 ## 1.Use cmake  
